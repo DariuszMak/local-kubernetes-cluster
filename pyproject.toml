@@ -1,0 +1,184 @@
+[project]
+name = "logged-time-reporting"
+version = "1.0.0"
+description = "Simple template project for Python Standalone GUI Application"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.16.0",
+    "pip-audit>=2.9.0",
+    "pytest>=8.4.0",
+    "pytest-cov>=6.2.1",
+    "ruff>=0.11.13",
+]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.ruff]
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+]
+line-length = 120
+indent-width = 4
+# Assume Python 3.11
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    # Pyflakes (F), Pycodestyle (E), isort, Pycodestyle warnings (W), Flake8-bugbear(B), Quotes style (Q)
+    "F",
+    "E",
+    "I001",
+    "W",
+    "B",
+    "Q",
+    # flake8-bandit replacing bandit tool (S), unusued arguments (ARG), datetime zone (DTZ), flake8-logging (G)
+    "S",
+    "ARG",
+    "DTZ",
+    "G",
+    # string concat style (ISC), no arg exception style (RSE), specific rule codes when ignoring (PGH004)
+    "ISC",
+    "RSE",
+    "PGH004",
+    # flake8 PIE (PIE), pytest (PT), Ruff specific, flake8 simplify (SIM), flake8 type checking imports (TCH)
+    "PIE",
+    "PT",
+    "RUF",
+    "SIM",
+    "TCH",
+    # exception handling (TRY), core upgrades/deprecations (UP), sys.version (YTT), FIXME comments
+    "TRY",
+    "UP",
+    "YTT",
+    "FIX001",
+    # flake8 comprehensions (C4), performance (PERF), flake8-async, builtin shadowing (A), pep8 names (N)
+    "C4",
+    "PERF",
+    "ASYNC",
+    "A",
+    "N",
+    # Debugger calls, print calls, fstring vs static join (FLY)
+    "T10",
+    "T20",
+    "FLY",
+    # 'I' for import-related issues, 'F401' for unused imports
+    "I",
+    "F401",
+    # if want type annotations on everything (ANN), docs (D)
+    # "ANN", "D"
+]
+# S101: we don't optimize out sanity asserts.
+# PT001 Checks for argument-free @pytest.fixture() decorators with or without parentheses, depending on the lint.flake8-pytest-style.fixture-parentheses setting
+# TRY002 require custom exc.
+# TRY003 long exc messages.
+# UP040 type keyword was introduced in Python 3.12 by PEP 695 but isn't supported by mypy yet
+ignore = ["S101", "PT001", "TRY002", "TRY003", "UP040"]
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+fixable = [
+    "A",
+    "C",
+    "C4",
+    "D",
+    "E",
+    "F",
+    "G",
+    "I",
+    "N",
+    "Q",
+    "S",
+    "T",
+    "W",
+    "ANN",
+    "ARG",
+    "BLE",
+    "COM",
+    "DJ",
+    "DTZ",
+    "EM",
+    "ERA",
+    "EXE",
+    "FBT",
+    "FLY",
+    "ICN",
+    "INP",
+    "ISC",
+    "NPY",
+    "PD",
+    "PGH",
+    "PIE",
+    "PL",
+    "PT",
+    "PTH",
+    "PYI",
+    "RET",
+    "RSE",
+    "RUF",
+    "SIM",
+    "SLF",
+    "T10",
+    "T20",
+    "TCH",
+    "TID",
+    "TRY",
+    "UP",
+    "YTT",
+    "I001",
+]
+unfixable = ["B"]
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$" # Allow unused variables when underscore-prefixed.
+
+[tool.ruff.lint.per-file-ignores]
+# last checked EnvLoaderMixin + JsonSchemaMixin was having problems with X | Y annotations
+"app/{config,data_types}.py" = ["UP007"]
+"components/*.py" = ["UP007"]
+# F401: ignore unused imports in `__init__.py` files
+"__init__.py" = ["F401"]
+# S311: (Standard pseudo-random generators are not suitable for cryptographic purposes)
+# ARG001: unused args common for e.g. test fixtures
+"tests/*" = ["S311", "ARG001", "ANN"]
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
