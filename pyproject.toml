@@ -1,5 +1,5 @@
 [project]
-name = "logged-time-reporting"
+name = "python-project"
 version = "1.0.0"
 description = "Simple template project for Python Standalone GUI Application"
 readme = "README.md"
