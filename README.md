@@ -1,4 +1,4 @@
-# Python Logged time reporting project
+# Python project
 
 ## Requirements
 
