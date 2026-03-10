@@ -1,7 +1,7 @@
 [project]
 name = "python-project"
 version = "1.0.0"
-description = "Simple template project for Python Standalone GUI Application"
+description = "Simple template project for Python Application"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
