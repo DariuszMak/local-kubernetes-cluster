@@ -3,7 +3,7 @@ name = "python-project"
 version = "1.0.0"
 description = "Simple template project for Python Application"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.14"
 dependencies = [
 
 ]
@@ -18,7 +18,7 @@ dev = [
 ]
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.14"
 warn_return_any = true
 warn_unused_configs = true
 
@@ -54,7 +54,7 @@ exclude = [
 ]
 line-length = 120
 indent-width = 4
-# Assume Python 3.11
+# Assume Python 3.14
 target-version = "py311"
 
 [tool.ruff.lint]
