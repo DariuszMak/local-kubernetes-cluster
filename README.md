@@ -15,7 +15,7 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 deactivate ; 
 clear ; 
 
-# $ports = 8000
+# $ports = 8000, 8001
 # 
 # foreach ($port in $ports) {
 #     $conns = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
