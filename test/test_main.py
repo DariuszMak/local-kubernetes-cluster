@@ -60,8 +60,8 @@ def test_logs_debug_for_loaded_var(tmp_env_file: Path, caplog: pytest.LogCapture
     with caplog.at_level(logging.DEBUG, logger="src.main"):
         load_dev_env(str(tmp_env_file))
 
-    assert any("Loaded env var: EXAMPLE_VARIABLE_NAME" in m for m in caplog.messages)
-    assert any("Loaded env var: ANOTHER_VAR" in m for m in caplog.messages)
+    assert any("Loaded env var: EXAMPLE_VARIABLE_NAME=" in m for m in caplog.messages)
+    assert any("Loaded env var: ANOTHER_VAR=" in m for m in caplog.messages)
 
 
 def test_logs_debug_for_skipped_var(tmp_env_file: Path, caplog: pytest.LogCaptureFixture) -> None:
