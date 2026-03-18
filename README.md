@@ -45,7 +45,8 @@ uv lock ;
 ##### STATIC ANALYSIS & TESTS
 
 .venv\Scripts\Activate.ps1 ; 
-$env:PYTHONPATH="." ; 
+
+Get-Content thorough.env | ForEach-Object { if ($_ -match '^\s*([^=]+?)\s*=\s*"?([^"]*)"?') { [System.Environment]::SetEnvironmentVariable($matches[1], $matches[2], [System.EnvironmentVariableTarget]::Process) } else { Write-Warning "Invalid entry: '$_'" } } ; 
 
 .\scripts\format_and_lint.ps1 ; 
 
