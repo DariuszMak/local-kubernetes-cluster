@@ -22,7 +22,7 @@ def load_dev_env(env_path: str = "dev.env") -> dict[str, str]:
             value = value.strip()
             if os.getenv(key) is None:
                 os.environ[key] = value
-                logger.debug("Loaded env var: %s", key)
+                logger.debug("Loaded env var: %s=%s", key, value)
             else:
                 logger.debug("Skipped env var (already set): %s", key)
             loaded[key] = value
