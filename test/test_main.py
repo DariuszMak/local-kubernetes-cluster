@@ -59,6 +59,7 @@ def test_dev_env_file_loads_example_variable() -> None:
 
 # --- logging tests ---
 
+
 def test_logs_debug_for_loaded_var(tmp_env_file: Path, caplog: pytest.LogCaptureFixture) -> None:
     for key in ("EXAMPLE_VARIABLE_NAME", "ANOTHER_VAR", "SPACED_VAR"):
         os.environ.pop(key, None)
