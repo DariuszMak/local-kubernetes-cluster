@@ -11,11 +11,7 @@ from src.main import load_dev_env
 def tmp_env_file(tmp_path: Path) -> Path:
     env_file = tmp_path / "test.env"
     env_file.write_text(
-        "EXAMPLE_VARIABLE_NAME=Hi it is me!\n"
-        "# This is a comment\n"
-        "ANOTHER_VAR=hello\n"
-        "\n" 
-        "  SPACED_VAR=spaced  \n",
+        "EXAMPLE_VARIABLE_NAME=Hi it is me!\n# This is a comment\nANOTHER_VAR=hello\n\n  SPACED_VAR=spaced  \n",
         encoding="utf-8",
     )
     return env_file
@@ -55,7 +51,6 @@ def test_dev_env_file_loads_example_variable() -> None:
     os.environ.pop("EXAMPLE_VARIABLE_NAME", None)
     load_dev_env("dev.env")
     assert os.getenv("EXAMPLE_VARIABLE_NAME") == "Hi it is me!"
-
 
 
 def test_logs_debug_for_loaded_var(tmp_env_file: Path, caplog: pytest.LogCaptureFixture) -> None:
