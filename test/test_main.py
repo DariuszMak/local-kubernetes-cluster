@@ -70,7 +70,7 @@ def test_logs_debug_for_skipped_var(tmp_env_file: Path, caplog: pytest.LogCaptur
     with caplog.at_level(logging.DEBUG, logger="src.main"):
         load_dev_env(str(tmp_env_file))
 
-    assert any("Skipped env var (already set): ANOTHER_VAR" in m for m in caplog.messages)
+    assert any("Skipped env var (already set): ANOTHER_VAR=" in m for m in caplog.messages)
     os.environ.pop("ANOTHER_VAR", None)
 
 

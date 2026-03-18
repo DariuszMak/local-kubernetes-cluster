@@ -24,7 +24,7 @@ def load_dev_env(env_path: str = "dev.env") -> dict[str, str]:
                 os.environ[key] = value
                 logger.debug("Loaded env var: %s=%s", key, value)
             else:
-                logger.debug("Skipped env var (already set): %s", key)
+                logger.debug("Skipped env var (already set): %s=%s", key, value)
             loaded[key] = value
     logger.info("Loaded %d var(s) from %s", len(loaded), env_path)
     return loaded
