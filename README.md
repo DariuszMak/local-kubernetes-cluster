@@ -47,6 +47,7 @@ uv lock ;
 .venv\Scripts\Activate.ps1 ; 
 
 Get-Content dev.env | ForEach-Object { if ($_ -match '^\s*([^=]+?)\s*=\s*"?([^"]*)"?') { [System.Environment]::SetEnvironmentVariable($matches[1], $matches[2], [System.EnvironmentVariableTarget]::Process) } else { Write-Warning "Invalid entry: '$_'" } } ; 
+Get-ChildItem Env: ; 
 
 .\scripts\format_and_lint.ps1 ; 
 
