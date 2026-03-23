@@ -51,7 +51,7 @@ Get-ChildItem Env: ;
 
 .\scripts\format_and_lint.ps1 ; 
 
-pytest test/ --cov=src -vv ; 
+pytest tests/ --cov=src -vv ; 
 
 ##### RUN APPLICATION LOCALLY
 
