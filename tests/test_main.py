@@ -1,10 +1,13 @@
 import logging
 import os
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 
 from src.main import load_dev_env
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 @pytest.fixture()
