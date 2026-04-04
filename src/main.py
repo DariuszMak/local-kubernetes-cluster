@@ -5,7 +5,7 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 
-def load_dev_env(env_path: str = "dev.env") -> dict[str, str]:
+def load_dev_env(env_path: str = ".dev.env") -> dict[str, str]:
     """Load key=value pairs from a .env file into os.environ. Returns loaded vars."""
     loaded: dict[str, str] = {}
     path = Path(env_path)

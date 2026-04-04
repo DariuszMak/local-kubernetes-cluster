@@ -45,14 +45,14 @@ def test_does_not_override_existing_env_var(tmp_env_file: Path) -> None:
 
 
 def test_missing_file_returns_empty() -> None:
-    loaded = load_dev_env("nonexistent.env")
+    loaded = load_dev_env(".nonexistent.env")
     assert loaded == {}
 
 
 def test_dev_env_file_loads_example_variable() -> None:
-    """Integration test: loads the actual dev.env from the project root."""
+    """Integration test: loads the actual .dev.env from the project root."""
     os.environ.pop("EXAMPLE_VARIABLE_NAME", None)
-    load_dev_env("dev.env")
+    load_dev_env(".dev.env")
     assert os.getenv("EXAMPLE_VARIABLE_NAME") == "Hi it is me!"
 
 
