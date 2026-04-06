@@ -25,6 +25,7 @@ warn_unused_configs = true
 
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.
+preview = true
 exclude = [
     ".bzr",
     ".direnv",
@@ -102,6 +103,11 @@ select = [
     "F401",
     # if want type annotations on everything (ANN), docs (D)
     # "ANN", "D"
+    "E301",
+    "E302",
+    "E303",
+    "E305",
+    "E306",
 ]
 # S101: we don't optimize out sanity asserts.
 # PT001 Checks for argument-free @pytest.fixture() decorators with or without parentheses, depending on the lint.flake8-pytest-style.fixture-parentheses setting
@@ -159,6 +165,11 @@ fixable = [
     "UP",
     "YTT",
     "I001",
+    "E301",
+    "E302",
+    "E303",
+    "E305",
+    "E306",
 ]
 unfixable = ["B"]
 # Allow unused variables when underscore-prefixed.
@@ -183,3 +194,4 @@ indent-style = "space"
 skip-magic-trailing-comma = false
 # Like Black, automatically detect the appropriate line ending.
 line-ending = "auto"
+docstring-code-format = true
