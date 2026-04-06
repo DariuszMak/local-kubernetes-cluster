@@ -89,6 +89,6 @@ def test_logs_info_summary(tmp_env_file: Path, caplog: pytest.LogCaptureFixture)
 
 def test_logs_warning_for_missing_file(caplog: pytest.LogCaptureFixture) -> None:
     with caplog.at_level(logging.WARNING, logger="src.main"):
-        load_dev_env("nonexistent.env")
+        load_dev_env(".nonexistent.env")
 
-    assert any("Env file not found: nonexistent.env" in m for m in caplog.messages)
+    assert any("Env file not found: .nonexistent.env" in m for m in caplog.messages)
