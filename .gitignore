@@ -1,3 +1,4 @@
+.cache.*
 moc_*.py
 files_rc.py
 
