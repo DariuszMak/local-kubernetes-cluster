@@ -6,6 +6,7 @@
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/src/main.py",
+            "cwd": "${workspaceFolder}",
             "envFile": "${workspaceFolder}/.dev.env",
             "args": []
         }
