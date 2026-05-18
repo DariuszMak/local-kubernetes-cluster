@@ -1,0 +1,38 @@
+apiVersion: k3d.io/v1alpha5
+kind: Simple
+
+# Cluster name — matches context: k3d-python-project
+metadata:
+  name: python-project
+
+servers: 1   # control-plane nodes
+agents: 1    # worker nodes
+
+# Port mappings on the load-balancer so you can reach your app at localhost
+ports:
+  - port: 8080:80     # HTTP  → localhost:8080
+    nodeFilters:
+      - loadbalancer
+  - port: 8443:443    # HTTPS → localhost:8443
+    nodeFilters:
+      - loadbalancer
+
+# Local image registry so you can push images without DockerHub
+registries:
+  create:
+    name: registry.localhost
+    host: "0.0.0.0"
+    hostPort: "5001"   # push to localhost:5001/<image>
+  use: []
+
+# k3s options
+options:
+  k3s:
+    extraArgs:
+      # Keep Traefik (built-in ingress). Remove this line if you prefer nginx.
+      - arg: --disable=traefik
+        nodeFilters:
+          - server:*
+  kubeconfig:
+    updateDefaultKubeconfig: true   # auto-update ~/.kube/config
+    switchCurrentContext: true      # auto-switch kubectl context
