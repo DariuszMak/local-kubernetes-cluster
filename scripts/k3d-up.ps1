@@ -86,8 +86,8 @@ kubectl apply -f "$K8sManifests/deployment.yaml"
 kubectl apply -f "$K8sManifests/service.yaml"
 kubectl apply -f "$K8sManifests/ingress.yaml"
 
-Write-Host "-> Waiting for deployment rollout..." -ForegroundColor Cyan
-kubectl rollout status deployment/python-project --timeout=60s
+# Write-Host "-> Waiting for deployment rollout..." -ForegroundColor Cyan
+# kubectl rollout status deployment/python-project --timeout=60s
 
 Write-Host ""
 Write-Host "Done! App available at: http://localhost:8082" -ForegroundColor Green
