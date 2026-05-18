@@ -206,5 +206,5 @@ if __name__ == "__main__":
     port = int(os.getenv("PORT", "8000"))
     server = HTTPServer((host, port), Handler)
     # Always print a localhost URL regardless of bind address so it's clickable locally
-    logger.info("Serving on http://%s:%d  →  open http://localhost:%d", host, port, port)
+    logger.info("Serving on http://%s:%d   open http://localhost:%d", host, port, port)
     server.serve_forever()
