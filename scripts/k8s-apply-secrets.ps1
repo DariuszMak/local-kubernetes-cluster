@@ -1,6 +1,4 @@
 #!/usr/bin/env pwsh
-# scripts/k8s-apply-secrets.ps1
-# Reads .dev.env and creates/updates a Kubernetes Secret named python-project-secrets.
 
 $EnvFile    = ".dev.env"
 $SecretName = "python-project-secrets"
