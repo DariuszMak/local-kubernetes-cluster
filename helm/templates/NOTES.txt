@@ -1,0 +1,14 @@
+Release {{ .Release.Name }} deployed successfully.
+
+  App URL (k3d default): http://localhost:8082
+  Image:                 {{ .Values.image.repository }}:{{ .Values.image.tag }}
+  Replicas:              {{ .Values.replicaCount }}
+
+To upgrade after a code change:
+  .\scripts\k3d-redeploy.ps1
+
+To roll back one release:
+  helm rollback {{ .Release.Name }}
+
+To view release history:
+  helm history {{ .Release.Name }}
