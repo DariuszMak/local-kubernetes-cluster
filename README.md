@@ -55,3 +55,15 @@ pytest tests/ --cov=src -vv ;
 
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
 ```
+
+
+```
+# First time (creates cluster, builds image, deploys everything)
+.\scripts\k3d-up.ps1
+
+# Iterative dev — just rebuilt and redeploy
+.\scripts\k3d-redeploy.ps1
+
+# Done for the day
+.\scripts\k3d-down.ps1
+```
