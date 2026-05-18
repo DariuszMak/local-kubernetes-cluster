@@ -62,8 +62,11 @@ pytest tests/ --cov=src -vv ;
 ##### RUN APPLICATION LOCALLY
 
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
+Start-Process "http://localhost:8001" ; 
 
 .\scripts\k3d-up.ps1 ; 
+Start-Process "http://localhost:8082" ; 
+
 # .\scripts\k3d-redeploy.ps1 ; 
 # .\scripts\k3d-down.ps1 ; 
 ```
