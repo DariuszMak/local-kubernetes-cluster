@@ -15,6 +15,14 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 deactivate ; 
 clear ; 
 
+docker system df ; 
+docker compose down -v --remove-orphans ; 
+docker stop $(docker ps -a -q) ; 
+docker rm -f $(docker ps -a -q) ; 
+docker system prune --volumes -a -f ; 
+docker volume rm -f $(docker volume ls -q) ; 
+docker system df ; 
+
 # $ports = 8000, 8001
 # 
 # foreach ($port in $ports) {
@@ -54,16 +62,8 @@ pytest tests/ --cov=src -vv ;
 ##### RUN APPLICATION LOCALLY
 
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
-```
 
-
-```
-# First time (creates cluster, builds image, deploys everything)
 .\scripts\k3d-up.ps1
-
-# Iterative dev — just rebuilt and redeploy
-.\scripts\k3d-redeploy.ps1
-
-# Done for the day
-.\scripts\k3d-down.ps1
+# .\scripts\k3d-redeploy.ps1
+# .\scripts\k3d-down.ps1
 ```
