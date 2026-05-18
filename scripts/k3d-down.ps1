@@ -10,4 +10,4 @@ $ClusterName = "python-project"
 Write-Host "→ Deleting k3d cluster '$ClusterName'..." -ForegroundColor Yellow
 k3d cluster delete $ClusterName
 
-Write-Host "✅ Cluster deleted." -ForegroundColor Green
+Write-Host "Cluster deleted." -ForegroundColor Green

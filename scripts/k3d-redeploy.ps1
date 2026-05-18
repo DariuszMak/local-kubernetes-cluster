@@ -19,4 +19,4 @@ Write-Host "→ Restarting deployment..." -ForegroundColor Cyan
 kubectl rollout restart deployment/python-project
 kubectl rollout status deployment/python-project --timeout=60s
 
-Write-Host "✅ Redeployed. http://localhost:8082" -ForegroundColor Green
+Write-Host "Redeployed. http://localhost:8082" -ForegroundColor Green
