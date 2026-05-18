@@ -65,7 +65,18 @@ Start-Process uv -ArgumentList "run", "python", "src\main.py" ;
 Start-Process "http://localhost:8001" ; 
 
 .\scripts\k3d-up.ps1 ; 
+
 Start-Process "http://localhost:8082" ; 
+
+kubectl get deployments -A --no-headers `
+| ForEach-Object {
+    $parts = $_ -split '\s+'
+    $ns = $parts[0]
+    $name = $parts[1]
+
+    Write-Host "`n=== $ns / $name ==="
+    kubectl tree deployment $name -n $ns
+}
 
 # .\scripts\k3d-redeploy.ps1 ; 
 # .\scripts\k3d-down.ps1 ; 
