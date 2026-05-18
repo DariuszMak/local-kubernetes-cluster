@@ -1,7 +1,5 @@
 #!/usr/bin/env pwsh
 # scripts/k3d-up.ps1
-# Spins up k3d cluster, builds & pushes the image, applies all k8s manifests.
-# Run from the project root.
 
 $ErrorActionPreference = "Stop"
 
@@ -26,12 +24,25 @@ if (-not $clusterExists) {
     $ErrorActionPreference = "Stop"
 }
 
-# 2. Merge kubeconfig explicitly (don't rely on k3d auto-update)
+# 2. Merge kubeconfig and switch context
 Write-Host "-> Merging kubeconfig for k3d-$ClusterName ..." -ForegroundColor Cyan
 k3d kubeconfig merge $ClusterName --kubeconfig-merge-default
 kubectl config use-context "k3d-$ClusterName"
 
-# 3. Wait until the API server is reachable
+# 3. Fix server address: replace host.docker.internal with 127.0.0.1
+#    (host.docker.internal does not resolve correctly on all Windows/WSL2 setups)
+Write-Host "-> Ensuring API server address is 127.0.0.1 ..." -ForegroundColor Cyan
+$ErrorActionPreference = "Continue"
+$currentServer = kubectl config view --minify -o jsonpath="{.clusters[0].cluster.server}" 2>$null
+$ErrorActionPreference = "Stop"
+if ($currentServer -match "host\.docker\.internal:(\d+)") {
+    $port = $Matches[1]
+    $newServer = "https://127.0.0.1:$port"
+    Write-Host "   Rewriting $currentServer -> $newServer" -ForegroundColor DarkGray
+    kubectl config set-cluster "k3d-$ClusterName" --server=$newServer
+}
+
+# 4. Wait until the API server is reachable
 Write-Host "-> Waiting for API server to be ready (this can take ~30s)..." -ForegroundColor Cyan
 $retries = 0
 $apiReady = $false
@@ -55,15 +66,15 @@ while (-not $apiReady) {
 }
 Write-Host "v API server is ready." -ForegroundColor Green
 
-# 4. Build Docker image
+# 5. Build Docker image
 Write-Host "-> Building Docker image: $ImageName ..." -ForegroundColor Cyan
 docker build -t $ImageName .
 
-# 5. Push image to local registry
+# 6. Push image to local registry
 Write-Host "-> Pushing image to local registry..." -ForegroundColor Cyan
 docker push $ImageName
 
-# 6. Install nginx ingress controller (if not present)
+# 7. Install nginx ingress controller (if not present)
 $ErrorActionPreference = "Continue"
 $existing = kubectl get ns ingress-nginx --ignore-not-found 2>$null
 $ErrorActionPreference = "Stop"
@@ -76,17 +87,17 @@ if (-not $existing) {
     Write-Host "v ingress-nginx already installed." -ForegroundColor Green
 }
 
-# 7. Apply secrets (from .dev.env)
+# 8. Apply secrets (from .dev.env)
 Write-Host "-> Applying secrets from .dev.env..." -ForegroundColor Cyan
 & "$PSScriptRoot\k8s-apply-secrets.ps1"
 
-# 8. Apply k8s manifests
+# 9. Apply k8s manifests
 Write-Host "-> Applying Kubernetes manifests..." -ForegroundColor Cyan
 kubectl apply -f "$K8sManifests/deployment.yaml"
 kubectl apply -f "$K8sManifests/service.yaml"
 kubectl apply -f "$K8sManifests/ingress.yaml"
 
-# 9. Wait for rollout
+# 10. Wait for rollout
 Write-Host "-> Waiting for deployment rollout..." -ForegroundColor Cyan
 kubectl rollout status deployment/python-project --timeout=60s
 
