@@ -10,7 +10,7 @@ SECRET_KEYS  = ["EXAMPLE_VARIABLE_NAME"]
 # ── Read .dev.env for secrets ─────────────────────────────────────────────────
 def load_dev_env(path=".dev.env"):
     env = {}
-    for line in read_file(path).splitlines():
+    for line in str(read_file(path)).splitlines():
         line = line.strip()
         if not line or line.startswith("#") or "=" not in line:
             continue
