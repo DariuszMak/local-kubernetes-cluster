@@ -9,7 +9,12 @@ $K3dConfig    = "k8s/k3d-config.yaml"
 $HelmChart    = "helm"
 $ReleaseName  = "python-project"
 
-# ── Cluster ──────────────────────────────────────────────────────────────────
+# Keys that live under .Values.secrets in values.yaml.
+# Only these are forwarded as --set secrets.KEY=VALUE.
+# Everything else in .dev.env (HOST, PORT, PYTHONPATH...) stays out.
+$SecretKeys = @("EXAMPLE_VARIABLE_NAME")
+
+# ── Cluster ───────────────────────────────────────────────────────────────────
 $ErrorActionPreference = "Continue"
 $clusterExists = k3d cluster list --no-headers 2>$null | Select-String $ClusterName
 $ErrorActionPreference = "Stop"
@@ -77,21 +82,26 @@ if (-not $existing) {
     Write-Host "v ingress-nginx already installed." -ForegroundColor Green
 }
 
-# ── Helm deploy ───────────────────────────────────────────────────────────────
-Write-Host "-> Deploying via Helm..." -ForegroundColor Cyan
-
-# Pull secret values from .dev.env so they are never stored in values.yaml
-$secretArgs = @()
+# ── Read secret values from .dev.env ─────────────────────────────────────────
+$envMap = @{}
 foreach ($line in Get-Content ".dev.env") {
     $line = $line.Trim()
     if ($line -eq "" -or $line.StartsWith("#") -or $line -notmatch "=") { continue }
-    $parts  = $line -split "=", 2
-    $key    = $parts[0].Trim()
-    $value  = $parts[1].Trim()
-    # Only forward keys that are declared under .secrets in values.yaml
-    $secretArgs += "--set=secrets.$key=$value"
+    $parts       = $line -split "=", 2
+    $envMap[$parts[0].Trim()] = $parts[1].Trim()
 }
 
+$secretArgs = @()
+foreach ($key in $SecretKeys) {
+    if ($envMap.ContainsKey($key)) {
+        $secretArgs += "--set=secrets.$key=$($envMap[$key])"
+    } else {
+        Write-Warning "Secret key '$key' not found in .dev.env"
+    }
+}
+
+# ── Helm deploy ───────────────────────────────────────────────────────────────
+Write-Host "-> Deploying via Helm..." -ForegroundColor Cyan
 helm upgrade --install $ReleaseName $HelmChart `
     --wait --timeout 60s `
     @secretArgs

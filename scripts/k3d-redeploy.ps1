@@ -8,24 +8,34 @@ $ImageName   = "$Registry/python-project:local"
 $HelmChart   = "helm"
 $ReleaseName = "python-project"
 
+# Must match the keys declared under .secrets in values.yaml
+$SecretKeys  = @("EXAMPLE_VARIABLE_NAME")
+
 Write-Host "-> Rebuilding image..." -ForegroundColor Cyan
 docker build -t $ImageName .
 
 Write-Host "-> Pushing to local registry..." -ForegroundColor Cyan
 docker push $ImageName
 
-Write-Host "-> Upgrading Helm release..." -ForegroundColor Cyan
-
-$secretArgs = @()
+# Read secret values from .dev.env
+$envMap = @{}
 foreach ($line in Get-Content ".dev.env") {
     $line = $line.Trim()
     if ($line -eq "" -or $line.StartsWith("#") -or $line -notmatch "=") { continue }
-    $parts = $line -split "=", 2
-    $key   = $parts[0].Trim()
-    $value = $parts[1].Trim()
-    $secretArgs += "--set=secrets.$key=$value"
+    $parts           = $line -split "=", 2
+    $envMap[$parts[0].Trim()] = $parts[1].Trim()
 }
 
+$secretArgs = @()
+foreach ($key in $SecretKeys) {
+    if ($envMap.ContainsKey($key)) {
+        $secretArgs += "--set=secrets.$key=$($envMap[$key])"
+    } else {
+        Write-Warning "Secret key '$key' not found in .dev.env"
+    }
+}
+
+Write-Host "-> Upgrading Helm release..." -ForegroundColor Cyan
 helm upgrade --install $ReleaseName $HelmChart `
     --wait --timeout 60s `
     @secretArgs

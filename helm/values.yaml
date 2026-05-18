@@ -22,11 +22,13 @@ resources:
     memory: "256Mi"
     cpu: "500m"
 
+# Plain env vars — not sensitive, committed here is fine
 env:
   HOST: "0.0.0.0"
   PORT: "8000"
 
-# Secret values — override via --set or a values override file.
-# Do NOT commit real secrets here.
+# Sensitive values only — keys must match what the script reads from .dev.env.
+# Do NOT add HOST or PORT here; they are already in env above.
+# Do NOT commit real values — the scripts inject these at deploy time via --set.
 secrets:
-  EXAMPLE_VARIABLE_NAME: "Hi it is me!"
+  EXAMPLE_VARIABLE_NAME: ""
