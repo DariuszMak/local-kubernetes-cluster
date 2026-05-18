@@ -25,12 +25,24 @@ spec:
             - name: {{ $key }}
               value: {{ $val | quote }}
             {{- end }}
-            {{- range $key := (keys .Values.secrets) }}
+            {{- range $key, $val := .Values.secrets }}
             - name: {{ $key }}
               valueFrom:
                 secretKeyRef:
                   name: {{ $.Release.Name }}-secrets
                   key: {{ $key }}
             {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.service.targetPort }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.service.targetPort }}
+            initialDelaySeconds: 3
+            periodSeconds: 5
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
