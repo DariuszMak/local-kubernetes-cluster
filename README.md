@@ -80,4 +80,8 @@ kubectl get deployments -A --no-headers `
 
 # .\scripts\k3d-redeploy.ps1 ; 
 # .\scripts\k3d-down.ps1 ; 
+
+.\scripts\tilt-up.ps1
+# .\scripts\tilt-down.ps1
+Start-Process "http://localhost:10350" ; 
 ```

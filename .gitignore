@@ -152,3 +152,7 @@ GitHub.sublime-settings
 !.vscode/launch.json
 !.vscode/extensions.json
 .history
+
+# Tilt
+.tilt-dev
+tilt_modules/
