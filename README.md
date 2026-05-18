@@ -63,7 +63,7 @@ pytest tests/ --cov=src -vv ;
 
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
 
-.\scripts\k3d-up.ps1
-# .\scripts\k3d-redeploy.ps1
-# .\scripts\k3d-down.ps1
+.\scripts\k3d-up.ps1 ; 
+# .\scripts\k3d-redeploy.ps1 ; 
+# .\scripts\k3d-down.ps1 ; 
 ```
