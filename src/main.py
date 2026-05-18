@@ -187,7 +187,7 @@ def load_dev_env(env_path: str = ".dev.env") -> dict[str, str]:
 
 
 class Handler(BaseHTTPRequestHandler):
-    def do_GET(self) -> None:
+    def do_GET(self) -> None:  # noqa: N802
         body = HTML_PAGE.encode("utf-8")
         self.send_response(200)
         self.send_header("Content-Type", "text/html; charset=utf-8")
@@ -195,7 +195,7 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
-    def log_message(self, fmt: str, *args: object) -> None:
+    def log_message(self, fmt: str, *args: object) -> None:  # noqa: ANN002
         logger.info(fmt, *args)
 
 
@@ -205,5 +205,6 @@ if __name__ == "__main__":
     host = os.getenv("HOST", "0.0.0.0")  # noqa: S104
     port = int(os.getenv("PORT", "8000"))
     server = HTTPServer((host, port), Handler)
-    logger.info("Serving on http://%s:%d", host, port)
+    # Always print a localhost URL regardless of bind address so it's clickable locally
+    logger.info("Serving on http://%s:%d  →  open http://localhost:%d", host, port, port)
     server.serve_forever()
