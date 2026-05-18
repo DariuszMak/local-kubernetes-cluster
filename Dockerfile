@@ -10,8 +10,10 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 COPY pyproject.toml ./
 COPY uv.lock* ./
 
-# Install only production dependencies (no dev group)
-RUN uv sync --no-dev --frozen
+# Install only production dependencies.
+# If uv.lock exists (committed or generated), use --frozen for reproducibility.
+# Falls back to a plain sync if no lockfile is present.
+RUN if [ -f uv.lock ]; then uv sync --no-dev --frozen; else uv sync --no-dev; fi
 
 # Copy application source
 COPY src/ ./src/
