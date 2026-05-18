@@ -26,18 +26,19 @@ if (-not $clusterExists) {
 Write-Host "-> Switching kubectl context to k3d-$ClusterName ..." -ForegroundColor Cyan
 kubectl config use-context "k3d-$ClusterName"
 
-# 3. Wait until the API server is actually reachable
+# 3. Wait until the API server is actually reachable (suppress all output)
 Write-Host "-> Waiting for API server to be ready..." -ForegroundColor Cyan
 $retries = 0
 do {
-    Start-Sleep -Seconds 2
-    $ready = kubectl get nodes --request-timeout=5s 2>$null
+    Start-Sleep -Seconds 3
     $retries++
-    if ($retries -gt 30) {
-        Write-Error "Timed out waiting for API server."
+    if ($retries -gt 20) {
+        Write-Error "Timed out waiting for API server after 60s."
         exit 1
     }
-} until ($ready)
+    # Redirect both stdout and stderr to null; check only exit code
+    kubectl get nodes --request-timeout=5s 2>&1 | Out-Null
+} until ($LASTEXITCODE -eq 0)
 Write-Host "v API server is ready." -ForegroundColor Green
 
 # 4. Build Docker image
