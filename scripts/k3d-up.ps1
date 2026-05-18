@@ -26,25 +26,32 @@ if (-not $clusterExists) {
     $ErrorActionPreference = "Stop"
 }
 
-# 2. Switch kubectl context
-Write-Host "-> Switching kubectl context to k3d-$ClusterName ..." -ForegroundColor Cyan
+# 2. Merge kubeconfig explicitly (don't rely on k3d auto-update)
+Write-Host "-> Merging kubeconfig for k3d-$ClusterName ..." -ForegroundColor Cyan
+k3d kubeconfig merge $ClusterName --kubeconfig-merge-default
 kubectl config use-context "k3d-$ClusterName"
 
 # 3. Wait until the API server is reachable
-Write-Host "-> Waiting for API server to be ready..." -ForegroundColor Cyan
+Write-Host "-> Waiting for API server to be ready (this can take ~30s)..." -ForegroundColor Cyan
 $retries = 0
 $apiReady = $false
 while (-not $apiReady) {
-    Start-Sleep -Seconds 3
     $retries++
-    if ($retries -gt 20) {
-        Write-Error "Timed out waiting for API server after 60s."
+    if ($retries -gt 30) {
+        Write-Error "Timed out waiting for API server after 90s."
         exit 1
     }
     $ErrorActionPreference = "Continue"
-    $null = kubectl get nodes --request-timeout=5s 2>&1
-    if ($LASTEXITCODE -eq 0) { $apiReady = $true }
+    $out = kubectl cluster-info 2>&1
+    $exitCode = $LASTEXITCODE
     $ErrorActionPreference = "Stop"
+
+    if ($exitCode -eq 0) {
+        $apiReady = $true
+    } else {
+        Write-Host "   [$retries/30] Not ready yet, retrying in 3s..." -ForegroundColor DarkGray
+        Start-Sleep -Seconds 3
+    }
 }
 Write-Host "v API server is ready." -ForegroundColor Green
 
