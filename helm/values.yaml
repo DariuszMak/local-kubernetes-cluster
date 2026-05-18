@@ -1,0 +1,32 @@
+replicaCount: 1
+
+image:
+  repository: registry.localhost:5001/python-project
+  tag: local
+  pullPolicy: Always
+
+service:
+  port: 80
+  targetPort: 8000
+
+ingress:
+  enabled: true
+  className: nginx
+  path: /
+
+resources:
+  requests:
+    memory: "64Mi"
+    cpu: "100m"
+  limits:
+    memory: "256Mi"
+    cpu: "500m"
+
+env:
+  HOST: "0.0.0.0"
+  PORT: "8000"
+
+# Secret values — override via --set or a values override file.
+# Do NOT commit real secrets here.
+secrets:
+  EXAMPLE_VARIABLE_NAME: "Hi it is me!"

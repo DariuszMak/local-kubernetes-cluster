@@ -6,8 +6,10 @@ $ClusterName  = "python-project"
 $Registry     = "localhost:5001"
 $ImageName    = "$Registry/python-project:local"
 $K3dConfig    = "k8s/k3d-config.yaml"
-$K8sManifests = "k8s"
+$HelmChart    = "helm"
+$ReleaseName  = "python-project"
 
+# ── Cluster ──────────────────────────────────────────────────────────────────
 $ErrorActionPreference = "Continue"
 $clusterExists = k3d cluster list --no-headers 2>$null | Select-String $ClusterName
 $ErrorActionPreference = "Stop"
@@ -37,58 +39,65 @@ if ($currentServer -match "host\.docker\.internal:(\d+)") {
     kubectl config set-cluster "k3d-$ClusterName" --server=$newServer
 }
 
-Write-Host "-> Waiting for API server to be ready (this can take ~30s)..." -ForegroundColor Cyan
+Write-Host "-> Waiting for API server to be ready..." -ForegroundColor Cyan
 $retries = 0
 $apiReady = $false
 while (-not $apiReady) {
     $retries++
-    if ($retries -gt 30) {
-        Write-Error "Timed out waiting for API server after 90s."
-        exit 1
-    }
+    if ($retries -gt 30) { Write-Error "Timed out waiting for API server."; exit 1 }
     $ErrorActionPreference = "Continue"
     $out = kubectl cluster-info 2>&1
     $exitCode = $LASTEXITCODE
     $ErrorActionPreference = "Stop"
-
     if ($exitCode -eq 0) {
         $apiReady = $true
     } else {
-        Write-Host "   [$retries/30] Not ready yet, retrying in 3s..." -ForegroundColor DarkGray
+        Write-Host "   [$retries/30] Not ready, retrying in 3s..." -ForegroundColor DarkGray
         Start-Sleep -Seconds 3
     }
 }
 Write-Host "v API server is ready." -ForegroundColor Green
 
+# ── Image ─────────────────────────────────────────────────────────────────────
 Write-Host "-> Building Docker image: $ImageName ..." -ForegroundColor Cyan
 docker build -t $ImageName .
 
 Write-Host "-> Pushing image to local registry..." -ForegroundColor Cyan
 docker push $ImageName
 
+# ── ingress-nginx ─────────────────────────────────────────────────────────────
 $ErrorActionPreference = "Continue"
 $existing = kubectl get ns ingress-nginx --ignore-not-found 2>$null
 $ErrorActionPreference = "Stop"
 if (-not $existing) {
     Write-Host "-> Installing ingress-nginx..." -ForegroundColor Cyan
     kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.1/deploy/static/provider/cloud/deploy.yaml
-    Write-Host "   Waiting for ingress-nginx controller pod to be ready..."
     kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s
 } else {
     Write-Host "v ingress-nginx already installed." -ForegroundColor Green
 }
 
-Write-Host "-> Applying secrets from .dev.env..." -ForegroundColor Cyan
-& "$PSScriptRoot\k8s-apply-secrets.ps1"
+# ── Helm deploy ───────────────────────────────────────────────────────────────
+Write-Host "-> Deploying via Helm..." -ForegroundColor Cyan
 
-Write-Host "-> Applying Kubernetes manifests..." -ForegroundColor Cyan
-kubectl apply -f "$K8sManifests/deployment.yaml"
-kubectl apply -f "$K8sManifests/service.yaml"
-kubectl apply -f "$K8sManifests/ingress.yaml"
+# Pull secret values from .dev.env so they are never stored in values.yaml
+$secretArgs = @()
+foreach ($line in Get-Content ".dev.env") {
+    $line = $line.Trim()
+    if ($line -eq "" -or $line.StartsWith("#") -or $line -notmatch "=") { continue }
+    $parts  = $line -split "=", 2
+    $key    = $parts[0].Trim()
+    $value  = $parts[1].Trim()
+    # Only forward keys that are declared under .secrets in values.yaml
+    $secretArgs += "--set=secrets.$key=$value"
+}
 
-Write-Host "-> Waiting for deployment rollout..." -ForegroundColor Cyan
-kubectl rollout status deployment/python-project --timeout=60s
+helm upgrade --install $ReleaseName $HelmChart `
+    --wait --timeout 60s `
+    @secretArgs
 
 Write-Host ""
 Write-Host "Done! App available at: http://localhost:8082" -ForegroundColor Green
-Write-Host "   kubectl context: k3d-$ClusterName"
+Write-Host "   kubectl context : k3d-$ClusterName"
+Write-Host "   helm release    : $ReleaseName"
+Write-Host "   helm history    : helm history $ReleaseName"
