@@ -187,7 +187,7 @@ def load_dev_env(env_path: str = ".dev.env") -> dict[str, str]:
 
 
 class Handler(BaseHTTPRequestHandler):
-    def do_GET(self) -> None:  # noqa: N802
+    def do_GET(self) -> None:
         body = HTML_PAGE.encode("utf-8")
         self.send_response(200)
         self.send_header("Content-Type", "text/html; charset=utf-8")
@@ -195,7 +195,7 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
-    def log_message(self, fmt: str, *args: object) -> None:  # noqa: ANN002
+    def log_message(self, fmt: str, *args: object) -> None:
         logger.info(fmt, *args)
 
 
