@@ -1,5 +1,4 @@
 #!/usr/bin/env pwsh
-# scripts/k3d-up.ps1
 
 $ErrorActionPreference = "Stop"
 

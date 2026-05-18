@@ -1,6 +1,4 @@
 #!/usr/bin/env pwsh
-# scripts/k3d-down.ps1
-# Stops and deletes the k3d cluster (does NOT remove the local registry image cache).
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"

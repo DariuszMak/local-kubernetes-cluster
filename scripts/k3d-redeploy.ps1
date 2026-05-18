@@ -1,7 +1,4 @@
 #!/usr/bin/env pwsh
-# scripts/k3d-redeploy.ps1
-# Rebuild image, push to local registry, and force a rollout restart.
-# Use this during iterative development instead of k3d-up.ps1.
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
