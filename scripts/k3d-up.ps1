@@ -12,20 +12,7 @@ $ImageName    = "$Registry/python-project:local"
 $K3dConfig    = "k8s/k3d-config.yaml"
 $K8sManifests = "k8s"
 
-# 1. Install nginx ingress controller (if not present)
-function Install-NginxIngress {
-    $existing = kubectl get ns ingress-nginx --ignore-not-found 2>$null
-    if (-not $existing) {
-        Write-Host "-> Installing ingress-nginx..." -ForegroundColor Cyan
-        kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.1/deploy/static/provider/cloud/deploy.yaml
-        Write-Host "   Waiting for ingress-nginx to be ready..."
-        kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s
-    } else {
-        Write-Host "v ingress-nginx already installed." -ForegroundColor Green
-    }
-}
-
-# 2. Create cluster
+# 1. Create or start cluster
 $clusterExists = k3d cluster list --no-headers 2>$null | Select-String $ClusterName
 if (-not $clusterExists) {
     Write-Host "-> Creating k3d cluster from $K3dConfig ..." -ForegroundColor Cyan
@@ -35,28 +22,54 @@ if (-not $clusterExists) {
     k3d cluster start $ClusterName 2>$null
 }
 
-# 3. Build Docker image
+# 2. Switch kubectl context immediately after cluster is ready
+Write-Host "-> Switching kubectl context to k3d-$ClusterName ..." -ForegroundColor Cyan
+kubectl config use-context "k3d-$ClusterName"
+
+# 3. Wait until the API server is actually reachable
+Write-Host "-> Waiting for API server to be ready..." -ForegroundColor Cyan
+$retries = 0
+do {
+    Start-Sleep -Seconds 2
+    $ready = kubectl get nodes --request-timeout=5s 2>$null
+    $retries++
+    if ($retries -gt 30) {
+        Write-Error "Timed out waiting for API server."
+        exit 1
+    }
+} until ($ready)
+Write-Host "v API server is ready." -ForegroundColor Green
+
+# 4. Build Docker image
 Write-Host "-> Building Docker image: $ImageName ..." -ForegroundColor Cyan
 docker build -t $ImageName .
 
-# 4. Push image to local registry
+# 5. Push image to local registry
 Write-Host "-> Pushing image to local registry..." -ForegroundColor Cyan
 docker push $ImageName
 
-# 5. Install nginx ingress
-Install-NginxIngress
+# 6. Install nginx ingress controller (if not present)
+$existing = kubectl get ns ingress-nginx --ignore-not-found 2>$null
+if (-not $existing) {
+    Write-Host "-> Installing ingress-nginx..." -ForegroundColor Cyan
+    kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.1/deploy/static/provider/cloud/deploy.yaml
+    Write-Host "   Waiting for ingress-nginx controller pod to be ready..."
+    kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s
+} else {
+    Write-Host "v ingress-nginx already installed." -ForegroundColor Green
+}
 
-# 6. Apply secrets (from .dev.env)
+# 7. Apply secrets (from .dev.env)
 Write-Host "-> Applying secrets from .dev.env..." -ForegroundColor Cyan
 & "$PSScriptRoot\k8s-apply-secrets.ps1"
 
-# 7. Apply k8s manifests
+# 8. Apply k8s manifests
 Write-Host "-> Applying Kubernetes manifests..." -ForegroundColor Cyan
 kubectl apply -f "$K8sManifests/deployment.yaml"
 kubectl apply -f "$K8sManifests/service.yaml"
 kubectl apply -f "$K8sManifests/ingress.yaml"
 
-# 8. Wait for rollout
+# 9. Wait for rollout
 Write-Host "-> Waiting for deployment rollout..." -ForegroundColor Cyan
 kubectl rollout status deployment/python-project --timeout=60s
 
