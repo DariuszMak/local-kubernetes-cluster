@@ -41,4 +41,4 @@ helm upgrade --install $ReleaseName $HelmChart `
     @secretArgs
 
 Write-Host "Redeployed. http://localhost:8082" -ForegroundColor Green
-Write-Host "   helm history $ReleaseName  — to see all releases"
+Write-Host "   helm history $ReleaseName  -- to see all releases"
