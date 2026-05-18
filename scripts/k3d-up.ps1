@@ -102,5 +102,5 @@ Write-Host "-> Waiting for deployment rollout..." -ForegroundColor Cyan
 kubectl rollout status deployment/python-project --timeout=60s
 
 Write-Host ""
-Write-Host "Done! App available at: http://localhost:8080" -ForegroundColor Green
+Write-Host "Done! App available at: http://localhost:8082" -ForegroundColor Green
 Write-Host "   kubectl context: k3d-$ClusterName"
