@@ -31,7 +31,5 @@ options:
     updateDefaultKubeconfig: true
     switchCurrentContext: true
 
-# Force kubeconfig to use 127.0.0.1 instead of host.docker.internal
-# which fails to resolve on some Windows / Docker Desktop / WSL2 setups.
 kubeAPI:
   host: "127.0.0.1"
