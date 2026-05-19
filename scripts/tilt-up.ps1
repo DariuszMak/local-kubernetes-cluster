@@ -1,9 +1,4 @@
 #!/usr/bin/env pwsh
-<#
-.SYNOPSIS
-    Starts the k3d cluster (if needed) then launches Tilt.
-    Tilt itself watches files and handles image build + Helm deploy.
-#>
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
