@@ -1,4 +1,4 @@
-# Python project
+# Local kubernetes cluster
 
 ## Requirements
 
