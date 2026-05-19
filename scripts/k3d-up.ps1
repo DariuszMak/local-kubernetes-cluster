@@ -9,12 +9,8 @@ $K3dConfig    = "k8s/k3d-config.yaml"
 $HelmChart    = "helm"
 $ReleaseName  = "python-project"
 
-# Keys that live under .Values.secrets in values.yaml.
-# Only these are forwarded as --set secrets.KEY=VALUE.
-# Everything else in .dev.env (HOST, PORT, PYTHONPATH...) stays out.
 $SecretKeys = @("EXAMPLE_VARIABLE_NAME")
 
-# ── Cluster ───────────────────────────────────────────────────────────────────
 $ErrorActionPreference = "Continue"
 $clusterExists = k3d cluster list --no-headers 2>$null | Select-String $ClusterName
 $ErrorActionPreference = "Stop"
@@ -63,14 +59,12 @@ while (-not $apiReady) {
 }
 Write-Host "v API server is ready." -ForegroundColor Green
 
-# ── Image ─────────────────────────────────────────────────────────────────────
 Write-Host "-> Building Docker image: $ImageName ..." -ForegroundColor Cyan
 docker build -t $ImageName .
 
 Write-Host "-> Pushing image to local registry..." -ForegroundColor Cyan
 docker push $ImageName
 
-# ── ingress-nginx ─────────────────────────────────────────────────────────────
 $ErrorActionPreference = "Continue"
 $existing = kubectl get ns ingress-nginx --ignore-not-found 2>$null
 $ErrorActionPreference = "Stop"
@@ -82,7 +76,6 @@ if (-not $existing) {
     Write-Host "v ingress-nginx already installed." -ForegroundColor Green
 }
 
-# ── Read secret values from .dev.env ─────────────────────────────────────────
 $envMap = @{}
 foreach ($line in Get-Content ".dev.env") {
     $line = $line.Trim()
@@ -100,7 +93,6 @@ foreach ($key in $SecretKeys) {
     }
 }
 
-# ── Helm deploy ───────────────────────────────────────────────────────────────
 Write-Host "-> Deploying via Helm..." -ForegroundColor Cyan
 helm upgrade --install $ReleaseName $HelmChart `
     --wait --timeout 60s `

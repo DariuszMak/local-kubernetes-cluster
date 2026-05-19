@@ -8,7 +8,6 @@ $ImageName   = "$Registry/python-project:local"
 $HelmChart   = "helm"
 $ReleaseName = "python-project"
 
-# Must match the keys declared under .secrets in values.yaml
 $SecretKeys  = @("EXAMPLE_VARIABLE_NAME")
 
 Write-Host "-> Rebuilding image..." -ForegroundColor Cyan
@@ -17,7 +16,6 @@ docker build -t $ImageName .
 Write-Host "-> Pushing to local registry..." -ForegroundColor Cyan
 docker push $ImageName
 
-# Read secret values from .dev.env
 $envMap = @{}
 foreach ($line in Get-Content ".dev.env") {
     $line = $line.Trim()

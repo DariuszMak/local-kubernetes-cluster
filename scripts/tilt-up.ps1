@@ -11,7 +11,6 @@ $ErrorActionPreference = "Stop"
 $ClusterName = "python-project"
 $K3dConfig   = "k8s/k3d-config.yaml"
 
-# ── Ensure cluster is up ──────────────────────────────────────────────────────
 $ErrorActionPreference = "Continue"
 $clusterExists = k3d cluster list --no-headers 2>$null | Select-String $ClusterName
 $ErrorActionPreference = "Stop"
@@ -30,7 +29,6 @@ Write-Host "-> Merging kubeconfig..." -ForegroundColor Cyan
 k3d kubeconfig merge $ClusterName --kubeconfig-merge-default
 kubectl config use-context "k3d-$ClusterName"
 
-# Fix host.docker.internal -> 127.0.0.1 (common on Windows/WSL2)
 $ErrorActionPreference = "Continue"
 $currentServer = kubectl config view --minify -o jsonpath="{.clusters[0].cluster.server}" 2>$null
 $ErrorActionPreference = "Stop"
@@ -41,7 +39,6 @@ if ($currentServer -match "host\.docker\.internal:(\d+)") {
     kubectl config set-cluster "k3d-$ClusterName" --server=$newServer
 }
 
-# ── Ensure ingress-nginx is present ──────────────────────────────────────────
 $ErrorActionPreference = "Continue"
 $ingressNs = kubectl get ns ingress-nginx --ignore-not-found 2>$null
 $ErrorActionPreference = "Stop"
@@ -56,7 +53,6 @@ if (-not $ingressNs) {
     Write-Host "v ingress-nginx already present." -ForegroundColor Green
 }
 
-# ── Launch Tilt ───────────────────────────────────────────────────────────────
 Write-Host ""
 Write-Host "-> Starting Tilt..." -ForegroundColor Cyan
 Write-Host "   App (port-forward) : http://localhost:8001"
