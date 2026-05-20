@@ -1,17 +1,11 @@
-.cache.*
-moc_*.py
-files_rc.py
-
 __pycache__
 *.py[cod]
 *$py.class
 
-
 # PyInstaller
 build
 dist
-windows_distribution
-linux_distribution
+releases
 
 # Distribution / packaging
 .Python build
@@ -30,6 +24,7 @@ share/python-wheels
 .installed.cfg
 *.egg
 *.manifest
+*.spec
 *.bak
 
 # mypy
@@ -53,30 +48,16 @@ htmlcov
 .coverage
 .coverage.*
 .cache
+.cache.*
 .pytest_cache
 nosetests.xml
 coverage.xml
 *.cover
-*,cover
-*.py,cover
 .hypothesis
 
 # Translations
 *.mo
 *.pot
-
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-
-# Flask stuff:
-instance
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
 
 # PyBuilder
 .pybuilder
@@ -112,7 +93,7 @@ uv.lock
 # Task
 .task
 
-# If you are using PyCharm #
+# PyCharm
 .idea
 .idea/**/workspace.xml
 .idea/**/tasks.xml
@@ -145,7 +126,7 @@ Control.ca-bundle
 Control.system-ca-bundle
 GitHub.sublime-settings
 
-# Visual Studio Code #
+# Visual Studio Code
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -153,6 +134,8 @@ GitHub.sublime-settings
 !.vscode/extensions.json
 .history
 
-# Tilt
+# Ruff
+ruff-report.json
+
 .tilt-dev
 tilt_modules/
