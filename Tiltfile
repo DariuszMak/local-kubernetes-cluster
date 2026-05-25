@@ -42,6 +42,6 @@ k8s_yaml(
 
 k8s_resource(
     RELEASE_NAME,
-    port_forwards=["8001:8000"],
+    port_forwards=["8003:8000"],
     labels=["app"],
 )
