@@ -139,3 +139,8 @@ ruff-report.json
 
 .tilt-dev
 tilt_modules/
+
+# Kustomize
+k8s/kustomize/overlays/**/.dev.secrets.env
+k8s/kustomize/overlays/**/.staging.secrets.env
+k8s/kustomize/overlays/**/.prod.secrets.env
