@@ -25,3 +25,18 @@ tasks:
     desc: Local dev Windows run
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/run_windows_dev_application.ps1
+  
+  k3d:
+    desc: Load k3d cluster
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/k3d.ps1
+
+  kustomize-dev:
+    desc: Load kustomize dev overlay
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/kustomize.ps1
+
+  tilt:
+    desc: Load Tilt
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/tilt.ps1
