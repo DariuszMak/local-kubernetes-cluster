@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-project
+  labels:
+    app: python-project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-project
+  template:
+    metadata:
+      labels:
+        app: python-project
+    spec:
+      containers:
+        - name: python-project
+          image: registry.localhost:5001/python-project:local
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          env:
+            - name: HOST
+              value: "0.0.0.0"
+            - name: PORT
+              value: "8000"
+            - name: EXAMPLE_VARIABLE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: python-project-secrets
+                  key: EXAMPLE_VARIABLE_NAME
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"

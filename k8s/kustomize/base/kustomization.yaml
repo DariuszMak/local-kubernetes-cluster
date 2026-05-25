@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# The base resources are the raw Helm-rendered manifests committed here.
+# To regenerate them from the chart run:
+#   helm template python-project ../../helm > all.yaml
+# and split or keep as a single multi-doc file.
+resources:
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+  - secret.yaml
+
+# Common labels applied to every object
+commonLabels:
+  app.kubernetes.io/name: python-project
+  app.kubernetes.io/managed-by: kustomize
+
+# Common annotations
+commonAnnotations:
+  app.kubernetes.io/version: "1.0.0"
