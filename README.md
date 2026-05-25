@@ -19,37 +19,4 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 ## Fast native Windows development:
 
 ```commandline
-
-##### K3D
-
-.\scripts\k3d-up.ps1 ; 
-
-Start-Process "http://localhost:8082" ; 
-
-kubectl get deployments -A --no-headers `
-| ForEach-Object {
-    $parts = $_ -split '\s+'
-    $ns = $parts[0]
-    $name = $parts[1]
-
-    Write-Host "`n=== $ns / $name ==="
-    kubectl tree deployment $name -n $ns
-}
-
-# .\scripts\k3d-redeploy.ps1 ; 
-# .\scripts\k3d-down.ps1 ; 
-
-##### KUSTOMIZE
-
-.\scripts\kustomize-apply.ps1 -Overlay dev ; 
-# .\scripts\kustomize-apply.ps1 -Overlay prod -DryRun ; 
-# .\scripts\kustomize-apply.ps1 -Overlay staging ; 
-
-##### TILT
-
-Start-Process "http://localhost:10350" ; 
-Start-Process "http://localhost:8003" ; 
-
-.\scripts\tilt-up.ps1 ; 
-# .\scripts\tilt-down.ps1 ; 
 ```
