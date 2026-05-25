@@ -25,7 +25,7 @@ secretGenerator:
   - name: python-project-secrets
     namespace: staging
     envs:
-      - .staging.secrets.env   # populated by CI pipeline, never committed
+      - .staging.secrets.env
     options:
       disableNameSuffixHash: true
 

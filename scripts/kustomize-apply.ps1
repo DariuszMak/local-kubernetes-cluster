@@ -27,21 +27,18 @@ $OverlayPath = "k8s/kustomize/overlays/$Overlay"
 $SecretsEnv  = "$OverlayPath/.$Overlay.secrets.env"
 $ExampleEnv  = "$OverlayPath/.$Overlay.secrets.env.example"
 
-# ── Ensure secrets file exists (dev only — CI handles staging/prod) ──────────
 if ($Overlay -eq "dev" -and -not (Test-Path $SecretsEnv)) {
     if (Test-Path $ExampleEnv) {
         Write-Host "-> Secrets file not found. Copying example to $SecretsEnv ..." -ForegroundColor Yellow
         Copy-Item $ExampleEnv $SecretsEnv
         Write-Host "   Edit $SecretsEnv with real values if needed." -ForegroundColor DarkGray
     } else {
-        # Fall back to generating from .dev.env
         Write-Host "-> Generating $SecretsEnv from .dev.env ..." -ForegroundColor Yellow
         $lines = Get-Content ".dev.env" | Where-Object { $_ -notmatch "^#" -and $_ -match "=" }
         $lines | Set-Content $SecretsEnv
     }
 }
 
-# ── Ensure namespace exists ───────────────────────────────────────────────────
 $ErrorActionPreference = "Continue"
 $nsExists = kubectl get namespace $Overlay 2>$null
 $ErrorActionPreference = "Stop"
@@ -50,7 +47,6 @@ if (-not $nsExists) {
     kubectl create namespace $Overlay
 }
 
-# ── Apply or diff ─────────────────────────────────────────────────────────────
 if ($DryRun) {
     Write-Host "-> Diff for overlay '$Overlay' (dry-run)..." -ForegroundColor Cyan
     kubectl diff -k $OverlayPath

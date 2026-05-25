@@ -18,7 +18,6 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "1000m"
-          # Conservative probes in prod — don't restart unless truly unhealthy
           livenessProbe:
             initialDelaySeconds: 10
             periodSeconds: 15
@@ -27,7 +26,6 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 10
             failureThreshold: 3
-      # Spread pods across nodes for HA
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
