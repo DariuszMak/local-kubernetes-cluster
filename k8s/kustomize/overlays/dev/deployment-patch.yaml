@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-project
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: python-project
+          env:
+            - name: LOG_LEVEL
+              value: DEBUG
+            - name: PORT
+              value: "8000"
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+          # Faster probe cycle in dev so restarts are felt quickly
+          livenessProbe:
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          readinessProbe:
+            initialDelaySeconds: 2
+            periodSeconds: 3
