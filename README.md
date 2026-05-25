@@ -66,10 +66,12 @@ $env:UV_ENV_FILE = ".dev.env" ;
 
 pytest tests/ --cov=src -vv ; 
 
-##### RUN APPLICATION LOCALLY
+##### LOCAL APP
 
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
 Start-Process "http://localhost:8001" ; 
+
+##### K3D
 
 .\scripts\k3d-up.ps1 ; 
 
@@ -88,9 +90,13 @@ kubectl get deployments -A --no-headers `
 # .\scripts\k3d-redeploy.ps1 ; 
 # .\scripts\k3d-down.ps1 ; 
 
+##### KUSTOMIZE
+
 .\scripts\kustomize-apply.ps1 -Overlay dev ; 
 # .\scripts\kustomize-apply.ps1 -Overlay prod -DryRun ; 
 # .\scripts\kustomize-apply.ps1 -Overlay staging ; 
+
+##### TILT
 
 Start-Process "http://localhost:10350" ; 
 Start-Process "http://localhost:8003" ; 
