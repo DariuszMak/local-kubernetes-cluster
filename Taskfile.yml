@@ -9,3 +9,9 @@ tasks:
     desc: Full project cleanup (docker, git, ports, caches)
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/cleanup.ps1
+
+  dev-env:
+    desc: Setup uv environment (Python, sync, lock)
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/dev_uv_environment.ps1
+      - powershell -ExecutionPolicy Bypass -File .venv/Scripts/Activate.ps1
