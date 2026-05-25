@@ -20,3 +20,8 @@ tasks:
     desc: Static analysis + unit tests
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/static_analysis_and_tests.ps1
+
+  local-dev-windows-run:
+    desc: Local dev Windows run
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/run_windows_dev_application.ps1

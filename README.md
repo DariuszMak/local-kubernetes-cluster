@@ -20,11 +20,6 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 
 ```commandline
 
-##### LOCAL APP
-
-Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
-Start-Process "http://localhost:8001" ; 
-
 ##### K3D
 
 .\scripts\k3d-up.ps1 ; 
