@@ -15,3 +15,8 @@ tasks:
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/dev_uv_environment.ps1
       - powershell -ExecutionPolicy Bypass -File .venv/Scripts/Activate.ps1
+
+  local-static-tests:
+    desc: Static analysis + unit tests
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/static_analysis_and_tests.ps1

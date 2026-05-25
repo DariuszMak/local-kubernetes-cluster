@@ -20,15 +20,6 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 
 ```commandline
 
-##### STATIC ANALYSIS & TESTS
-
-.venv\Scripts\Activate.ps1 ; 
-$env:UV_ENV_FILE = ".dev.env" ; 
-
-.\scripts\format_and_lint.ps1 ; 
-
-pytest tests/ --cov=src -vv ; 
-
 ##### LOCAL APP
 
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
