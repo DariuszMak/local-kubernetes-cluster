@@ -1,0 +1,11 @@
+version: '3'
+
+env:
+  UV_ENV_FILE: .dev.env
+
+tasks:
+
+  cleanup:
+    desc: Full project cleanup (docker, git, ports, caches)
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/cleanup.ps1
