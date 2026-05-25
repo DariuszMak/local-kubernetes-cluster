@@ -11,6 +11,3 @@ kubectl get deployments -A --no-headers `
     Write-Host "`n=== $ns / $name ==="
     kubectl tree deployment $name -n $ns
 }
-
-# .\scripts\k3d-redeploy.ps1 ; 
-# .\scripts\k3d-down.ps1 ; 

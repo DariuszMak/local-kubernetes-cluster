@@ -52,3 +52,11 @@ tasks:
       - task: k3d
       - task: kustomize-dev
       - task: tilt
+
+# .\scripts\kustomize-apply.ps1 -Overlay prod -DryRun ; 
+# .\scripts\kustomize-apply.ps1 -Overlay staging ; 
+
+# .\scripts\k3d-redeploy.ps1 ; 
+# .\scripts\k3d-down.ps1 ; 
+
+# .\scripts\tilt-down.ps1 ; 
