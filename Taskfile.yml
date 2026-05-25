@@ -1,10 +1,9 @@
-version: '3'
+version: "3"
 
 env:
   UV_ENV_FILE: .dev.env
 
 tasks:
-
   cleanup:
     desc: Full project cleanup (docker, git, ports, caches)
     cmds:
@@ -25,7 +24,7 @@ tasks:
     desc: Local dev Windows run
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/run_windows_dev_application.ps1
-  
+
   k3d:
     desc: Load k3d cluster
     cmds:
@@ -65,7 +64,6 @@ tasks:
     desc: Stop Tilt environment
     cmds:
       - powershell -ExecutionPolicy Bypass -Command ".\scripts\tilt-down.ps1"
-
 
   full-dev-windows:
     desc: Native Windows development flow
