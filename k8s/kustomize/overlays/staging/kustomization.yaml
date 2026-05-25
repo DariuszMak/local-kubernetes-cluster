@@ -21,10 +21,6 @@ patches:
       kind: Ingress
       name: python-project
 
-# In staging, secrets come from CI — inject with:
-#   kubectl create secret generic staging-python-project-secrets \
-#     --from-literal=EXAMPLE_VARIABLE_NAME="$CI_SECRET_VALUE" \
-#     -n staging --dry-run=client -o yaml | kubectl apply -f -
 secretGenerator:
   - name: python-project-secrets
     namespace: staging
@@ -35,5 +31,4 @@ secretGenerator:
 
 images:
   - name: registry.localhost:5001/python-project
-    # Override at deploy time: kustomize edit set image ... or --set in CI
     newTag: latest

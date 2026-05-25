@@ -20,7 +20,6 @@ spec:
             limits:
               memory: "128Mi"
               cpu: "200m"
-          # Faster probe cycle in dev so restarts are felt quickly
           livenessProbe:
             initialDelaySeconds: 3
             periodSeconds: 5

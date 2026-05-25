@@ -11,25 +11,17 @@ commonLabels:
 bases:
   - ../../base
 
-# Patch: 1 replica, reduced resources, LOG_LEVEL=DEBUG
 patches:
   - path: deployment-patch.yaml
     target:
       kind: Deployment
       name: python-project
 
-# Secret values for dev — sourced from a local .env file that is gitignored.
-# Run: kubectl create secret generic dev-python-project-secrets \
-#        --from-env-file=.dev.env -n dev --dry-run=client -o yaml | kubectl apply -f -
-# OR let the secretGenerator below read from a local file (never committed).
-#
-# Uncomment and populate .dev.secrets.env locally, then kustomize will
-# auto-create/update the secret on every `kubectl apply -k`.
 secretGenerator:
   - name: python-project-secrets
     namespace: dev
     envs:
-      - .dev.secrets.env   # gitignored — copy from .dev.env locally
+      - .dev.secrets.env
     options:
       disableNameSuffixHash: true
 

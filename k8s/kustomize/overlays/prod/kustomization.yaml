@@ -20,22 +20,16 @@ patches:
     target:
       kind: Ingress
       name: python-project
-  - path: hpa.yaml   # HorizontalPodAutoscaler — additional resource
+  - path: hpa.yaml
 
-# In prod, secrets are managed externally (e.g. Vault, Sealed Secrets, ESO).
-# The secretGenerator here is a fallback for clusters without an external secret operator.
-# Preferred: use External Secrets Operator pointing at your secrets backend.
 secretGenerator:
   - name: python-project-secrets
     namespace: prod
     envs:
-      - .prod.secrets.env   # injected by CI/CD, never committed
+      - .prod.secrets.env
     options:
       disableNameSuffixHash: true
 
 images:
   - name: registry.localhost:5001/python-project
-    # Pin to a specific immutable digest in prod, e.g.:
-    # newName: ghcr.io/your-org/python-project
-    # newTag: "1.2.3"
     newTag: "1.0.0"
