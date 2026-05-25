@@ -20,11 +20,6 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 
 ```commandline
 
-uv python install 3.14 ; 
-uv python pin 3.14 ; 
-uv sync --dev --no-cache ; 
-uv lock ; 
-
 ##### STATIC ANALYSIS & TESTS
 
 .venv\Scripts\Activate.ps1 ; 
