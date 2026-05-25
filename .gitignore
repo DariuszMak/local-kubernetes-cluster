@@ -137,6 +137,7 @@ GitHub.sublime-settings
 # Ruff
 ruff-report.json
 
+# Tilt
 .tilt-dev
 tilt_modules/
 
