@@ -91,5 +91,10 @@ kubectl get deployments -A --no-headers `
 Start-Process "http://localhost:10350" ; 
 Start-Process "http://localhost:8001" ; 
 .\scripts\tilt-up.ps1
+
+.\scripts\kustomize-apply.ps1 -Overlay dev ; 
+.\scripts\kustomize-apply.ps1 -Overlay prod -DryRun ; 
+.\scripts\kustomize-apply.ps1 -Overlay staging ; 
+
 # .\scripts\tilt-down.ps1
 ```
