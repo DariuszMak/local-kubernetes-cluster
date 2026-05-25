@@ -50,7 +50,7 @@ if (-not $ingressNs) {
 
 Write-Host ""
 Write-Host "-> Starting Tilt..." -ForegroundColor Cyan
-Write-Host "   App (port-forward) : http://localhost:8001"
+Write-Host "   App (port-forward) : http://localhost:8003"
 Write-Host "   Tilt UI             : http://localhost:10350"
 Write-Host ""
 
