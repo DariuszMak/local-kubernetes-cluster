@@ -1,7 +1,8 @@
+---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: vault-server
+  name: vault
   namespace: vault
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -14,7 +15,7 @@ roleRef:
   name: system:auth-delegator
 subjects:
   - kind: ServiceAccount
-    name: vault-server
+    name: vault
     namespace: vault
 ---
 apiVersion: apps/v1
@@ -34,7 +35,7 @@ spec:
       labels:
         app: vault
     spec:
-      serviceAccountName: vault-server
+      serviceAccountName: vault
       containers:
         - name: vault
           image: hashicorp/vault:1.17.2
