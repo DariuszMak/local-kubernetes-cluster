@@ -2,13 +2,14 @@ from __future__ import annotations
 
 import logging
 import os
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 
 from src.main import load_dev_env, load_secrets
 
-
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 @pytest.fixture()
@@ -95,8 +96,6 @@ def test_logs_warning_for_missing_file(caplog: pytest.LogCaptureFixture) -> None
     assert any("Env file not found: .nonexistent.env" in m for m in caplog.messages)
 
 
-
-
 @pytest.fixture(autouse=True)
 def _clean_vault_env(monkeypatch: pytest.MonkeyPatch) -> None:
     """Ensure Vault-related env vars are clean before each test."""
@@ -104,9 +103,7 @@ def _clean_vault_env(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("EXAMPLE_VARIABLE_NAME", raising=False)
 
 
-def test_load_secrets_uses_vault_secrets_file_when_set(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_load_secrets_uses_vault_secrets_file_when_set(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """VAULT_SECRETS_FILE takes priority over everything else."""
     vault_file = tmp_path / "app.env"
     vault_file.write_text("EXAMPLE_VARIABLE_NAME=from-vault\n", encoding="utf-8")
@@ -134,13 +131,12 @@ def test_load_secrets_falls_back_to_dev_env(
 ) -> None:
     """Falls back to .dev.env when neither Vault source is available."""
     monkeypatch.delenv("VAULT_SECRETS_FILE", raising=False)
-    
+
     if os.path.exists(".vault-secrets.env"):
         pytest.skip(".vault-secrets.env present in cwd — skipping fallback test")
 
     load_secrets()
 
-    
     assert os.getenv("EXAMPLE_VARIABLE_NAME") == "Hi it is me!"
 
 
@@ -152,11 +148,9 @@ def test_load_secrets_vault_file_missing_path_falls_through(
     if os.path.exists(".vault-secrets.env"):
         pytest.skip(".vault-secrets.env present — skipping")
 
-    load_secrets()  
+    load_secrets()
 
     assert os.getenv("EXAMPLE_VARIABLE_NAME") == "Hi it is me!"
-
-
 
 
 @pytest.fixture()
