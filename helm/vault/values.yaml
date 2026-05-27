@@ -1,8 +1,9 @@
 # helm/vault/values.yaml
 # HashiCorp Vault Helm chart overrides for local k3d dev.
+# Dev mode: in-memory storage, auto-unsealed, single StatefulSet pod.
+#
 # Install with:
 #   helm repo add hashicorp https://helm.releases.hashicorp.com
-#   helm repo update
 #   helm upgrade --install vault hashicorp/vault -f helm/vault/values.yaml -n vault --create-namespace
 
 global:
@@ -11,37 +12,31 @@ global:
 injector:
   enabled: true
   replicas: 1
-  # Point the injector at the Vault server inside the same cluster.
-  # Using the full DNS name avoids the injector trying to reach an external address.
+  # Tell the injector where the Vault server lives inside the cluster
   externalVaultAddr: "http://vault.vault.svc.cluster.local:8200"
 
 server:
+  # Dev mode only - do NOT also set standalone.enabled: true
+  # The chart treats these as mutually exclusive; combining them suppresses
+  # the StatefulSet entirely when dataStorage is disabled.
   dev:
     enabled: true
     devRootToken: "root"
 
-  dataStorage:
+  # standalone must be explicitly disabled when dev is enabled
+  standalone:
     enabled: false
 
-  standalone:
-    enabled: true
-    config: |
-      ui = true
-
-      listener "tcp" {
-        tls_disable = 1
-        address     = "[::]:8200"
-      }
-
-      storage "inmem" {}
+  ha:
+    enabled: false
 
   resources:
     requests:
       memory: 64Mi
-      cpu:    50m
+      cpu: 50m
     limits:
       memory: 256Mi
-      cpu:    250m
+      cpu: 250m
 
   readinessProbe:
     enabled: true

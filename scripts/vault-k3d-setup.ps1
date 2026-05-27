@@ -51,14 +51,15 @@ $ready      = "False"
 $maxRetries = 60
 for ($i = 1; $i -le $maxRetries; $i++) {
     $ErrorActionPreference = "Continue"
-    $pods = kubectl get pods -n $Namespace -l "app.kubernetes.io/name=vault" `
-        --field-selector="status.phase=Running" -o jsonpath="{.items[*].metadata.name}" 2>$null
+    # Get ALL pod names in the vault namespace, no label/field filtering
+    $allPods = kubectl get pods -n $Namespace -o jsonpath="{.items[*].metadata.name}" 2>$null
     $ErrorActionPreference = "Stop"
 
-    if ($pods) {
-        # Pick the server pod (not the injector)
-        foreach ($p in ($pods -split " ")) {
-            if ($p -notmatch "injector") {
+    if ($allPods) {
+        foreach ($p in ($allPods -split "\s+")) {
+            # Server pod: named "vault-0" (StatefulSet) or starts with "vault-"
+            # but NOT the injector (which contains "injector" in its name)
+            if ($p -and $p -notmatch "injector" -and $p -match "^vault") {
                 $vaultPod = $p
                 break
             }
@@ -66,7 +67,6 @@ for ($i = 1; $i -le $maxRetries; $i++) {
     }
 
     if ($vaultPod) {
-        # Confirm it's actually Ready
         $ErrorActionPreference = "Continue"
         $ready = kubectl get pod $vaultPod -n $Namespace `
             -o jsonpath="{.status.conditions[?(@.type=='Ready')].status}" 2>$null
@@ -75,6 +75,9 @@ for ($i = 1; $i -le $maxRetries; $i++) {
     }
 
     if ($i -eq $maxRetries) {
+        Write-Host ""
+        Write-Host "All pods in namespace '$Namespace':" -ForegroundColor Yellow
+        kubectl get pods -n $Namespace
         Write-Error "Vault pod did not become Ready after $maxRetries attempts."
         exit 1
     }
