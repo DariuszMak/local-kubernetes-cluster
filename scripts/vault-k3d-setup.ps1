@@ -47,6 +47,7 @@ helm upgrade --install $ReleaseName $ChartName `
 # -- 4. Find the Vault pod (StatefulSet vault-0 in dev mode) ------------------
 Write-Host "-> Waiting for Vault pod to become Ready..." -ForegroundColor Cyan
 $vaultPod   = $null
+$ready      = "False"
 $maxRetries = 60
 for ($i = 1; $i -le $maxRetries; $i++) {
     $ErrorActionPreference = "Continue"
