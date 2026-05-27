@@ -111,11 +111,11 @@ tasks:
       - cleanup
     cmds:
       - task: dev-env
-      - task: vault-dev # Start local Vault, seed secrets
-      - task: vault-render # Write .vault-secrets.env
+      - task: vault-dev
+      - task: vault-render
       - task: local-static-tests
-      - task: local-dev-windows-run # App reads .vault-secrets.env
+      - task: local-dev-windows-run
       - task: k3d
-      - task: vault-k3d # Install Vault in k3d + seed
+      - task: vault-k3d
       - task: kustomize-dev
       - task: tilt
