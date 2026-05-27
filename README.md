@@ -19,5 +19,5 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 ## Native Windows development:
 
 ```commandline
-task full-dev-windows-vault ; 
+task full-dev-windows ; 
 ```
