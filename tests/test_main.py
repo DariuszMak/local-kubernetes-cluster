@@ -10,7 +10,6 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
-# ── load_dev_env tests (unchanged behaviour) ────────────────────────────────
 
 @pytest.fixture()
 def tmp_env_file(tmp_path: Path) -> Path:
@@ -96,8 +95,6 @@ def test_logs_warning_for_missing_file(caplog: pytest.LogCaptureFixture) -> None
     assert any("Env file not found: .nonexistent.env" in m for m in caplog.messages)
 
 
-# ── load_secrets() priority tests ───────────────────────────────────────────
-
 @pytest.fixture(autouse=True)
 def _clean_vault_env(monkeypatch: pytest.MonkeyPatch) -> None:
     """Ensure Vault-related env vars are clean before each test."""
@@ -135,13 +132,11 @@ def test_load_secrets_falls_back_to_dev_env(
 ) -> None:
     """Falls back to .dev.env when neither Vault source is available."""
     monkeypatch.delenv("VAULT_SECRETS_FILE", raising=False)
-    # Ensure .vault-secrets.env does not exist in cwd (it shouldn't in CI)
     if os.path.exists(".vault-secrets.env"):
         pytest.skip(".vault-secrets.env present in cwd — skipping fallback test")
 
     load_secrets()
 
-    # .dev.env sets EXAMPLE_VARIABLE_NAME=Hi it is me!
     assert os.getenv("EXAMPLE_VARIABLE_NAME") == "Hi it is me!"
 
 
@@ -153,12 +148,10 @@ def test_load_secrets_vault_file_missing_path_falls_through(
     if os.path.exists(".vault-secrets.env"):
         pytest.skip(".vault-secrets.env present — skipping")
 
-    load_secrets()  # should not raise
+    load_secrets()  
 
     assert os.getenv("EXAMPLE_VARIABLE_NAME") == "Hi it is me!"
 
-
-# ── conftest helper ─────────────────────────────────────────────────────────
 
 @pytest.fixture()
 def tmp_cwd(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
