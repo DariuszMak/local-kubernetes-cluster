@@ -1,13 +1,13 @@
+from __future__ import annotations
+
 import logging
 import os
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 import pytest
 
 from src.main import load_dev_env, load_secrets
 
-if TYPE_CHECKING:
-    from pathlib import Path
 
 
 
@@ -95,6 +95,8 @@ def test_logs_warning_for_missing_file(caplog: pytest.LogCaptureFixture) -> None
     assert any("Env file not found: .nonexistent.env" in m for m in caplog.messages)
 
 
+
+
 @pytest.fixture(autouse=True)
 def _clean_vault_env(monkeypatch: pytest.MonkeyPatch) -> None:
     """Ensure Vault-related env vars are clean before each test."""
@@ -132,11 +134,13 @@ def test_load_secrets_falls_back_to_dev_env(
 ) -> None:
     """Falls back to .dev.env when neither Vault source is available."""
     monkeypatch.delenv("VAULT_SECRETS_FILE", raising=False)
+    
     if os.path.exists(".vault-secrets.env"):
         pytest.skip(".vault-secrets.env present in cwd — skipping fallback test")
 
     load_secrets()
 
+    
     assert os.getenv("EXAMPLE_VARIABLE_NAME") == "Hi it is me!"
 
 
@@ -151,6 +155,8 @@ def test_load_secrets_vault_file_missing_path_falls_through(
     load_secrets()  
 
     assert os.getenv("EXAMPLE_VARIABLE_NAME") == "Hi it is me!"
+
+
 
 
 @pytest.fixture()
