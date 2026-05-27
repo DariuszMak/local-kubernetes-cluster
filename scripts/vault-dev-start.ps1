@@ -1,13 +1,4 @@
 #!/usr/bin/env pwsh
-<#
-.SYNOPSIS
-    Start a local Vault dev server and seed it with secrets from .dev.env.
-    Vault runs in dev mode: in-memory, auto-unsealed, no TLS - fully local.
-
-.NOTES
-    Root token is fixed to "root" for local dev convenience.
-    Never use dev mode in production.
-#>
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"

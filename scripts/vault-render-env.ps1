@@ -1,13 +1,4 @@
 #!/usr/bin/env pwsh
-<#
-.SYNOPSIS
-    Fetch secrets from the local Vault dev server and write them to a
-    temporary .vault-secrets.env file that the application reads on startup.
-
-.NOTES
-    This replaces direct .dev.env secret usage for the running application.
-    The generated file is gitignored and regenerated on every run.
-#>
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"

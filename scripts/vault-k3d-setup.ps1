@@ -1,10 +1,4 @@
 #!/usr/bin/env pwsh
-<#
-.SYNOPSIS
-    Deploy Vault dev server into k3d using a plain manifest (not the Helm
-    chart server mode which has unreliable conditionals), then install only
-    the Vault Agent Injector via Helm so annotated pods get sidecars.
-#>
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"

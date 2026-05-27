@@ -1,18 +1,5 @@
 #!/usr/bin/env pwsh
-<#
-.SYNOPSIS
-    Apply a Kustomize overlay to the current kubectl context.
 
-.PARAMETER Overlay
-    Which overlay to apply: dev | staging | prod  (default: dev)
-
-.PARAMETER DryRun
-    Pass -DryRun to preview without applying (runs kubectl diff).
-
-.EXAMPLE
-    .\scripts\kustomize-apply.ps1 -Overlay dev
-    .\scripts\kustomize-apply.ps1 -Overlay prod -DryRun
-#>
 param(
     [ValidateSet("dev", "staging", "prod")]
     [string]$Overlay = "dev",
