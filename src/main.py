@@ -37,7 +37,6 @@ HTML_PAGE = """\
       overflow: hidden;
     }
 
-    /* subtle grid overlay */
     body::before {
       content: '';
       position: fixed; inset: 0;
@@ -129,7 +128,6 @@ HTML_PAGE = """\
       50%       { opacity: .3; transform: scale(.7); }
     }
 
-    /* fade-in on load */
     .card { animation: fadeUp .5s ease both; }
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(18px); }
@@ -186,6 +184,37 @@ def load_dev_env(env_path: str = ".dev.env") -> dict[str, str]:
     return loaded
 
 
+def load_secrets() -> None:
+    """
+    Load secrets using the best available source, in priority order:
+
+    1. VAULT_SECRETS_FILE env var  — set by the Vault Agent Injector inside k8s.
+       Points to /vault/secrets/app.env, written by the Vault Agent sidecar.
+
+    2. .vault-secrets.env          — generated locally by vault-render-env.ps1
+       when running natively on Windows with a local Vault dev server.
+
+    3. .dev.env                    — plain fallback for environments without Vault.
+    """
+    vault_file = os.getenv("VAULT_SECRETS_FILE")
+    if vault_file and Path(vault_file).exists():
+        logger.info("Loading secrets from Vault Agent file: %s", vault_file)
+        load_dev_env(vault_file)
+        # Still load .dev.env for non-secret infra vars (HOST, PORT, etc.)
+        load_dev_env(".dev.env")
+        return
+
+    local_vault_env = ".vault-secrets.env"
+    if Path(local_vault_env).exists():
+        logger.info("Loading secrets from local Vault render: %s", local_vault_env)
+        load_dev_env(local_vault_env)
+        load_dev_env(".dev.env")
+        return
+
+    logger.info("Vault not available — falling back to .dev.env")
+    load_dev_env(".dev.env")
+
+
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:
         body = HTML_PAGE.encode("utf-8")
@@ -201,10 +230,9 @@ class Handler(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-    load_dev_env()
+    load_secrets()
     host = os.getenv("HOST", "0.0.0.0")  # noqa: S104
     port = int(os.getenv("PORT", "8000"))
     server = HTTPServer((host, port), Handler)
-    # Always print a localhost URL regardless of bind address so it's clickable locally
     logger.info("Serving on http://%s:%d   open http://localhost:%d", host, port, port)
     server.serve_forever()

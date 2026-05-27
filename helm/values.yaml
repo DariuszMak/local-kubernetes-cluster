@@ -26,5 +26,21 @@ env:
   HOST: "0.0.0.0"
   PORT: "8000"
 
+# ── Vault integration ──────────────────────────────────────────────────────────
+# When vault.enabled=true the Vault Agent Injector sidecar fetches secrets and
+# writes them to /vault/secrets/app.env inside the pod.
+# The application reads that file via load_dev_env(os.getenv("VAULT_SECRETS_FILE")).
+#
+# Set enabled=false to fall back to the legacy k8s Secret / secretGenerator path.
+vault:
+  enabled: true
+  # Vault address reachable from inside k3d
+  address: "http://vault.vault.svc.cluster.local:8200"
+  # Kubernetes auth role (created by vault-k3d-setup.ps1)
+  role: "python-project"
+  # KV v2 path (without the 'data/' prefix — the injector adds it)
+  secretPath: "secret/data/python-project/dev"
+
+# Legacy k8s Secret values — only used when vault.enabled=false
 secrets:
   EXAMPLE_VARIABLE_NAME: ""

@@ -13,7 +13,25 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}
+      annotations:
+        {{- if .Values.vault.enabled }}
+        # ── Vault Agent Injector annotations ──────────────────────────────────
+        # The injector sidecar fetches secrets from Vault and writes them to
+        # /vault/secrets/app.env inside the container.  The app reads that file
+        # via load_dev_env("/vault/secrets/app.env").
+        vault.hashicorp.com/agent-inject:                   "true"
+        vault.hashicorp.com/role:                           {{ .Values.vault.role | quote }}
+        vault.hashicorp.com/agent-inject-secret-app.env:   {{ .Values.vault.secretPath | quote }}
+        vault.hashicorp.com/agent-inject-template-app.env: |
+          {{`{{- with secret `}}"{{ .Values.vault.secretPath }}"{{` -}}`}}
+          {{`{{- range $k, $v := .Data.data -}}`}}
+          {{`{{ $k }}={{ $v }}`}}
+          {{`{{ end -}}`}}
+          {{`{{- end -}}`}}
+        vault.hashicorp.com/agent-pre-populate-only:        "true"
+        {{- end }}
     spec:
+      serviceAccountName: {{ .Release.Name }}
       containers:
         - name: {{ .Release.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -25,12 +43,20 @@ spec:
             - name: {{ $key }}
               value: {{ $val | quote }}
             {{- end }}
+            {{- if not .Values.vault.enabled }}
+            # Fallback: inject secrets directly when Vault is disabled
             {{- range $key, $val := .Values.secrets }}
             - name: {{ $key }}
               valueFrom:
                 secretKeyRef:
                   name: {{ $.Release.Name }}-secrets
                   key: {{ $key }}
+            {{- end }}
+            {{- end }}
+            {{- if .Values.vault.enabled }}
+            # Tell the app which env file to load (written by Vault Agent)
+            - name: VAULT_SECRETS_FILE
+              value: "/vault/secrets/app.env"
             {{- end }}
           livenessProbe:
             httpGet:
