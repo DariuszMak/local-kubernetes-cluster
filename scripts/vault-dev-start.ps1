@@ -17,13 +17,11 @@ $RootToken  = "root"
 $SecretPath = "secret/python-project/dev"
 $DevEnvFile = ".dev.env"
 
-# -- 1. Check vault binary ----------------------------------------------------
 if (-not (Get-Command vault -ErrorAction SilentlyContinue)) {
     Write-Error "vault binary not found. Install from https://developer.hashicorp.com/vault/install"
     exit 1
 }
 
-# -- 2. Kill any existing vault dev server -----------------------------------
 $existing = Get-Process -Name "vault" -ErrorAction SilentlyContinue
 if ($existing) {
     Write-Host "-> Stopping existing Vault process(es)..." -ForegroundColor Yellow
@@ -31,14 +29,12 @@ if ($existing) {
     Start-Sleep -Seconds 1
 }
 
-# -- 3. Start vault dev server in background ---------------------------------
 Write-Host "-> Starting Vault dev server on $VaultAddr ..." -ForegroundColor Cyan
 $vaultProc = Start-Process vault `
     -ArgumentList "server", "-dev", "-dev-root-token-id=$RootToken", "-dev-listen-address=127.0.0.1:8200" `
     -PassThru -WindowStyle Hidden
 Write-Host "   PID: $($vaultProc.Id)" -ForegroundColor DarkGray
 
-# Wait for Vault to be ready
 $ready = $false
 $retries = 0
 $env:VAULT_ADDR  = $VaultAddr
@@ -56,12 +52,10 @@ while (-not $ready) {
 }
 Write-Host "v Vault is ready." -ForegroundColor Green
 
-# -- 4. Enable KV v2 at 'secret/' (already enabled in dev mode, just confirm) -
 $ErrorActionPreference = "Continue"
 vault secrets enable -path=secret kv-v2 2>$null
 $ErrorActionPreference = "Stop"
 
-# -- 5. Parse .dev.env and write secrets to Vault ----------------------------
 if (-not (Test-Path $DevEnvFile)) {
     Write-Warning "$DevEnvFile not found - skipping secret seeding."
 } else {
@@ -71,7 +65,6 @@ if (-not (Test-Path $DevEnvFile)) {
     foreach ($line in Get-Content $DevEnvFile) {
         $line = $line.Trim()
         if ($line -eq "" -or $line.StartsWith("#") -or $line -notmatch "=") { continue }
-        # Skip infra vars that aren't real secrets
         if ($line -match "^(HOST|PORT|PYTHONPATH)=") { continue }
         $parts = $line -split "=", 2
         $kvArgs += "$($parts[0].Trim())=$($parts[1].Trim())"
@@ -85,7 +78,6 @@ if (-not (Test-Path $DevEnvFile)) {
     }
 }
 
-# -- 6. Print summary ---------------------------------------------------------
 Write-Host ""
 Write-Host "Vault dev server running" -ForegroundColor Green
 Write-Host "   Address : $VaultAddr"

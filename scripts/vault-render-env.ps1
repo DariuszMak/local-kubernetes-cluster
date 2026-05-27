@@ -27,19 +27,15 @@ $env:VAULT_TOKEN = $VaultToken
 
 Write-Host "-> Fetching secrets from Vault ($SecretPath)..." -ForegroundColor Cyan
 
-# vault kv get -format=json may return an array of strings (one per line)
-# when PowerShell captures process output. Join them before parsing.
 $rawLines = vault kv get -format=json $SecretPath 2>&1
 if ($LASTEXITCODE -ne 0) {
     Write-Error "Failed to read secrets from Vault. Is the dev server running? (task vault-dev)"
     exit 1
 }
 
-# Join into a single string so ConvertFrom-Json works regardless of buffering
 $jsonString = ($rawLines -join "`n")
 $parsed = $jsonString | ConvertFrom-Json
 
-# KV v2 stores values under .data.data; KV v1 stores them under .data
 $secretData = $null
 if ($parsed.data.PSObject.Properties.Name -contains "data") {
     $secretData = $parsed.data.data   # KV v2
@@ -54,13 +50,11 @@ if ($null -eq $secretData) {
 
 $lines = [System.Collections.Generic.List[string]]::new()
 
-# Enumerate properties safely - works for 1 or many keys under StrictMode
 $props = @($secretData.PSObject.Properties)
 foreach ($prop in $props) {
     $lines.Add("$($prop.Name)=$($prop.Value)")
 }
 
-# Forward infra vars from .dev.env so the app knows where to bind
 foreach ($line in (Get-Content ".dev.env" -ErrorAction SilentlyContinue)) {
     $line = $line.Trim()
     if ($line -match "^(HOST|PORT|PYTHONPATH)=") {

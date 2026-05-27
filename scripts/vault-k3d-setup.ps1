@@ -15,7 +15,6 @@ $RootToken   = "root"
 $LocalPort   = "8200"
 $ManifestFile = "k8s/vault/vault-dev.yaml"
 
-# -- 1. Namespace --------------------------------------------------------------
 Write-Host "-> Ensuring namespace '$Namespace' exists..." -ForegroundColor Cyan
 $ErrorActionPreference = "Continue"
 kubectl get namespace $Namespace 2>$null | Out-Null
@@ -24,11 +23,9 @@ if ($LASTEXITCODE -ne 0) {
 }
 $ErrorActionPreference = "Stop"
 
-# -- 2. Deploy Vault server from plain manifest --------------------------------
 Write-Host "-> Deploying Vault dev server from $ManifestFile ..." -ForegroundColor Cyan
 kubectl apply -f $ManifestFile
 
-# -- 3. Wait for vault pod Ready -----------------------------------------------
 Write-Host "-> Waiting for Vault pod to become Ready..." -ForegroundColor Cyan
 $vaultPod   = $null
 $ready      = "False"
@@ -66,14 +63,12 @@ for ($i = 1; $i -le $maxRetries; $i++) {
 }
 Write-Host "   Pod '$vaultPod' is Ready." -ForegroundColor DarkGray
 
-# -- 4. Install Vault Agent Injector via Helm (server disabled) ----------------
 Write-Host "-> Installing Vault Agent Injector via Helm..." -ForegroundColor Cyan
 $ErrorActionPreference = "Continue"
 helm repo add hashicorp https://helm.releases.hashicorp.com 2>$null
 $ErrorActionPreference = "Stop"
 helm repo update
 
-# Install only the injector, pointing it at our plain-manifest Vault server
 helm upgrade --install vault hashicorp/vault `
     --namespace $Namespace `
     --set "server.enabled=false" `
@@ -81,7 +76,6 @@ helm upgrade --install vault hashicorp/vault `
     --set "injector.externalVaultAddr=http://vault.vault.svc.cluster.local:8200" `
     --timeout 120s
 
-# -- 5. Port-forward -----------------------------------------------------------
 Write-Host "-> Port-forwarding svc/vault -> localhost:$LocalPort ..." -ForegroundColor Cyan
 $ErrorActionPreference = "Continue"
 Get-NetTCPConnection -LocalPort $LocalPort -ErrorAction SilentlyContinue |
@@ -114,7 +108,6 @@ if (-not $vaultUp) {
 }
 Write-Host "   Port-forward up (PID $($pfProc.Id))" -ForegroundColor DarkGray
 
-# -- 6. Seed secrets -----------------------------------------------------------
 Write-Host "-> Seeding secrets from .dev.env ..." -ForegroundColor Cyan
 $ErrorActionPreference = "Continue"
 vault secrets enable -path=secret kv-v2 2>$null
@@ -133,18 +126,15 @@ if ($kvArgs.Count -gt 0) {
     Write-Host "   Seeded $($kvArgs.Count) secret(s) to '$SecretPath'" -ForegroundColor DarkGray
 }
 
-# -- 7. Policy -----------------------------------------------------------------
 Write-Host "-> Writing Vault policy..." -ForegroundColor Cyan
 'path "secret/data/python-project/*" { capabilities = ["read"] }' |
     vault policy write python-project-policy -
 
-# -- 8. Kubernetes auth --------------------------------------------------------
 Write-Host "-> Configuring Kubernetes auth..." -ForegroundColor Cyan
 $ErrorActionPreference = "Continue"
 vault auth enable kubernetes 2>$null
 $ErrorActionPreference = "Stop"
 
-# Run inside the pod - Vault auto-discovers the cluster CA and SA token
 $ErrorActionPreference = "Continue"
 $cfgOut = kubectl exec -n $Namespace $vaultPod -- `
     sh -c 'VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=root vault write auth/kubernetes/config kubernetes_host="https://kubernetes.default.svc.cluster.local"' 2>&1
@@ -157,7 +147,6 @@ if ($cfgRc -ne 0) {
 }
 Write-Host "   $cfgOut" -ForegroundColor DarkGray
 
-# -- 9. App role ---------------------------------------------------------------
 Write-Host "-> Creating auth role..." -ForegroundColor Cyan
 vault write auth/kubernetes/role/python-project `
     bound_service_account_names="python-project,default" `
