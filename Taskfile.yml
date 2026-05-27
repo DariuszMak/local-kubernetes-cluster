@@ -9,6 +9,28 @@ tasks:
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/cleanup.ps1
 
+  vault-dev:
+    desc: Start local Vault dev server and seed secrets from .dev.env
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File scripts/vault-dev-start.ps1
+
+  vault-render:
+    desc: Fetch secrets from local Vault dev server -> .vault-secrets.env
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File scripts/vault-render-env.ps1
+
+  vault-k3d:
+    desc: Install Vault into k3d cluster and seed secrets
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File scripts/vault-k3d-setup.ps1
+
+  vault-status:
+    desc: Show Vault status and list secrets
+    cmds:
+      - powershell -ExecutionPolicy Bypass -Command |
+          $env:VAULT_ADDR='http://127.0.0.1:8200'; $env:VAULT_TOKEN='root';
+          vault status; vault kv get secret/python-project/dev
+
   dev-env:
     desc: Setup uv environment (Python, sync, lock)
     cmds:
@@ -74,5 +96,26 @@ tasks:
       - task: local-static-tests
       - task: local-dev-windows-run
       - task: k3d
+      - task: kustomize-dev
+      - task: tilt
+
+  local-dev-windows-run-vault:
+    desc: Render secrets from Vault then run the app (Windows native)
+    cmds:
+      - task: vault-render
+      - powershell -ExecutionPolicy Bypass -File tasks/run_windows_dev_application.ps1
+
+  full-dev-windows-vault:
+    desc: Full local dev flow with Vault (Windows native)
+    deps:
+      - cleanup
+    cmds:
+      - task: dev-env
+      - task: vault-dev          # Start local Vault, seed secrets
+      - task: vault-render       # Write .vault-secrets.env
+      - task: local-static-tests
+      - task: local-dev-windows-run   # App reads .vault-secrets.env
+      - task: k3d
+      - task: vault-k3d          # Install Vault in k3d + seed
       - task: kustomize-dev
       - task: tilt
