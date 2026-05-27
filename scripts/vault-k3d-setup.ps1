@@ -1,12 +1,13 @@
 #!/usr/bin/env pwsh
 <#
 .SYNOPSIS
-    Install HashiCorp Vault (dev mode) into the running k3d cluster
-    and seed it with secrets from .dev.env.
+    Install HashiCorp Vault (dev mode) into the running k3d cluster,
+    seed secrets, and configure Kubernetes auth so the Vault Agent
+    Injector sidecar can authenticate from the app pod.
 
 .NOTES
-    Requires: helm, kubectl, vault CLI (for seeding from outside the cluster)
-    Vault is exposed on http://localhost:8200 via port-forward for local access.
+    Requires: helm, kubectl, vault CLI
+    Vault is exposed on http://localhost:8200 via port-forward.
 #>
 
 Set-StrictMode -Version Latest
@@ -28,23 +29,23 @@ helm repo add $ChartRepo https://helm.releases.hashicorp.com 2>$null
 $ErrorActionPreference = "Stop"
 helm repo update
 
-# -- 2. Create namespace ------------------------------------------------------
+# -- 2. Create namespace -------------------------------------------------------
 $ErrorActionPreference = "Continue"
-kubectl get namespace $Namespace 2>$null | Out-Null
+$nsOut = kubectl get namespace $Namespace 2>&1
 if ($LASTEXITCODE -ne 0) {
     Write-Host "-> Creating namespace '$Namespace'..." -ForegroundColor Cyan
     kubectl create namespace $Namespace
 }
 $ErrorActionPreference = "Stop"
 
-# -- 3. Install / upgrade Vault -----------------------------------------------
+# -- 3. Install / upgrade Vault ------------------------------------------------
 Write-Host "-> Installing Vault into k3d (dev mode)..." -ForegroundColor Cyan
 helm upgrade --install $ReleaseName $ChartName `
     --namespace $Namespace `
     --values $ValuesFile `
     --wait --timeout 120s
 
-# -- 4. Wait for Vault pod ready ----------------------------------------------
+# -- 4. Wait for Vault pod ready -----------------------------------------------
 Write-Host "-> Waiting for Vault pod to be ready..." -ForegroundColor Cyan
 kubectl wait pod `
     --namespace $Namespace `
@@ -52,28 +53,22 @@ kubectl wait pod `
     --for condition=Ready `
     --timeout 90s
 
-# -- 5. Port-forward Vault in the background ----------------------------------
+# -- 5. Port-forward Vault in the background -----------------------------------
 Write-Host "-> Starting port-forward vault:8200 -> localhost:$LocalPort ..." -ForegroundColor Cyan
 
-# Kill any existing port-forward on 8200
 $ErrorActionPreference = "Continue"
-$pfProc = Get-NetTCPConnection -LocalPort $LocalPort -ErrorAction SilentlyContinue |
+Get-NetTCPConnection -LocalPort $LocalPort -ErrorAction SilentlyContinue |
     Select-Object -ExpandProperty OwningProcess -Unique |
-    Where-Object { $_ -gt 0 }
-if ($pfProc) {
-    $pfProc | ForEach-Object { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue }
-    Start-Sleep -Seconds 1
-}
+    Where-Object { $_ -gt 0 } |
+    ForEach-Object { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue }
 $ErrorActionPreference = "Stop"
 
-$pfJob = Start-Process kubectl `
+Start-Process kubectl `
     -ArgumentList "port-forward", "-n", $Namespace, "svc/vault", "${LocalPort}:8200" `
-    -PassThru -WindowStyle Hidden
-
+    -WindowStyle Hidden
 Start-Sleep -Seconds 3
-Write-Host "   Port-forward PID: $($pfJob.Id)" -ForegroundColor DarkGray
 
-# -- 6. Seed secrets ----------------------------------------------------------
+# -- 6. Seed secrets -----------------------------------------------------------
 $env:VAULT_ADDR  = "http://127.0.0.1:$LocalPort"
 $env:VAULT_TOKEN = $RootToken
 
@@ -91,49 +86,45 @@ foreach ($line in Get-Content ".dev.env") {
     $parts = $line -split "=", 2
     $kvArgs += "$($parts[0].Trim())=$($parts[1].Trim())"
 }
-
 if ($kvArgs.Count -gt 0) {
     vault kv put $SecretPath @kvArgs
     Write-Host "   Seeded $($kvArgs.Count) secret(s) to '$SecretPath'" -ForegroundColor DarkGray
 }
 
-# -- 7. Configure Vault Agent Injector policy ---------------------------------
+# -- 7. Write Vault policy -----------------------------------------------------
 Write-Host "-> Configuring Vault policy for app..." -ForegroundColor Cyan
-
-$policy = @"
-path "secret/data/python-project/*" {
-  capabilities = ["read"]
-}
-"@
+$policy = 'path "secret/data/python-project/*" { capabilities = ["read"] }'
 $policy | vault policy write python-project-policy -
 
-# -- 8. Enable Kubernetes auth -------------------------------------------------
-Write-Host "-> Enabling Kubernetes auth method..." -ForegroundColor Cyan
+# -- 8. Enable and configure Kubernetes auth -----------------------------------
+Write-Host "-> Configuring Kubernetes auth method..." -ForegroundColor Cyan
+
 $ErrorActionPreference = "Continue"
 vault auth enable kubernetes 2>$null
 $ErrorActionPreference = "Stop"
 
-# Get k8s host from inside the cluster
-$k8sHost = kubectl config view --minify -o jsonpath="{.clusters[0].cluster.server}"
-$caCert  = kubectl config view --minify --raw -o jsonpath="{.clusters[0].cluster.certificate-authority-data}"
+# The cleanest approach for k3d: tell Vault to use its own pod's service
+# account token and the in-cluster Kubernetes API address.
+# This avoids fragile multi-line cert extraction via kubectl exec.
+$configResult = kubectl exec -n $Namespace vault-0 -- `
+    vault write auth/kubernetes/config `
+        kubernetes_host="https://kubernetes.default.svc.cluster.local" 2>&1
 
-# Get the vault SA token for auth config
-$vaultSaToken = kubectl exec -n $Namespace vault-0 -- `
-    sh -c 'cat /var/run/secrets/kubernetes.io/serviceaccount/token' 2>$null
-$vaultCaCert  = kubectl exec -n $Namespace vault-0 -- `
-    sh -c 'cat /var/run/secrets/kubernetes.io/serviceaccount/ca.crt' 2>$null
+if ($LASTEXITCODE -ne 0) {
+    Write-Warning "Kubernetes auth config step returned non-zero: $configResult"
+    Write-Warning "The injector may not authenticate. Re-run 'task vault-k3d' after the cluster settles."
+} else {
+    Write-Host "   Kubernetes auth configured (in-cluster token + CA)" -ForegroundColor DarkGray
+}
 
-$ErrorActionPreference = "Continue"
-vault write auth/kubernetes/config `
-    kubernetes_host="$k8sHost" `
-    kubernetes_ca_cert="$vaultCaCert" `
-    token_reviewer_jwt="$vaultSaToken" 2>$null
-$ErrorActionPreference = "Stop"
+# -- 9. Create the app role ----------------------------------------------------
+Write-Host "-> Creating Kubernetes auth role for app..." -ForegroundColor Cyan
 
-# Create a role that the app's service account can use
+# The app runs in 'default' namespace (Helm/Tilt) and 'dev' (Kustomize).
+# ServiceAccount name matches the Helm release name.
 vault write auth/kubernetes/role/python-project `
-    bound_service_account_names=python-project `
-    bound_service_account_namespaces=default,dev `
+    bound_service_account_names="python-project,default" `
+    bound_service_account_namespaces="default,dev" `
     policies=python-project-policy `
     ttl=1h
 
@@ -141,3 +132,6 @@ Write-Host ""
 Write-Host "Vault is running in k3d" -ForegroundColor Green
 Write-Host "   UI      : http://localhost:8200/ui  (token: $RootToken)"
 Write-Host "   Secrets : vault kv get $SecretPath"
+Write-Host ""
+Write-Host "To verify auth config inside the cluster:"
+Write-Host "   kubectl exec -n vault vault-0 -- vault read auth/kubernetes/config"

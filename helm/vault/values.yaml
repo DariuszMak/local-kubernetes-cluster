@@ -9,17 +9,17 @@ global:
   enabled: true
 
 injector:
-  # Enable the Vault Agent Injector so annotated pods get sidecars
   enabled: true
   replicas: 1
+  # Point the injector at the Vault server inside the same cluster.
+  # Using the full DNS name avoids the injector trying to reach an external address.
+  externalVaultAddr: "http://vault.vault.svc.cluster.local:8200"
 
 server:
-  # Dev mode: in-memory, auto-unsealed, single pod — local only
   dev:
     enabled: true
     devRootToken: "root"
 
-  # No persistence needed in dev mode
   dataStorage:
     enabled: false
 
