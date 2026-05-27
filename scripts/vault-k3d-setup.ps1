@@ -21,14 +21,14 @@ $SecretPath  = "secret/python-project/dev"
 $RootToken   = "root"
 $LocalPort   = "8200"
 
-# ── 1. Add HashiCorp Helm repo ───────────────────────────────────────────────
+# -- 1. Add HashiCorp Helm repo -----------------------------------------------
 Write-Host "-> Adding HashiCorp Helm repo..." -ForegroundColor Cyan
 $ErrorActionPreference = "Continue"
 helm repo add $ChartRepo https://helm.releases.hashicorp.com 2>$null
 $ErrorActionPreference = "Stop"
 helm repo update
 
-# ── 2. Create namespace ──────────────────────────────────────────────────────
+# -- 2. Create namespace ------------------------------------------------------
 $ErrorActionPreference = "Continue"
 kubectl get namespace $Namespace 2>$null | Out-Null
 if ($LASTEXITCODE -ne 0) {
@@ -37,14 +37,14 @@ if ($LASTEXITCODE -ne 0) {
 }
 $ErrorActionPreference = "Stop"
 
-# ── 3. Install / upgrade Vault ───────────────────────────────────────────────
+# -- 3. Install / upgrade Vault -----------------------------------------------
 Write-Host "-> Installing Vault into k3d (dev mode)..." -ForegroundColor Cyan
 helm upgrade --install $ReleaseName $ChartName `
     --namespace $Namespace `
     --values $ValuesFile `
     --wait --timeout 120s
 
-# ── 4. Wait for Vault pod ready ──────────────────────────────────────────────
+# -- 4. Wait for Vault pod ready ----------------------------------------------
 Write-Host "-> Waiting for Vault pod to be ready..." -ForegroundColor Cyan
 kubectl wait pod `
     --namespace $Namespace `
@@ -52,7 +52,7 @@ kubectl wait pod `
     --for condition=Ready `
     --timeout 90s
 
-# ── 5. Port-forward Vault in the background ──────────────────────────────────
+# -- 5. Port-forward Vault in the background ----------------------------------
 Write-Host "-> Starting port-forward vault:8200 -> localhost:$LocalPort ..." -ForegroundColor Cyan
 
 # Kill any existing port-forward on 8200
@@ -73,7 +73,7 @@ $pfJob = Start-Process kubectl `
 Start-Sleep -Seconds 3
 Write-Host "   Port-forward PID: $($pfJob.Id)" -ForegroundColor DarkGray
 
-# ── 6. Seed secrets ──────────────────────────────────────────────────────────
+# -- 6. Seed secrets ----------------------------------------------------------
 $env:VAULT_ADDR  = "http://127.0.0.1:$LocalPort"
 $env:VAULT_TOKEN = $RootToken
 
@@ -97,7 +97,7 @@ if ($kvArgs.Count -gt 0) {
     Write-Host "   Seeded $($kvArgs.Count) secret(s) to '$SecretPath'" -ForegroundColor DarkGray
 }
 
-# ── 7. Configure Vault Agent Injector policy ─────────────────────────────────
+# -- 7. Configure Vault Agent Injector policy ---------------------------------
 Write-Host "-> Configuring Vault policy for app..." -ForegroundColor Cyan
 
 $policy = @"
@@ -107,7 +107,7 @@ path "secret/data/python-project/*" {
 "@
 $policy | vault policy write python-project-policy -
 
-# ── 8. Enable Kubernetes auth ─────────────────────────────────────────────────
+# -- 8. Enable Kubernetes auth -------------------------------------------------
 Write-Host "-> Enabling Kubernetes auth method..." -ForegroundColor Cyan
 $ErrorActionPreference = "Continue"
 vault auth enable kubernetes 2>$null
