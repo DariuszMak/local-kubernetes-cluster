@@ -42,11 +42,6 @@ tasks:
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/static_analysis_and_tests.ps1
 
-  local-dev-windows-run:
-    desc: Local dev Windows run
-    cmds:
-      - powershell -ExecutionPolicy Bypass -File tasks/run_windows_dev_application.ps1
-
   k3d:
     desc: Load k3d cluster
     cmds:
@@ -87,18 +82,6 @@ tasks:
     cmds:
       - powershell -ExecutionPolicy Bypass -Command ".\scripts\tilt-down.ps1"
 
-  full-dev-windows:
-    desc: Native Windows development flow
-    deps:
-      - cleanup
-    cmds:
-      - task: dev-env
-      - task: local-static-tests
-      - task: local-dev-windows-run
-      - task: k3d
-      - task: kustomize-dev
-      - task: tilt
-
   local-dev-windows-run-vault:
     desc: Render secrets from Vault then run the app (Windows native)
     cmds:
@@ -114,7 +97,7 @@ tasks:
       - task: vault-dev
       - task: vault-render
       - task: local-static-tests
-      - task: local-dev-windows-run
+      - task: local-dev-windows-run-vault
       - task: k3d
       - task: vault-k3d
       - task: kustomize-dev
