@@ -145,3 +145,8 @@ tilt_modules/
 k8s/kustomize/overlays/**/.dev.secrets.env
 k8s/kustomize/overlays/**/.staging.secrets.env
 k8s/kustomize/overlays/**/.prod.secrets.env
+
+# Vault
+.vault-token-local
+.vault-secrets.env
+k8s/kustomize/overlays/**/.vault-token
