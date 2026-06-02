@@ -44,10 +44,3 @@ k8s_resource(
     port_forwards=["8003:8000"],
     labels=["app"],
 )
-
-local_resource(
-    "monitoring",
-    cmd="powershell -ExecutionPolicy Bypass -File scripts/monitoring-install.ps1",
-    deps=["scripts/monitoring-install.ps1", "helm/monitoring/values.yaml"],
-    labels=["monitoring"],
-)
