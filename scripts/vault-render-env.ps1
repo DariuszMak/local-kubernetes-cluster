@@ -3,9 +3,6 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-# -----------------------------
-# Config
-# -----------------------------
 $vaultHost = if ($env:VAULT_HOST) { $env:VAULT_HOST } else { "127.0.0.1" }
 $vaultPort = if ($env:VAULT_PORT) { $env:VAULT_PORT } else { 8200 }
 
@@ -15,9 +12,6 @@ $VaultToken = if ($env:VAULT_TOKEN) { $env:VAULT_TOKEN } else { "root" }
 $SecretPath = "secret/python-project/dev"
 $OutFile    = ".vault-secrets.env"
 
-# -----------------------------
-# Preconditions
-# -----------------------------
 if (-not (Get-Command vault -ErrorAction SilentlyContinue)) {
     Write-Error "vault binary not found."
     exit 1
@@ -25,10 +19,6 @@ if (-not (Get-Command vault -ErrorAction SilentlyContinue)) {
 
 $env:VAULT_ADDR  = $VaultAddr
 $env:VAULT_TOKEN = $VaultToken
-
-# -----------------------------
-# Wait for Vault
-# -----------------------------
 function Wait-VaultReady {
     param(
         [string]$Url,
@@ -65,9 +55,6 @@ if (-not (Wait-VaultReady -Url $VaultAddr)) {
     exit 1
 }
 
-# -----------------------------
-# Fetch secrets
-# -----------------------------
 Write-Host "-> Fetching secrets from Vault ($SecretPath)..." -ForegroundColor Cyan
 
 $jsonString = vault kv get -format=json $SecretPath 2>&1
@@ -79,13 +66,12 @@ if ($LASTEXITCODE -ne 0) {
 
 $parsed = $jsonString | ConvertFrom-Json
 
-# KV v2 vs v1 handling
 $secretData = $null
 
 if ($parsed.data.PSObject.Properties.Name -contains "data") {
-    $secretData = $parsed.data.data   # KV v2
+    $secretData = $parsed.data.data
 } else {
-    $secretData = $parsed.data        # KV v1
+    $secretData = $parsed.data
 }
 
 if ($null -eq $secretData) {
@@ -93,16 +79,12 @@ if ($null -eq $secretData) {
     exit 1
 }
 
-# -----------------------------
-# Build env file
-# -----------------------------
 $lines = [System.Collections.Generic.List[string]]::new()
 
 foreach ($prop in $secretData.PSObject.Properties) {
     $lines.Add("$($prop.Name)=$($prop.Value)")
 }
 
-# Merge dev overrides
 $devEnvPath = ".dev.env"
 
 if (Test-Path $devEnvPath) {
