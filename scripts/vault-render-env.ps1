@@ -25,27 +25,26 @@ function Wait-VaultReady {
 
     Write-Host "-> Waiting for Vault at $Url ..." -ForegroundColor Cyan
 
-    $start = Get-Date
+    $sw = [System.Diagnostics.Stopwatch]::StartNew()
 
-    while ((Get-Date) - $start -lt (New-TimeSpan -Seconds $TimeoutSec)) {
+    while ($sw.Elapsed.TotalSeconds -lt $TimeoutSec) {
         try {
-            $resp = Invoke-WebRequest "$Url/v1/sys/health" -UseBasicParsing -TimeoutSec 2
+            $resp = Invoke-WebRequest "$Url/v1/sys/health" `
+                -UseBasicParsing `
+                -TimeoutSec 2
 
-            # Vault zwraca:
-            # 200 = ok
-            # 429/472/473 też oznaczają działający vault (sealed/uninitialized states)
             if ($resp.StatusCode -in 200, 429, 472, 473) {
                 Write-Host "-> Vault is ready." -ForegroundColor Green
                 return $true
             }
-        } catch {
+        }
+        catch {
             Start-Sleep -Milliseconds 500
         }
     }
 
     return $false
 }
-
 
 if (-not (Wait-VaultReady)) {
     Write-Error "Vault is not ready after timeout (30s)."
