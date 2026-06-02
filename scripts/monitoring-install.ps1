@@ -45,3 +45,5 @@ $encoded = kubectl get secret --namespace monitoring `
   -o jsonpath="{.items[0].data.admin-password}"
 
 [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($encoded))
+
+Start-Process "http://localhost:3000/grafana/" ; 
