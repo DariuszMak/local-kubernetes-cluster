@@ -101,8 +101,8 @@ tasks:
   full-dev-windows:
     desc: Full local dev flow with Vault (Windows native)
     deps:
-      - cleanup
       - vault-dev
+      - cleanup
     cmds:
       - task: dev-env
       - task: local-static-tests
