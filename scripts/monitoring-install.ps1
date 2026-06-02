@@ -48,4 +48,4 @@ $encoded = kubectl get secret --namespace monitoring `
 
 [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($encoded))
 
-Start-Process "http://localhost:3000/grafana/" ; 
+Start-Process "http://localhost:3000/"
