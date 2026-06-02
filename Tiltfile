@@ -1,9 +1,12 @@
-
 IMAGE        = "registry.localhost:5001/python-project:local"
 RELEASE_NAME = "python-project"
 HELM_CHART   = "./helm"
 NAMESPACE    = "default"
 SECRET_KEYS  = ["EXAMPLE_VARIABLE_NAME"]
+
+MON_RELEASE    = "kube-prometheus-stack"
+MON_NAMESPACE  = "monitoring"
+MON_VALUES     = "./helm/monitoring/values.yaml"
 
 def load_dev_env(path=".dev.env"):
     env = {}
@@ -22,7 +25,7 @@ docker_build(
     context=".",
     dockerfile="Dockerfile",
     live_update=[
-                sync("./src", "/app/src"),
+        sync("./src", "/app/src"),
     ],
 )
 
@@ -40,8 +43,29 @@ k8s_yaml(
     )
 )
 
+k8s_yaml(
+    helm(
+        "prometheus-community/kube-prometheus-stack",
+        name=MON_RELEASE,
+        namespace=MON_NAMESPACE,
+        values=[MON_VALUES],
+    )
+)
+
 k8s_resource(
     RELEASE_NAME,
     port_forwards=["8003:8000"],
     labels=["app"],
+)
+
+k8s_resource(
+    MON_RELEASE + "-grafana",
+    port_forwards=["3000:3000"],
+    labels=["monitoring"],
+)
+
+k8s_resource(
+    MON_RELEASE + "-prometheus",
+    port_forwards=["9090:9090"],
+    labels=["monitoring"],
 )

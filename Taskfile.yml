@@ -72,6 +72,16 @@ tasks:
     cmds:
       - powershell -ExecutionPolicy Bypass -Command ".\scripts\kustomize-apply.ps1 -Overlay staging"
 
+  monitoring:
+    desc: Install kube-prometheus-stack (Prometheus + Grafana)
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File scripts/monitoring-install.ps1
+
+  monitoring-down:
+    desc: Uninstall kube-prometheus-stack
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File scripts/monitoring-uninstall.ps1
+
   tilt:
     desc: Load Tilt
     cmds:
@@ -100,4 +110,5 @@ tasks:
       - task: k3d
       - task: vault-k3d
       - task: kustomize-dev
+      - task: monitoring
       - task: tilt
