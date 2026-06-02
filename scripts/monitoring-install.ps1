@@ -35,10 +35,12 @@ $POD_NAME = kubectl --namespace monitoring get pod `
   -o jsonpath="{.items[0].metadata.name}"
   
   
-Start-Job -ScriptBlock {
-    kubectl --namespace monitoring port-forward $using:POD_NAME 3000:3000
-}
-
+Start-Process -NoNewWindow -FilePath "kubectl" -ArgumentList @(
+    "--namespace", "monitoring",
+    "port-forward",
+    "svc/kube-prometheus-stack-grafana",
+    "3000:80"
+)
 
 $encoded = kubectl get secret --namespace monitoring `
   -l app.kubernetes.io/component=admin-secret `
