@@ -16,31 +16,33 @@ if (-not (Get-Command vault -ErrorAction SilentlyContinue)) {
 $env:VAULT_ADDR  = $VaultAddr
 $env:VAULT_TOKEN = $VaultToken
 
-
 function Wait-VaultReady {
     param(
         [string]$Url = $VaultAddr,
-        [int]$TimeoutSec = 120
+        [int]$TimeoutSec = 180
     )
 
-    Write-Host "-> Waiting for Vault at $Url ..." -ForegroundColor Cyan
+    $host = "127.0.0.1"
+    $port = 8200
 
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
 
     while ($sw.Elapsed.TotalSeconds -lt $TimeoutSec) {
-        try {
-            $resp = Invoke-WebRequest "$Url/v1/sys/health" `
-                -UseBasicParsing `
-                -TimeoutSec 2
 
-            if ($resp.StatusCode -in 200, 429, 472, 473) {
-                Write-Host "-> Vault is ready." -ForegroundColor Green
-                return $true
-            }
+        $portOpen = Test-NetConnection -ComputerName $host -Port $port -WarningAction SilentlyContinue
+
+        if ($portOpen.TcpTestSucceeded) {
+            try {
+                $resp = Invoke-WebRequest "$Url/v1/sys/health" -TimeoutSec 2 -UseBasicParsing
+
+                if ($resp.StatusCode -in 200, 429, 472, 473) {
+                    Write-Host "-> Vault is ready." -ForegroundColor Green
+                    return $true
+                }
+            } catch {}
         }
-        catch {
-            Start-Sleep -Milliseconds 500
-        }
+
+        Start-Sleep -Seconds 1
     }
 
     return $false
