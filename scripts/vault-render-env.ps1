@@ -118,4 +118,4 @@ if (Test-Path $devEnvPath) {
 $lines | Set-Content $OutFile -Encoding UTF8
 
 Write-Host "-> Wrote $($secretData.PSObject.Properties.Count) secret(s) to $OutFile" -ForegroundColor DarkGray
-Write-Host "✓ Done. App will read secrets from $OutFile" -ForegroundColor Green
+Write-Host "[OK] Done. App will read secrets from $OutFile" -ForegroundColor Green
