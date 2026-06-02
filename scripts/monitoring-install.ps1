@@ -28,3 +28,20 @@ Write-Host ""
 Write-Host "Monitoring stack deployed." -ForegroundColor Green
 Write-Host "   Grafana  : http://localhost:8082/grafana  (admin / admin)"
 Write-Host "   kubectl port-forward svc/kube-prometheus-stack-prometheus -n monitoring 9090:9090"
+
+
+$POD_NAME = kubectl --namespace monitoring get pod `
+  -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=kube-prometheus-stack" `
+  -o jsonpath="{.items[0].metadata.name}"
+  
+  
+Start-Job -ScriptBlock {
+    kubectl --namespace monitoring port-forward $using:POD_NAME 3000:3000
+}
+
+
+$encoded = kubectl get secret --namespace monitoring `
+  -l app.kubernetes.io/component=admin-secret `
+  -o jsonpath="{.items[0].data.admin-password}"
+
+[System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($encoded))
