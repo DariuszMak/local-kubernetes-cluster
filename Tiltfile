@@ -47,6 +47,7 @@ k8s_resource(
 
 local_resource(
     "monitoring",
-    serve_cmd="powershell -ExecutionPolicy Bypass -File scripts/monitoring-install.ps1",
+    cmd="powershell -ExecutionPolicy Bypass -File scripts/monitoring-install.ps1",
+    deps=["scripts/monitoring-install.ps1", "helm/monitoring/values.yaml"],
     labels=["monitoring"],
 )
