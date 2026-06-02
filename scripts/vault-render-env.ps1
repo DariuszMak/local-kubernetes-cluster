@@ -20,7 +20,7 @@ $env:VAULT_TOKEN = $VaultToken
 function Wait-VaultReady {
     param(
         [string]$Url = $VaultAddr,
-        [int]$TimeoutSec = 30
+        [int]$TimeoutSec = 120
     )
 
     Write-Host "-> Waiting for Vault at $Url ..." -ForegroundColor Cyan
