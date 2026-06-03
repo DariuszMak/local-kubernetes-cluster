@@ -93,7 +93,7 @@ tasks:
     cmds:
       - powershell -ExecutionPolicy Bypass -Command ".\scripts\tilt-down.ps1"
 
-  local-dev-windows-run:
+  local-dev-native-run:
     desc: Render secrets from Vault then run the app (Windows native)
     cmds:
       - task: vault-render
@@ -114,7 +114,7 @@ tasks:
     cmds:
       - powershell -ExecutionPolicy Bypass -File scripts/argocd-down.ps1
 
-  full-dev-windows:
+  full-dev-native:
     desc: Full local dev flow with Vault (Windows native)
     deps:
       - cleanup
@@ -122,7 +122,7 @@ tasks:
       - task: vault-dev
       - task: dev-env
       - task: local-static-tests
-      - task: local-dev-windows-run
+      - task: local-dev-native-run
       - task: k3d
       - task: vault-k3d
       - task: kustomize-dev
