@@ -19,7 +19,7 @@ Write-Host "-> Patching repoURL in Application manifests..." -ForegroundColor Cy
 
 $files = Get-ChildItem "k8s/argocd/app-*.yaml", "k8s/argocd/project.yaml"
 foreach ($f in $files) {
-    (Get-Content $f.FullName) -replace "https://github.com/YOUR_ORG/YOUR_REPO.git", $RepoURL |
+    (Get-Content $f.FullName) -replace "https://github.com/DariuszMak/local-kubernetes-cluster", $RepoURL |
         Set-Content $f.FullName
 }
 
