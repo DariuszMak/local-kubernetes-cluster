@@ -5,10 +5,11 @@ namespace: dev
 
 namePrefix: dev-
 
-commonLabels:
-  environment: dev
+labels:
+  - pairs:
+      environment: dev
 
-bases:
+resources:
   - ../../base
 
 patches:
@@ -16,14 +17,6 @@ patches:
     target:
       kind: Deployment
       name: python-project
-
-secretGenerator:
-  - name: python-project-secrets
-    namespace: dev
-    envs:
-      - .dev.secrets.env
-    options:
-      disableNameSuffixHash: true
 
 images:
   - name: registry.localhost:5001/python-project
