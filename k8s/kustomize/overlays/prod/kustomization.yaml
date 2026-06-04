@@ -11,6 +11,7 @@ labels:
 
 resources:
   - ../../base
+  - hpa.yaml
 
 patches:
   - path: deployment-patch.yaml
@@ -21,7 +22,6 @@ patches:
     target:
       kind: Ingress
       name: python-project
-  - path: hpa.yaml
 
 images:
   - name: registry.localhost:5001/python-project
