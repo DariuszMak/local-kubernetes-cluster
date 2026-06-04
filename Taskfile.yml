@@ -125,6 +125,7 @@ tasks:
       - task: local-dev-native-run
       - task: k3d
       - task: vault-k3d
+      - task: argocd
       - task: kustomize-dev
       - task: monitoring
       - task: tilt
