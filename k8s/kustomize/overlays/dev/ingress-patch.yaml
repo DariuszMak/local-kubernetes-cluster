@@ -13,6 +13,6 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: python-project
+                name: dev-python-project
                 port:
                   number: 80
