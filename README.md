@@ -21,3 +21,9 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 ```commandline
 task full-dev-native ; 
 ```
+
+## Native GitOps:
+
+```commandline
+task full-gitops ; 
+```
