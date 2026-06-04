@@ -1,3 +1,3 @@
 .\scripts\format_and_lint.ps1 ; 
 
-pytest tests/ --cov=src -vv ; 
+uv run pytest tests/ --cov=src -vv ; 
