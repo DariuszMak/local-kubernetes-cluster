@@ -42,7 +42,7 @@ if ($encoded) {
 Write-Host ""
 Write-Host "Argo CD deployed." -ForegroundColor Green
 Write-Host "   UI via ingress  : http://localhost:8082/argocd"
-Write-Host "   UI via redirect : http://localhost:8080  (port-forward below)"
+Write-Host "   UI via redirect : http://localhost:8080/argocd  (port-forward below)"
 Write-Host "   login           : admin"
 if ($password) {
     Write-Host "   password        : $password" -ForegroundColor Yellow
@@ -56,4 +56,4 @@ Start-Process kubectl `
     -WindowStyle Hidden
 
 Start-Sleep -Seconds 2
-Start-Process "http://localhost:8080"
+Start-Process "http://localhost:8080/argocd"
