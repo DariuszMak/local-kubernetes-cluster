@@ -8,6 +8,7 @@ server:
     ingressClassName: nginx
     annotations:
       nginx.ingress.kubernetes.io/rewrite-target: /$2
+      nginx.ingress.kubernetes.io/use-regex: "true"
     paths:
       - /argocd(/|$)(.*)
     pathType: ImplementationSpecific
