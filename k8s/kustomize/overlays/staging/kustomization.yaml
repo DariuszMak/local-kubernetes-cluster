@@ -5,10 +5,11 @@ namespace: staging
 
 namePrefix: staging-
 
-commonLabels:
-  environment: staging
+labels:
+  - pairs:
+      environment: staging
 
-bases:
+resources:
   - ../../base
 
 patches:
@@ -20,14 +21,6 @@ patches:
     target:
       kind: Ingress
       name: python-project
-
-secretGenerator:
-  - name: python-project-secrets
-    namespace: staging
-    envs:
-      - .staging.secrets.env
-    options:
-      disableNameSuffixHash: true
 
 images:
   - name: registry.localhost:5001/python-project

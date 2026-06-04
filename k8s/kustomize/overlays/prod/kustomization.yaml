@@ -5,10 +5,11 @@ namespace: prod
 
 namePrefix: prod-
 
-commonLabels:
-  environment: prod
+labels:
+  - pairs:
+      environment: prod
 
-bases:
+resources:
   - ../../base
 
 patches:
@@ -21,14 +22,6 @@ patches:
       kind: Ingress
       name: python-project
   - path: hpa.yaml
-
-secretGenerator:
-  - name: python-project-secrets
-    namespace: prod
-    envs:
-      - .prod.secrets.env
-    options:
-      disableNameSuffixHash: true
 
 images:
   - name: registry.localhost:5001/python-project
