@@ -126,6 +126,10 @@ tasks:
       - task: k3d
       - task: vault-k3d
       - task: argocd
+      - task: argocd-setup
+        vars:
+            REPO_URL: "{{.REPO_URL}}"
+            ENV: all
       - task: kustomize-dev
       - task: monitoring
       - task: tilt
