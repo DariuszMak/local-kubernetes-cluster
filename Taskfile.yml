@@ -107,7 +107,7 @@ tasks:
   argocd-setup:
     desc: Register Git repo and apply Application manifests (requires -RepoURL)
     cmds:
-      - powershell -ExecutionPolicy Bypass -Command ".\scripts\argocd-setup.ps1 -RepoURL {{.REPO_URL}} -Env all"
+      - powershell -ExecutionPolicy Bypass -Command ".\scripts\argocd-setup.ps1 -RepoURL https://github.com/DariuszMak/local-kubernetes-cluster"
 
   argocd-down:
     desc: Uninstall Argo CD and remove Application manifests
