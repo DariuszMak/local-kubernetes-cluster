@@ -41,7 +41,6 @@ if ($encoded) {
 
 Write-Host ""
 Write-Host "Argo CD deployed." -ForegroundColor Green
-Write-Host "   UI via ingress  : http://localhost:8082/argocd"
 Write-Host "   UI via redirect : http://localhost:8080/argocd  (port-forward below)"
 Write-Host "   login           : admin"
 if ($password) {
