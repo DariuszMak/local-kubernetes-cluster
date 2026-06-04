@@ -17,6 +17,16 @@ patches:
     target:
       kind: Deployment
       name: python-project
+  - path: ingress-patch.yaml
+    target:
+      kind: Ingress
+      name: python-project
+
+secretGenerator:
+  - name: python-project-secrets
+    behavior: replace
+    envs:
+      - .dev.secrets.env
 
 images:
   - name: registry.localhost:5001/python-project
