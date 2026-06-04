@@ -2,6 +2,7 @@ version: "3"
 
 env:
   UV_ENV_FILE: .dev.env
+  RepoURL: https://github.com/DariuszMak/local-kubernetes-cluster
 
 tasks:
   cleanup:
