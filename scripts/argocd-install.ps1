@@ -31,13 +31,6 @@ kubectl wait --namespace $Namespace `
     --selector=app.kubernetes.io/name=argocd-server `
     --timeout=120s
 
-$encoded = kubectl get secret argocd-initial-admin-secret -n $Namespace `
-    -o jsonpath="{.data.password}" 2>$null
-
-$ErrorActionPreference = "Continue"
-kubectl delete secret argocd-initial-admin-secret -n $Namespace 2>$null
-$ErrorActionPreference = "Stop"
-
 $password = "admin123"
 
 Write-Host ""
