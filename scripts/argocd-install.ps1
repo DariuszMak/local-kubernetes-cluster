@@ -44,4 +44,4 @@ Start-Process kubectl `
     -WindowStyle Hidden
 
 Start-Sleep -Seconds 2
-Start-Process "http://localhost:8082/argocd"
+Start-Process "http://localhost:8080/argocd"
