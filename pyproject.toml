@@ -5,7 +5,9 @@ description = "Simple template project for Python Application"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-
+    "opentelemetry-exporter-otlp-proto-grpc>=1.42.1",
+    "opentelemetry-instrumentation-urllib3>=0.63b1",
+    "opentelemetry-sdk>=1.42.1",
 ]
 
 [dependency-groups]
