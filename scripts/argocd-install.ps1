@@ -34,15 +34,21 @@ kubectl wait --namespace $Namespace `
 $encoded = kubectl get secret argocd-initial-admin-secret -n $Namespace `
     -o jsonpath="{.data.password}" 2>$null
 
+$ErrorActionPreference = "Continue"
+kubectl delete secret argocd-initial-admin-secret -n $Namespace 2>$null
+$ErrorActionPreference = "Stop"
+
 $password = "admin123"
 
+Write-Host ""
 Write-Host "Argo CD deployed." -ForegroundColor Green
-Write-Host "   login    : admin"
-Write-Host "   password : $password"
+Write-Host "   UI via redirect : http://localhost:8082/argocd"
+Write-Host "   login           : admin"
+Write-Host "   password        : $password" -ForegroundColor Yellow
 
 Start-Process kubectl `
     -ArgumentList "port-forward", "svc/argocd-server", "-n", $Namespace, "8080:80" `
     -WindowStyle Hidden
 
 Start-Sleep -Seconds 2
-Start-Process "http://admin:${password}@localhost:8080/argocd"
+Start-Process "http://localhost:8082/argocd"
