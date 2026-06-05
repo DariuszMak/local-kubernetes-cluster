@@ -34,25 +34,15 @@ kubectl wait --namespace $Namespace `
 $encoded = kubectl get secret argocd-initial-admin-secret -n $Namespace `
     -o jsonpath="{.data.password}" 2>$null
 
-$password = ""
-if ($encoded) {
-    $password = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($encoded))
-}
+$password = "admin123"
 
-Write-Host ""
 Write-Host "Argo CD deployed." -ForegroundColor Green
-Write-Host "   UI via redirect : http://localhost:8080/argocd  (port-forward below)"
-Write-Host "   login           : admin"
-if ($password) {
-    Write-Host "   password        : $password" -ForegroundColor Yellow
-    Write-Host "   (change it after first login)" -ForegroundColor DarkGray
-}
+Write-Host "   login    : admin"
+Write-Host "   password : $password"
 
-Write-Host ""
-Write-Host "-> Starting port-forward on localhost:8080 -> argocd-server:80 ..." -ForegroundColor Cyan
 Start-Process kubectl `
     -ArgumentList "port-forward", "svc/argocd-server", "-n", $Namespace, "8080:80" `
     -WindowStyle Hidden
 
 Start-Sleep -Seconds 2
-Start-Process "http://localhost:8080/argocd"
+Start-Process "http://admin:${password}@localhost:8080/argocd"

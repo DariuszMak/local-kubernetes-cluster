@@ -20,6 +20,8 @@ configs:
   cm:
     url: http://localhost:8082/argocd
     application.resourceTrackingMethod: annotation
+  secret:
+    argocdServerAdminPassword: "$2b$10$NFvHQZxOOCsBXyvHjRN2KObpRAIyCmy5eDSQJ1RMi7JJaJj5rbHh2"
 
 repoServer:
   resources:
