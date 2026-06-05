@@ -22,12 +22,6 @@ patches:
       kind: Ingress
       name: python-project
 
-secretGenerator:
-  - name: python-project-secrets
-    behavior: replace
-    envs:
-      - .dev.secrets.env
-
 images:
   - name: registry.localhost:5001/python-project
     newTag: local
