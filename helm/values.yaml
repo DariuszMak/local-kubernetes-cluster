@@ -25,6 +25,8 @@ resources:
 env:
   HOST: "0.0.0.0"
   PORT: "8000"
+  OTEL_SERVICE_NAME: "python-project"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://otelcol.monitoring.svc.cluster.local:4317"
 
 # ── Vault integration ──────────────────────────────────────────────────────────
 # When vault.enabled=true the Vault Agent Injector sidecar fetches secrets and

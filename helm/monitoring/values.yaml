@@ -48,3 +48,8 @@ prometheusOperator:
     limits:
       memory: "256Mi"
       cpu: "200m"
+
+tempo:
+  enabled: true
+  service:
+    type: ClusterIP
