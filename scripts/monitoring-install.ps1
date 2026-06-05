@@ -48,4 +48,20 @@ $encoded = kubectl get secret --namespace monitoring `
 
 [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($encoded))
 
-Start-Process "http://localhost:3000/grafana/"
+$password = (kubectl get secret --namespace monitoring `
+    kube-prometheus-stack-grafana `
+    -o jsonpath="{.data.admin-password}") |
+    ForEach-Object { [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($_)) }
+
+Write-Host "Grafana password: $password" -ForegroundColor Yellow
+
+Start-Process -NoNewWindow -FilePath "kubectl" -ArgumentList @(
+    "--namespace", "monitoring",
+    "port-forward",
+    "svc/kube-prometheus-stack-grafana",
+    "3000:80"
+)
+
+Start-Sleep -Seconds 2
+Start-Process "http://localhost:3000/grafana/login"
+Write-Host "   Login: admin / $password" -ForegroundColor Yellow
