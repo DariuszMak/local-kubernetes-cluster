@@ -1,238 +1,47 @@
-import logging
-import os
-from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 
-logger = logging.getLogger(__name__)
+from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
-HTML_PAGE = """\
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>python-project</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&display=swap');
+from src.api.router import api_router
+from src.core.config import get_settings
+from src.core.exceptions import global_exception_handler
+from src.core.logging import configure_logging
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg:      #0b0c10;
-      --surface: #13141a;
-      --border:  #1e2030;
-      --accent:  #c8f135;
-      --muted:   #4a4f66;
-      --text:    #e8eaf0;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Mono', monospace;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background-image:
-        linear-gradient(var(--border) 1px, transparent 1px),
-        linear-gradient(90deg, var(--border) 1px, transparent 1px);
-      background-size: 48px 48px;
-      opacity: .5;
-      pointer-events: none;
-    }
-
-    .card {
-      position: relative;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 3rem 3.5rem;
-      max-width: 520px;
-      width: 90vw;
-      text-align: center;
-      box-shadow: 0 0 80px -20px rgba(200, 241, 53, .12);
-    }
-
-    .badge {
-      display: inline-block;
-      font-size: .65rem;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      color: var(--accent);
-      border: 1px solid var(--accent);
-      border-radius: 2px;
-      padding: .2em .75em;
-      margin-bottom: 1.5rem;
-    }
-
-    h1 {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: clamp(2rem, 6vw, 3rem);
-      letter-spacing: -.02em;
-      line-height: 1.1;
-      margin-bottom: .5rem;
-    }
-
-    h1 span { color: var(--accent); }
-
-    .sub {
-      color: var(--muted);
-      font-size: .8rem;
-      letter-spacing: .05em;
-      margin-bottom: 2.5rem;
-    }
-
-    .clock-wrap {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      padding: 1rem 1.5rem;
-    }
-
-    .clock-label {
-      font-size: .6rem;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: .4rem;
-    }
-
-    #clock {
-      font-size: 1.6rem;
-      font-weight: 500;
-      letter-spacing: .06em;
-      color: var(--accent);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .dot {
-      display: inline-block;
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--accent);
-      margin-right: .5rem;
-      vertical-align: middle;
-      animation: pulse 1.4s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: .3; transform: scale(.7); }
-    }
-
-    .card { animation: fadeUp .5s ease both; }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-  </style>
-</head>
-<body>
-  <div class="card">
-    <div class="badge">python-project &nbsp;/&nbsp; k3d</div>
-    <h1>Hello, <span>World</span></h1>
-    <p class="sub">Container is healthy &amp; serving requests</p>
-    <div class="clock-wrap">
-      <div class="clock-label"><span class="dot"></span>current time</div>
-      <div id="clock">--:--:--</div>
-    </div>
-  </div>
-  <script>
-    function tick() {
-      const now = new Date();
-      document.getElementById('clock').textContent =
-        now.toLocaleTimeString('en-GB', { hour12: false });
-    }
-    tick();
-    setInterval(tick, 1000);
-  </script>
-</body>
-</html>
-"""
+configure_logging()
 
 
-def load_dev_env(env_path: str = ".dev.env") -> dict[str, str]:
-    """Load key=value pairs from a .env file into os.environ. Returns loaded vars."""
-    loaded: dict[str, str] = {}
-    path = Path(env_path)
-    if not path.exists():
-        logger.warning("Env file not found: %s", env_path)
-        return loaded
-    for line in path.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if not line or line.startswith("#"):
-            continue
-        if "=" in line:
-            key, _, value = line.partition("=")
-            key = key.strip()
-            value = value.strip()
-            if os.getenv(key) is None:
-                os.environ[key] = value
-                logger.debug("Loaded env var: %s=%s", key, value)
-            else:
-                logger.debug("Skipped env var (already set): %s=%s", key, value)
-            loaded[key] = value
-    logger.info("Loaded %d var(s) from %s", len(loaded), env_path)
-    return loaded
+settings = get_settings()
+
+app = FastAPI(
+    title=settings.app_name,
+    version=settings.version,
+    description="Production-ready FastAPI template for recruitment tasks.",
+)
+
+app.include_router(api_router)
+
+app.add_exception_handler(Exception, global_exception_handler)
+
+app.mount("/static", StaticFiles(directory="src/static"), name="static")
 
 
-def load_secrets() -> None:
-    """
-    Load secrets using the best available source, in priority order:
-
-    1. VAULT_SECRETS_FILE env var  — set by the Vault Agent Injector inside k8s.
-       Points to /vault/secrets/app.env, written by the Vault Agent sidecar.
-
-    2. .vault-secrets.env          — generated locally by vault-render-env.ps1
-       when running natively on Windows with a local Vault dev server.
-
-    3. .dev.env                    — plain fallback for environments without Vault.
-    """
-    vault_file = os.getenv("VAULT_SECRETS_FILE")
-    if vault_file and Path(vault_file).exists():
-        logger.info("Loading secrets from Vault Agent file: %s", vault_file)
-        load_dev_env(vault_file)
-        # Still load .dev.env for non-secret infra vars (HOST, PORT, etc.)
-        load_dev_env(".dev.env")
-        return
-
-    local_vault_env = ".vault-secrets.env"
-    if Path(local_vault_env).exists():
-        logger.info("Loading secrets from local Vault render: %s", local_vault_env)
-        load_dev_env(local_vault_env)
-        load_dev_env(".dev.env")
-        return
-
-    logger.info("Vault not available — falling back to .dev.env")
-    load_dev_env(".dev.env")
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon() -> FileResponse:
+    return FileResponse(Path("src/static/favicon.ico"))
 
 
-class Handler(BaseHTTPRequestHandler):
-    def do_GET(self) -> None:
-        body = HTML_PAGE.encode("utf-8")
-        self.send_response(200)
-        self.send_header("Content-Type", "text/html; charset=utf-8")
-        self.send_header("Content-Length", str(len(body)))
-        self.end_headers()
-        self.wfile.write(body)
+def run() -> None:
+    import uvicorn
 
-    def log_message(self, fmt: str, *args: object) -> None:
-        logger.info(fmt, *args)
+    uvicorn.run(
+        "src.main:app",
+        host="127.0.0.1",
+        port=8000,
+        reload=settings.debug,
+    )
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-    load_secrets()
-    host = os.getenv("HOST", "0.0.0.0")  # noqa: S104
-    port = int(os.getenv("PORT", "8000"))
-    server = HTTPServer((host, port), Handler)
-    logger.info("Serving on http://%s:%d   open http://localhost:%d", host, port, port)
-    server.serve_forever()
+    run()
