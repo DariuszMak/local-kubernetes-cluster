@@ -37,8 +37,8 @@ def run() -> None:
 
     uvicorn.run(
         "src.main:app",
-        host="127.0.0.1",
-        port=8001,
+        host=settings.host,     
+        port=settings.port,     
         reload=settings.debug,
     )
 
