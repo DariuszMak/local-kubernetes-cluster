@@ -72,6 +72,21 @@ tasks:
     cmds:
       - powershell -ExecutionPolicy Bypass -Command ".\scripts\kustomize-apply.ps1 -Overlay staging"
 
+  argocd:
+    desc: Install Argo CD into the cluster
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File scripts/argocd-install.ps1
+
+  argocd-setup:
+    desc: Register Git repo and apply Application manifests (requires -RepoURL)
+    cmds:
+      - powershell -ExecutionPolicy Bypass -Command ".\scripts\argocd-setup.ps1 -RepoURL https://github.com/DariuszMak/local-kubernetes-cluster"
+
+  argocd-down:
+    desc: Uninstall Argo CD and remove Application manifests
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File scripts/argocd-down.ps1
+
   monitoring:
     desc: Install kube-prometheus-stack (Prometheus + Grafana)
     cmds:
@@ -103,21 +118,6 @@ tasks:
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/wait_for_native_api.ps1
       - powershell -ExecutionPolicy Bypass -File tasks/test_native_api.ps1
-
-  argocd:
-    desc: Install Argo CD into the cluster
-    cmds:
-      - powershell -ExecutionPolicy Bypass -File scripts/argocd-install.ps1
-
-  argocd-setup:
-    desc: Register Git repo and apply Application manifests (requires -RepoURL)
-    cmds:
-      - powershell -ExecutionPolicy Bypass -Command ".\scripts\argocd-setup.ps1 -RepoURL https://github.com/DariuszMak/local-kubernetes-cluster"
-
-  argocd-down:
-    desc: Uninstall Argo CD and remove Application manifests
-    cmds:
-      - powershell -ExecutionPolicy Bypass -File scripts/argocd-down.ps1
 
   local-dev-tilt-api-tests:
     desc: Local dev Windows API tests
