@@ -119,6 +119,12 @@ tasks:
     cmds:
       - powershell -ExecutionPolicy Bypass -File scripts/argocd-down.ps1
 
+  local-dev-tilt-api-tests:
+    desc: Local dev Windows API tests
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/wait_for_tilt_api.ps1
+      - powershell -ExecutionPolicy Bypass -File tasks/test_tilt_api.ps1
+
   full-dev-native:
     desc: Full local dev flow with Vault (Windows native)
     deps:
@@ -136,6 +142,7 @@ tasks:
       - task: kustomize-dev
       - task: monitoring
       - task: tilt
+      - task: local-dev-tilt-api-tests
 
   full-gitops:
     desc: Full GitOps flow — k3d + Vault + Argo CD (requires REPO_URL variable)
