@@ -334,14 +334,14 @@
           }
         },
         {
-          "name": "POST /users/ - duplicate email returns 500",
+          "name": "POST /users/ - duplicate email returns 409",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status is 500 for duplicate email', function () {",
-                  "    pm.response.to.have.status(500);",
+                  "pm.test('Status is 409 for duplicate email', function () {",
+                  "    pm.response.to.have.status(409);",
                   "});"
                 ],
                 "type": "text/javascript"
