@@ -97,6 +97,12 @@ tasks:
     cmds:
       - task: vault-render
       - powershell -ExecutionPolicy Bypass -File tasks/run_windows_dev_application.ps1
+  
+  local-dev-native-api-tests:
+    desc: Local dev Windows API tests
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/wait_for_windows_api.ps1
+      - powershell -ExecutionPolicy Bypass -File tasks/test_windows_api.ps1
 
   argocd:
     desc: Install Argo CD into the cluster
@@ -122,6 +128,7 @@ tasks:
       - task: dev-env
       - task: local-static-tests
       - task: local-dev-native-run
+      - task: local-dev-native-api-tests
       - task: k3d
       - task: vault-k3d
       - task: argocd
