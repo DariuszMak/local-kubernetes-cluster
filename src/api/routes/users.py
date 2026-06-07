@@ -1,5 +1,7 @@
 from typing import TYPE_CHECKING
 
+from src.core.exceptions import DuplicateEmailError
+
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, ConfigDict
 
@@ -31,10 +33,12 @@ def get_user_service(db: AsyncSession = Depends(get_db)) -> UserService:  # noqa
 @router.post("/", response_model=UserRead)
 async def create_user(
     email: str,
-    service: UserService = Depends(get_user_service),  # noqa: B008
+    service: UserService = Depends(get_user_service),
 ) -> User:
-    return await service.create_user(email)
-
+    try:
+        return await service.create_user(email)
+    except DuplicateEmailError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 @router.get("/{user_id}", response_model=UserRead)
 async def get_user(
