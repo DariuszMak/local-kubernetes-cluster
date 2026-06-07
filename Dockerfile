@@ -10,10 +10,10 @@ COPY uv.lock* ./
 
 RUN if [ -f uv.lock ]; then uv sync --no-dev --frozen; else uv sync --no-dev; fi
 
+COPY alembic.ini ./
+COPY alembic/ ./alembic/
 COPY src/ ./src/
 
 ENV PYTHONPATH=.
 
-RUN uv run alembic upgrade head ; uv run alembic downgrade base ; uv run alembic upgrade head ; 
-
-CMD ["uv", "run", "python", "src/main.py"]
+CMD ["sh", "-c", "uv run alembic upgrade head && uv run python src/main.py"]
