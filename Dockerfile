@@ -14,4 +14,6 @@ COPY src/ ./src/
 
 ENV PYTHONPATH=.
 
+RUN uv run alembic upgrade head ; uv run alembic downgrade base ; uv run alembic upgrade head ; 
+
 CMD ["uv", "run", "python", "src/main.py"]
