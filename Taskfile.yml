@@ -47,7 +47,7 @@ tasks:
     cmds:
       - task: vault-render
       - powershell -ExecutionPolicy Bypass -File tasks/run_native_dev_application.ps1
-  
+
   local-dev-native-api-tests:
     desc: Local dev Windows API tests
     cmds:
