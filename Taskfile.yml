@@ -112,7 +112,7 @@ tasks:
   tilt:
     desc: Load Tilt
     cmds:
-      - powershell -ExecutionPolicy Bypass -Command "Start-Process tilt -ArgumentList 'up'"
+      - powershell -ExecutionPolicy Bypass -Command "Start-Process .\scripts\tilt.ps1"
 
   tilt-down:
     desc: Stop Tilt environment
