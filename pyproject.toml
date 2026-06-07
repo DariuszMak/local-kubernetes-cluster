@@ -132,7 +132,7 @@ select = [
 # TRY002 require custom exc.
 # TRY003 long exc messages.
 # UP040 type keyword was introduced in Python 3.12 by PEP 695 but isn't supported by mypy yet
-ignore = ["S101", "PT001", "TRY002", "TRY003", "UP040"]
+ignore = ["S101", "PT001", "TRY002", "TRY003", "UP040", "TC002", "TC003"]
 # Allow autofix for all enabled rules (when `--fix`) is provided.
 fixable = [
     "A",
