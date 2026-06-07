@@ -1,11 +1,10 @@
 from typing import TYPE_CHECKING
 
-from src.core.exceptions import DuplicateEmailError
-
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, ConfigDict
 
 from src.api.dependencies.auth import get_current_user_email
+from src.core.exceptions import DuplicateEmailError
 from src.db.session import get_db
 from src.repositories.user_repository import UserRepository
 from src.services.user_service import UserNotFoundError, UserService
@@ -33,12 +32,13 @@ def get_user_service(db: AsyncSession = Depends(get_db)) -> UserService:  # noqa
 @router.post("/", response_model=UserRead)
 async def create_user(
     email: str,
-    service: UserService = Depends(get_user_service),
+    service: UserService = Depends(get_user_service),  # noqa: B008
 ) -> User:
     try:
         return await service.create_user(email)
     except DuplicateEmailError as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from exc
+
 
 @router.get("/{user_id}", response_model=UserRead)
 async def get_user(
