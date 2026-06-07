@@ -150,3 +150,6 @@ k8s/kustomize/overlays/**/.prod.secrets.env
 .vault-token-local
 .vault-secrets.env
 k8s/kustomize/overlays/**/.vault-token
+
+# Database
+*.db
