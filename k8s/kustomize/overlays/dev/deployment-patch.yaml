@@ -15,10 +15,10 @@ spec:
               value: "8000"
           resources:
             requests:
-              memory: "32Mi"
+              memory: "64Mi"
               cpu: "50m"
             limits:
-              memory: "128Mi"
+              memory: "512Mi"
               cpu: "200m"
           livenessProbe:
             initialDelaySeconds: 60
