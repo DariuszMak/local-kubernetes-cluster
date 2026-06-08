@@ -19,11 +19,11 @@ spec:
               memory: "512Mi"
               cpu: "1000m"
           livenessProbe:
-            initialDelaySeconds: 10
+            initialDelaySeconds: 60
             periodSeconds: 15
             failureThreshold: 3
           readinessProbe:
-            initialDelaySeconds: 5
+            initialDelaySeconds: 30
             periodSeconds: 10
             failureThreshold: 3
       topologySpreadConstraints:
