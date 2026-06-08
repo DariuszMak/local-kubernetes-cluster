@@ -1,13 +1,32 @@
-do {
-    Start-Sleep -Seconds 3
+$MaxWaitSeconds = 120
+$RetryInterval  = 3
+$Elapsed        = 0
+$Ready          = $false
+
+Write-Host "-> Waiting for API at http://127.0.0.1:8001 ..." -ForegroundColor Cyan
+
+while (-not $Ready) {
+    if ($Elapsed -ge $MaxWaitSeconds) {
+        Write-Error "API did not become ready after ${MaxWaitSeconds}s. Aborting."
+        exit 1
+    }
 
     try {
-        $api = Invoke-RestMethod `
-            -Uri "http://127.0.0.1:8001/openapi.json" `
-            -Method Get
+        $response = Invoke-WebRequest `
+            -Uri "http://127.0.0.1:8001/health/" `
+            -Method Get `
+            -UseBasicParsing `
+            -ErrorAction Stop
+
+        if ($response.StatusCode -eq 200) {
+            $Ready = $true
+        }
     }
     catch {
-        $api = $null
+        Write-Host "   [${Elapsed}s/${MaxWaitSeconds}s] Not ready yet..." -ForegroundColor DarkGray
+        Start-Sleep -Seconds $RetryInterval
+        $Elapsed += $RetryInterval
     }
+}
 
-} until ($api)
+Write-Host "-> API is ready." -ForegroundColor Green
