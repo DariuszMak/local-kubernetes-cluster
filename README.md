@@ -1,5 +1,19 @@
 # Local kubernetes cluster
 
+### Project structure diagrams
+
+##### Modular perspective
+
+<p align="center">
+  <img src="images/structure_module.svg" alt="Modular perspective" width="600">
+</p>
+
+##### Library dependencies perspective
+
+<p align="center">
+  <img src="images/structure_module_clustered.svg" alt="Library dependencies perspective" width="600">
+</p>
+
 ## Requirements
 
 - [UV](https://github.com/astral-sh/uv) package manager
