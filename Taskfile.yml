@@ -54,6 +54,11 @@ tasks:
       - powershell -ExecutionPolicy Bypass -File tasks/wait_for_native_api.ps1
       - powershell -ExecutionPolicy Bypass -File tasks/test_native_api.ps1
 
+  generate-diagrams:
+    desc: Generate project diagrams
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/generate_diagrams.ps1
+
   k3d:
     desc: Load k3d cluster
     cmds:
@@ -135,6 +140,7 @@ tasks:
       - task: local-static-tests
       - task: local-dev-native-run
       - task: local-dev-native-api-tests
+      - task: generate-diagrams
       - task: k3d
       - task: vault-k3d
       - task: argocd
