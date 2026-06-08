@@ -9,7 +9,7 @@ docker system prune --volumes -a -f ;
 docker volume rm -f $(docker volume ls -q) ; 
 docker system df ; 
 
-$ports = 8001
+$ports = 8001, 10350
 
 foreach ($port in $ports) {
     $conns = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
