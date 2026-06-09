@@ -13,7 +13,7 @@ while (-not $Ready) {
 
     try {
         $response = Invoke-WebRequest `
-            -Uri "http://127.0.0.1:8001/health/" `
+            -Uri "http://127.0.0.1:8001/health/readiness" `
             -Method Get `
             -UseBasicParsing `
             -ErrorAction Stop
@@ -29,4 +29,32 @@ while (-not $Ready) {
     }
 }
 
-Write-Host "-> API is ready." -ForegroundColor Green
+Write-Host "-> API is ready. Waiting for stability..." -ForegroundColor Cyan
+
+$StableCount    = 0
+$RequiredStable = 3
+
+while ($StableCount -lt $RequiredStable) {
+    Start-Sleep -Seconds 2
+
+    try {
+        $response = Invoke-WebRequest `
+            -Uri "http://127.0.0.1:8001/health/readiness" `
+            -Method Get `
+            -UseBasicParsing `
+            -ErrorAction Stop
+
+        if ($response.StatusCode -eq 200) {
+            $StableCount++
+            Write-Host "   Stable check $StableCount/$RequiredStable" -ForegroundColor DarkGray
+        } else {
+            $StableCount = 0
+        }
+    }
+    catch {
+        $StableCount = 0
+        Write-Host "   Stability check failed, resetting..." -ForegroundColor DarkGray
+    }
+}
+
+Write-Host "-> API is stable and ready for tests." -ForegroundColor Green
