@@ -1,12 +1,9 @@
-$MaxWaitSeconds = 180
-$RetryInterval  = 5
+$MaxWaitSeconds = 120
+$RetryInterval  = 3
 $Elapsed        = 0
 $Ready          = $false
 
-$HostUrl = "http://127.0.0.1:8003"
-$HealthEndpoint = "$HostUrl/health/readiness"
-
-Write-Host "-> Waiting for API at $HostUrl ..." -ForegroundColor Cyan
+Write-Host "-> Waiting for API at http://127.0.0.1:8001 ..." -ForegroundColor Cyan
 
 while (-not $Ready) {
     if ($Elapsed -ge $MaxWaitSeconds) {
@@ -15,27 +12,10 @@ while (-not $Ready) {
     }
 
     try {
-        $tcp = Test-NetConnection -ComputerName 127.0.0.1 -Port 8003 -WarningAction SilentlyContinue
-        if (-not $tcp.TcpTestSucceeded) {
-            Write-Host "   [${Elapsed}s] TCP not ready..." -ForegroundColor DarkGray
-            Start-Sleep -Seconds $RetryInterval
-            $Elapsed += $RetryInterval
-            continue
-        }
-    }
-    catch {
-        Write-Host "   [${Elapsed}s] TCP check failed..." -ForegroundColor DarkGray
-        Start-Sleep -Seconds $RetryInterval
-        $Elapsed += $RetryInterval
-        continue
-    }
-
-    try {
         $response = Invoke-WebRequest `
-            -Uri $HealthEndpoint `
+            -Uri "http://127.0.0.1:8001/health/readiness" `
             -Method Get `
             -UseBasicParsing `
-            -TimeoutSec 5 `
             -ErrorAction Stop
 
         if ($response.StatusCode -eq 200) {
@@ -43,62 +23,38 @@ while (-not $Ready) {
         }
     }
     catch {
-        Write-Host "   [${Elapsed}s/${MaxWaitSeconds}s] Not ready yet: $($_.Exception.Message)" -ForegroundColor DarkGray
+        Write-Host "   [${Elapsed}s/${MaxWaitSeconds}s] Not ready yet..." -ForegroundColor DarkGray
         Start-Sleep -Seconds $RetryInterval
         $Elapsed += $RetryInterval
     }
 }
 
-Write-Host "-> API responded ready. Verifying stability window..." -ForegroundColor Cyan
+Write-Host "-> API is ready. Waiting for stability..." -ForegroundColor Cyan
 
-$StableSecondsRequired = 15
-$StableStart = $null
-$StableCheckInterval = 2
-$StableElapsed = 0
+$StableCount    = 0
+$RequiredStable = 3
 
-while ($true) {
-
-    Start-Sleep -Seconds $StableCheckInterval
-    $StableElapsed += $StableCheckInterval
+while ($StableCount -lt $RequiredStable) {
+    Start-Sleep -Seconds 2
 
     try {
         $response = Invoke-WebRequest `
-            -Uri $HealthEndpoint `
+            -Uri "http://127.0.0.1:8001/health/readiness" `
             -Method Get `
             -UseBasicParsing `
-            -TimeoutSec 5 `
             -ErrorAction Stop
 
         if ($response.StatusCode -eq 200) {
-
-            if (-not $StableStart) {
-                $StableStart = Get-Date
-            }
-
-            $stableDuration = (New-TimeSpan -Start $StableStart).TotalSeconds
-
-            Write-Host "   Stable for ${stableDuration}s / ${StableSecondsRequired}s" -ForegroundColor DarkGray
-
-            if ($stableDuration -ge $StableSecondsRequired) {
-                break
-            }
-        }
-        else {
-            Write-Host "   Non-200 response, resetting stability..." -ForegroundColor DarkGray
-            $StableStart = $null
+            $StableCount++
+            Write-Host "   Stable check $StableCount/$RequiredStable" -ForegroundColor DarkGray
+        } else {
+            $StableCount = 0
         }
     }
     catch {
-        Write-Host "   Stability check failed: $($_.Exception.Message)" -ForegroundColor DarkGray
-        $StableStart = $null
-    }
-
-    if ($StableElapsed -ge $MaxWaitSeconds) {
-        Write-Error "API did not stabilize after ${MaxWaitSeconds}s. Aborting."
-        exit 1
+        $StableCount = 0
+        Write-Host "   Stability check failed, resetting..." -ForegroundColor DarkGray
     }
 }
 
-Start-Sleep -Seconds 5
-
-Write-Host "-> API is stable and fully ready for integration tests." -ForegroundColor Green
+Write-Host "-> API is stable and ready for tests." -ForegroundColor Green
