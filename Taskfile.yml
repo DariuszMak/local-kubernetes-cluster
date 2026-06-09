@@ -42,6 +42,11 @@ tasks:
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/static_analysis_and_tests.ps1
 
+  kibana-elastic:
+    desc: Start Elastic + Kibana stack
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/kibana_elastic.ps1
+
   local-dev-native-run:
     desc: Render secrets from Vault then run the app (Windows native)
     cmds:
@@ -58,6 +63,11 @@ tasks:
     desc: Generate project diagrams
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/generate_diagrams.ps1
+
+  sonarqube:
+    desc: Run SonarQube analysis pipeline
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/sonarqube.ps1
 
   k3d:
     desc: Load k3d cluster
@@ -138,8 +148,10 @@ tasks:
       - task: vault-dev
       - task: dev-env
       - task: local-static-tests
+      - task: kibana-elastic
       - task: local-dev-native-run
       - task: local-dev-native-api-tests
+      - task: sonarqube
       - task: generate-diagrams
       - task: k3d
       - task: vault-k3d
