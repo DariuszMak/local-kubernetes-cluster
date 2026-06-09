@@ -143,8 +143,6 @@ tasks:
       - task: generate-diagrams
       - task: k3d
       - task: vault-k3d
-      - task: argocd
-      - task: argocd-setup
       - task: kustomize-dev
       - task: monitoring
       - task: tilt
