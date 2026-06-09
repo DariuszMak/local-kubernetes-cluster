@@ -37,3 +37,13 @@ vault:
 
 secrets:
   EXAMPLE_VARIABLE_NAME: ""
+
+probes:
+  liveness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    failureThreshold: 5
+  readiness:
+    initialDelaySeconds: 15
+    periodSeconds: 5
+    failureThreshold: 5

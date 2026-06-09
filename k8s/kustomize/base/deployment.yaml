@@ -25,6 +25,8 @@ spec:
               value: "0.0.0.0"
             - name: PORT
               value: "8000"
+            - name: DEBUG
+              value: "false"
             - name: EXAMPLE_VARIABLE_NAME
               valueFrom:
                 secretKeyRef:
@@ -32,16 +34,18 @@ spec:
                   key: EXAMPLE_VARIABLE_NAME
           livenessProbe:
             httpGet:
-              path: /
-              port: 8000
-            initialDelaySeconds: 60
-            periodSeconds: 10
-          readinessProbe:
-            httpGet:
-              path: /
+              path: /health/liveness
               port: 8000
             initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /health/readiness
+              port: 8000
+            initialDelaySeconds: 15
             periodSeconds: 5
+            failureThreshold: 5
           resources:
             requests:
               memory: "64Mi"
