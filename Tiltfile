@@ -35,7 +35,7 @@ k8s_yaml(
         HELM_CHART,
         name=RELEASE_NAME,
         namespace=NAMESPACE,
-        set=["{}={}".format(k, v) for k, v in secret_set_args.items()] + ["env.DEBUG=false"],
+        set=["{}={}".format(k, v) for k, v in secret_set_args.items()],
     )
 )
 

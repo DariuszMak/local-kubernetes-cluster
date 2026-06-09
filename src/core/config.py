@@ -5,7 +5,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     app_name: str = "Logged Time Reporting API"
-    debug: bool = False
+    debug: bool = True
     version: str = "1.0.0"
     database_url: str = "sqlite+aiosqlite:///./app.db"
     host: str = "127.0.0.1"
