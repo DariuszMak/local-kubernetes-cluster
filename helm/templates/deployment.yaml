@@ -15,10 +15,6 @@ spec:
         app: {{ .Release.Name }}
       annotations:
         {{- if .Values.vault.enabled }}
-        # ── Vault Agent Injector annotations ──────────────────────────────────
-        # The injector sidecar fetches secrets from Vault and writes them to
-        # /vault/secrets/app.env inside the container.  The app reads that file
-        # via load_dev_env("/vault/secrets/app.env").
         vault.hashicorp.com/agent-inject:                   "true"
         vault.hashicorp.com/role:                           {{ .Values.vault.role | quote }}
         vault.hashicorp.com/agent-inject-secret-app.env:   {{ .Values.vault.secretPath | quote }}
@@ -44,7 +40,6 @@ spec:
               value: {{ $val | quote }}
             {{- end }}
             {{- if not .Values.vault.enabled }}
-            # Fallback: inject secrets directly when Vault is disabled
             {{- range $key, $val := .Values.secrets }}
             - name: {{ $key }}
               valueFrom:
@@ -54,21 +49,22 @@ spec:
             {{- end }}
             {{- end }}
             {{- if .Values.vault.enabled }}
-            # Tell the app which env file to load (written by Vault Agent)
             - name: VAULT_SECRETS_FILE
               value: "/vault/secrets/app.env"
             {{- end }}
           livenessProbe:
             httpGet:
-              path: /
+              path: /health/liveness
               port: {{ .Values.service.targetPort }}
-            initialDelaySeconds: 5
-            periodSeconds: 10
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
           readinessProbe:
             httpGet:
-              path: /
+              path: /health/readiness
               port: {{ .Values.service.targetPort }}
-            initialDelaySeconds: 3
-            periodSeconds: 5
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
