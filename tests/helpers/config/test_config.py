@@ -1,4 +1,3 @@
-import pytest
 
 from src.helpers.config.config import Config
 
