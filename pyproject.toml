@@ -23,6 +23,7 @@ dependencies = [
     "types-passlib>=1.7.7.20260211",
     "types-python-jose>=3.5.0.20250531",
     "uvicorn>=0.40.0",
+    "structlog>=26.1.0",
 ]
 
 [dependency-groups]
