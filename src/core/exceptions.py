@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 if TYPE_CHECKING:
     from fastapi import Request
 
-logger = logging.getLogger("api")
+logger = structlog.get_logger(__name__)
 
 
 def global_exception_handler(_request: Request, _exc: Exception) -> JSONResponse:

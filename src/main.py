@@ -3,6 +3,7 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+import structlog
 
 from src.api.router import api_router
 from src.core.config import get_settings
@@ -11,8 +12,10 @@ from src.core.logging import configure_logging
 
 configure_logging()
 
+logger = structlog.get_logger(__name__)
 
 settings = get_settings()
+
 
 app = FastAPI(
     title=settings.app_name,
@@ -26,6 +29,7 @@ app.add_exception_handler(Exception, global_exception_handler)
 
 app.mount("/static", StaticFiles(directory="src/static"), name="static")
 
+logger.info("FastAPI started", app_name=settings.app_name, version=settings.version)
 
 @app.get("/favicon.ico", include_in_schema=False)
 async def favicon() -> FileResponse:
