@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, ConfigDict
 
 from src.api.dependencies.auth import get_current_user_email
-from src.helpers.exceptions import DuplicateEmailError
 from src.db.session import get_db
+from src.helpers.exceptions import DuplicateEmailError
 from src.repositories.user_repository import UserRepository
 from src.services.user_service import UserNotFoundError, UserService
 
