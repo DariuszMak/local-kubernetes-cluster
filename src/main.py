@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from src.helpers.logging_setup import logging_setup
 import structlog
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
@@ -8,9 +9,8 @@ from fastapi.staticfiles import StaticFiles
 from src.api.router import api_router
 from src.helpers.config.config import get_settings
 from src.helpers.exceptions import global_exception_handler
-from src.helpers.logging import configure_logging
 
-configure_logging()
+logging_setup()
 
 logger = structlog.get_logger(__name__)
 
