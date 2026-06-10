@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
-from fastapi.responses import JSONResponse
 import structlog
+from fastapi.responses import JSONResponse
 
 if TYPE_CHECKING:
     from fastapi import Request
