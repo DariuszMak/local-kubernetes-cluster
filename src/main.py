@@ -7,8 +7,8 @@ from fastapi.staticfiles import StaticFiles
 
 from src.api.router import api_router
 from src.core.config import get_settings
-from src.core.exceptions import global_exception_handler
-from src.core.logging import configure_logging
+from src.helpers.exceptions import global_exception_handler
+from src.helpers.logging import configure_logging
 
 configure_logging()
 

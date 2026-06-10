@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 from typing import TYPE_CHECKING
 
-from src.core.exceptions import DuplicateEmailError
+from src.helpers.exceptions import DuplicateEmailError
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession

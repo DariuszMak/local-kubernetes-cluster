@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
-from src.core.exceptions import DuplicateEmailError
+from src.helpers.exceptions import DuplicateEmailError
 from src.db.models.user import User
 
 if TYPE_CHECKING:
