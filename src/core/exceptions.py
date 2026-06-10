@@ -1,7 +1,7 @@
-import logging
 from typing import TYPE_CHECKING
 
 from fastapi.responses import JSONResponse
+import structlog
 
 if TYPE_CHECKING:
     from fastapi import Request
