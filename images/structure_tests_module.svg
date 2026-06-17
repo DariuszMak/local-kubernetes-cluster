@@ -157,7 +157,7 @@
 <!-- src -->
 <g id="node8" class="node">
 <title>src</title><style>.edge>path:hover{stroke-width:8}</style>
-<ellipse fill="#2293e7" stroke="#ffffff" cx="32.17" cy="-348" rx="27" ry="18"/>
+<ellipse fill="#1694f3" stroke="#ffffff" cx="32.17" cy="-348" rx="27" ry="18"/>
 <text xml:space="preserve" text-anchor="middle" x="32.17" y="-344.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#e0e0e0">src</text>
 </g>
 <!-- src&#45;&gt;tests_conftest -->
@@ -188,21 +188,21 @@
 <!-- src_helpers -->
 <g id="node9" class="node">
 <title>src_helpers</title><style>.edge>path:hover{stroke-width:8}</style>
-<ellipse fill="#2f91db" stroke="#ffffff" cx="138.83" cy="-342" rx="38.49" ry="18"/>
+<ellipse fill="#2293e7" stroke="#ffffff" cx="138.83" cy="-342" rx="38.49" ry="18"/>
 <text xml:space="preserve" text-anchor="middle" x="138.83" y="-338.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#e0e0e0">src.helpers</text>
 </g>
 <!-- src_helpers&#45;&gt;src_main -->
 <g id="edge16" class="edge">
 <title>src_helpers&#45;&gt;src_main</title><style>.edge>path:hover{stroke-width:8}</style>
 <path fill="none" stroke="#ffffff" d="M401.77,-334C443.75,-331.06 548.54,-299.75 581.02,-273 619.41,-241.38 643.87,-187.41 656.05,-154.4"/>
-<polygon fill="#2f91db" stroke="#ffffff" points="659.3,-155.69 659.34,-145.1 652.71,-153.36 659.3,-155.69"/>
+<polygon fill="#2293e7" stroke="#ffffff" points="659.3,-155.69 659.34,-145.1 652.71,-153.36 659.3,-155.69"/>
 <path fill="none" stroke="#ffffff" d="M177.77,-341.87C228.44,-341.47 320.98,-339.89 399.77,-334"/>
 </g>
 <!-- src_helpers&#45;&gt;tests_helpers_config_test_config -->
 <g id="edge17" class="edge">
 <title>src_helpers&#45;&gt;tests_helpers_config_test_config</title><style>.edge>path:hover{stroke-width:8}</style>
 <path fill="none" stroke="#ffffff" d="M263.17,-296C341.56,-288.75 429.05,-262.03 483.01,-243.27"/>
-<polygon fill="#2f91db" stroke="#ffffff" points="483.98,-246.64 492.25,-240.01 481.65,-240.04 483.98,-246.64"/>
+<polygon fill="#2293e7" stroke="#ffffff" points="483.98,-246.64 492.25,-240.01 481.65,-240.04 483.98,-246.64"/>
 <path fill="none" stroke="#ffffff" d="M166.06,-329.1C190.13,-317.99 227.13,-302.71 261.17,-296"/>
 </g>
 <!-- src_helpers&#45;&gt;tests_helpers_test_logging -->
@@ -213,7 +213,7 @@
 <!-- src_helpers_config -->
 <g id="node10" class="node">
 <title>src_helpers_config</title><style>.edge>path:hover{stroke-width:8}</style>
-<ellipse fill="#3b8fce" stroke="#ffffff" cx="262.17" cy="-161" rx="35.71" ry="31.11"/>
+<ellipse fill="#2f91db" stroke="#ffffff" cx="262.17" cy="-161" rx="35.71" ry="31.11"/>
 <text xml:space="preserve" text-anchor="middle" x="262.17" y="-169.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#e0e0e0">src.</text>
 <text xml:space="preserve" text-anchor="middle" x="262.17" y="-157.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#e0e0e0">helpers.</text>
 <text xml:space="preserve" text-anchor="middle" x="262.17" y="-145.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#e0e0e0">config</text>
@@ -230,7 +230,7 @@
 <g id="edge19" class="edge">
 <title>src_helpers_config&#45;&gt;src_helpers_logging_setup</title><style>.edge>path:hover{stroke-width:8}</style>
 <path fill="none" stroke="#ffffff" d="M296.59,-151.7C309.94,-147.99 325.71,-143.6 340.86,-139.39"/>
-<polygon fill="#3b8fce" stroke="#ffffff" points="341.58,-142.82 350.28,-136.77 339.71,-136.08 341.58,-142.82"/>
+<polygon fill="#2f91db" stroke="#ffffff" points="341.58,-142.82 350.28,-136.77 339.71,-136.08 341.58,-142.82"/>
 </g>
 <!-- src_helpers_config&#45;&gt;src_main -->
 <g id="edge20" class="edge">
@@ -242,12 +242,12 @@
 <g id="edge21" class="edge">
 <title>src_helpers_config&#45;&gt;tests_helpers_config_test_config</title><style>.edge>path:hover{stroke-width:8}</style>
 <path fill="none" stroke="#ffffff" d="M401.77,-182C430.12,-182.98 460.38,-191.86 484.86,-201.2"/>
-<polygon fill="#3b8fce" stroke="#ffffff" points="483.33,-204.36 493.92,-204.8 485.92,-197.86 483.33,-204.36"/>
+<polygon fill="#2f91db" stroke="#ffffff" points="483.33,-204.36 493.92,-204.8 485.92,-197.86 483.33,-204.36"/>
 </g>
 <!-- src_helpers_config_config -->
 <g id="node11" class="node">
 <title>src_helpers_config_config</title><style>.edge>path:hover{stroke-width:8}</style>
-<ellipse fill="#3b8fce" stroke="#ffffff" cx="138.83" cy="-190" rx="35.71" ry="39.6"/>
+<ellipse fill="#2f7fbc" stroke="#ffffff" cx="138.83" cy="-190" rx="35.71" ry="39.6"/>
 <text xml:space="preserve" text-anchor="middle" x="138.83" y="-204.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#e0e0e0">src.</text>
 <text xml:space="preserve" text-anchor="middle" x="138.83" y="-192.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#e0e0e0">helpers.</text>
 <text xml:space="preserve" text-anchor="middle" x="138.83" y="-180.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#e0e0e0">config.</text>
@@ -257,7 +257,7 @@
 <g id="edge22" class="edge">
 <title>src_helpers_config_config&#45;&gt;src_helpers_logging_setup</title><style>.edge>path:hover{stroke-width:8}</style>
 <path fill="none" stroke="#ffffff" d="M263.17,-102C289.18,-92.79 319.38,-96.09 344.76,-102.52"/>
-<polygon fill="#3b8fce" stroke="#ffffff" points="343.66,-105.84 354.23,-105.14 345.53,-99.1 343.66,-105.84"/>
+<polygon fill="#2f7fbc" stroke="#ffffff" points="343.66,-105.84 354.23,-105.14 345.53,-99.1 343.66,-105.84"/>
 </g>
 <!-- src_helpers_config_config&#45;&gt;src_main -->
 <g id="edge23" class="edge">
@@ -269,7 +269,7 @@
 <g id="edge24" class="edge">
 <title>src_helpers_config_config&#45;&gt;tests_helpers_config_test_config</title><style>.edge>path:hover{stroke-width:8}</style>
 <path fill="none" stroke="#ffffff" d="M174.52,-195.76C186.75,-197.64 200.62,-199.6 213.31,-201 306.11,-211.25 414.51,-217.91 478.74,-221.3"/>
-<polygon fill="#3b8fce" stroke="#ffffff" points="478.53,-224.8 488.7,-221.82 478.89,-217.81 478.53,-224.8"/>
+<polygon fill="#2f7fbc" stroke="#ffffff" points="478.53,-224.8 488.7,-221.82 478.89,-217.81 478.53,-224.8"/>
 </g>
 <!-- src_helpers_logging_setup&#45;&gt;src_main -->
 <g id="edge25" class="edge">
