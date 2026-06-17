@@ -1,0 +1,49 @@
+replicaCount: 1
+
+image:
+  repository: registry.localhost:5001/python-project
+  tag: local
+  pullPolicy: Always
+
+service:
+  port: 80
+  targetPort: 8000
+
+ingress:
+  enabled: true
+  className: nginx
+  path: /
+
+resources:
+  requests:
+    memory: "64Mi"
+    cpu: "100m"
+  limits:
+    memory: "256Mi"
+    cpu: "500m"
+
+env:
+  HOST: "0.0.0.0"
+  PORT: "8000"
+  DEBUG: "false"
+  OTEL_SERVICE_NAME: "python-project"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://otelcol.monitoring.svc.cluster.local:4317"
+
+vault:
+  enabled: true
+  address: "http://vault.vault.svc.cluster.local:8200"
+  role: "python-project"
+  secretPath: "secret/data/python-project/dev"
+
+secrets:
+  EXAMPLE_VARIABLE_NAME: ""
+
+probes:
+  liveness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    failureThreshold: 5
+  readiness:
+    initialDelaySeconds: 15
+    periodSeconds: 5
+    failureThreshold: 5
