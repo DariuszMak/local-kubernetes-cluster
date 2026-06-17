@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     version: str = "1.0.0"
     database_url: str = "sqlite+aiosqlite:///./app.db"
     host: str = "127.0.0.1"
-    port: int = 8001
+    port: int = 8002
 
     model_config = SettingsConfigDict(
         env_file=".env",
