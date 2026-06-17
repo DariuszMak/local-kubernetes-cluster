@@ -1,21 +1,23 @@
 import os
 import sys
 
+from src.helpers.config.config import get_settings
 
-def main() -> None:
+settings = get_settings()
+
+def run() -> None:
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
     sys.path.insert(0, "src2")
 
     import uvicorn
 
     uvicorn.run(
-        "core.asgi:application",
-        host="127.0.0.1",
-        port=int(os.environ.get("PORT", 8000)),
-        reload=os.environ.get("DEBUG", "true").lower() == "true",
-        log_level="info",
+        "src2.main:app",
+        host=settings.host,
+        port=settings.port,
+        reload=settings.debug,
     )
 
-
 if __name__ == "__main__":
-    main()
+    run()
+
