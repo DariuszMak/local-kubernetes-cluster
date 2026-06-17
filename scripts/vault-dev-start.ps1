@@ -56,7 +56,7 @@ if (-not (Test-Path $DevEnvFile)) {
     foreach ($line in Get-Content $DevEnvFile) {
         $line = $line.Trim()
         if ($line -eq "" -or $line.StartsWith("#") -or $line -notmatch "=") { continue }
-        if ($line -match "^(HOST|PORT|PYTHONPATH)=") { continue }
+        if ($line -match "^(HOST|PORT|HOST2|PORT2|PYTHONPATH)=") { continue }
         $parts = $line -split "=", 2
         $kvArgs += "$($parts[0].Trim())=$($parts[1].Trim())"
     }

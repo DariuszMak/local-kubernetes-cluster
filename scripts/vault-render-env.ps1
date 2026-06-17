@@ -91,7 +91,7 @@ if (Test-Path $devEnvPath) {
     foreach ($line in Get-Content $devEnvPath) {
         $line = $line.Trim()
 
-        if ($line -match "^(HOST|PORT|PYTHONPATH)=") {
+        if ($line -match "^(HOST|PORT|HOST2|PORT2|PYTHONPATH)=") {
             $lines.Add($line)
         }
     }

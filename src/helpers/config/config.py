@@ -1,9 +1,10 @@
 from dataclasses import dataclass
 from functools import lru_cache
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from src.helpers.config.env_loader_mixin import EnvLoaderMixin
+from src2.helpers.config.env_loader_mixin import EnvLoaderMixin
 
 
 @dataclass(frozen=True)
@@ -12,12 +13,12 @@ class Config(EnvLoaderMixin):
 
 
 class Settings(BaseSettings):
-    app_name: str = "Logged Time Reporting API"
+    app_name: str = "App API"
     debug: bool = True
     version: str = "1.0.0"
     database_url: str = "sqlite+aiosqlite:///./app.db"
-    host: str = "127.0.0.1"
-    port: int = 8001
+    host: str = Field(default="127.0.0.1", validation_alias="HOST")
+    port: int = Field(default=8001, validation_alias="PORT")
 
     model_config = SettingsConfigDict(
         env_file=".env",
