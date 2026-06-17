@@ -10,6 +10,20 @@ uv run pydeps src\main.py --noshow -T svg -o images\structure_runner_clustered.s
 uv run pydeps src\main.py --noshow -T svg -o images\structure_runner.svg --max-bacon 2 --max-module-depth 100 --rankdir LR ; 
 uv run pydeps src\main.py --noshow -T svg -o images\structure_runner_pylib.svg --max-bacon 2 --max-module-depth 100 --rankdir LR --pylib ; 
 
+
+uv run pydeps src2 --noshow -T svg -o images\structure_module_clustered2.svg --max-bacon 100 --max-module-depth 100 --rankdir LR --cluster ; 
+uv run pydeps src2 --noshow -T svg -o images\structure_module2.svg --max-bacon 2 --max-module-depth 100 --rankdir LR ; 
+uv run pydeps src2 --noshow -T svg -o images\structure_module_pylib2.svg --max-bacon 2 --max-module-depth 100 --rankdir LR --pylib ; 
+
+uv run pydeps tests2 --noshow -T svg -o images\structure_tests_module_clustered2.svg --max-bacon 100 --max-module-depth 100 --rankdir LR --cluster ; 
+uv run pydeps tests2 --noshow -T svg -o images\structure_tests_module2.svg --max-bacon 2 --max-module-depth 100 --rankdir LR ; 
+uv run pydeps tests2 --noshow -T svg -o images\structure_tests_module_pylib2.svg --max-bacon 2 --max-module-depth 100 --rankdir LR --pylib ; 
+
+uv run pydeps src2\main.py --noshow -T svg -o images\structure_runner_clustered2.svg --max-bacon 100 --max-module-depth 100 --rankdir LR --cluster ; 
+uv run pydeps src2\main.py --noshow -T svg -o images\structure_runner2.svg --max-bacon 2 --max-module-depth 100 --rankdir LR ; 
+uv run pydeps src2\main.py --noshow -T svg -o images\structure_runner_pylib2.svg --max-bacon 2 --max-module-depth 100 --rankdir LR --pylib ; 
+
+
 $files = Get-ChildItem "images" -Filter "*.svg"
 
 foreach ($file in $files) {
