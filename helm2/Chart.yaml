@@ -1,6 +1,6 @@
 apiVersion: v2
-name: python-project
-description: A simple Python HTTP server
+name: python-project-app2
+description: Second Python HTTP server
 type: application
 version: 0.1.0
 appVersion: "1.0.0"
