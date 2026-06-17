@@ -129,7 +129,7 @@ select = [
     "E305",
     "E306",
 ]
-# S101: we don't optimize out sanity asserts.
+# S101: we don't optioptimize out sanity asserts.
 # PT001 Checks for argument-free @pytest.fixture() decorators with or without parentheses, depending on the lint.flake8-pytest-style.fixture-parentheses setting
 # TRY002 require custom exc.
 # TRY003 long exc messages.
@@ -216,3 +216,6 @@ skip-magic-trailing-comma = false
 # Like Black, automatically detect the appropriate line ending.
 line-ending = "auto"
 docstring-code-format = true
+
+[tool.pytest.ini_options]
+import_mode = "importlib"
