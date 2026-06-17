@@ -9,6 +9,15 @@
             "cwd": "${workspaceFolder}",
             "envFile": "${workspaceFolder}/.dev.env",
             "args": []
+        },
+        {
+            "name": "Run application 2",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src2/main.py",
+            "cwd": "${workspaceFolder}",
+            "envFile": "${workspaceFolder}/.dev.env",
+            "args": []
         }
     ]
 }
