@@ -1,11 +1,10 @@
 import pytest
-from django.test import Client
-from hypothesis import given, settings
-from hypothesis import strategies as st
-
 from apps.posts.models import Post
 from apps.users.models import User
 from apps.users.repository import UserRepository
+from django.test import Client
+from hypothesis import given, settings
+from hypothesis import strategies as st
 
 
 @pytest.mark.django_db

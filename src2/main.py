@@ -5,6 +5,7 @@ from src.helpers.config.config import get_settings
 
 settings = get_settings()
 
+
 def run() -> None:
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
     sys.path.insert(0, "src2")
@@ -18,6 +19,6 @@ def run() -> None:
         reload=settings.debug,
     )
 
+
 if __name__ == "__main__":
     run()
-

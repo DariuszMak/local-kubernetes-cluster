@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+from core.exceptions import DuplicateEmailError
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -7,7 +8,6 @@ from rest_framework.views import APIView
 
 from apps.users.serializers import UserReadSerializer
 from apps.users.service import UserNotFoundError, UserService
-from core.exceptions import DuplicateEmailError
 
 if TYPE_CHECKING:
     from rest_framework.request import Request

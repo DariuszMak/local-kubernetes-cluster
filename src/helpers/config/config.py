@@ -3,7 +3,6 @@ from functools import lru_cache
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
 from src2.helpers.config.env_loader_mixin import EnvLoaderMixin
 
 

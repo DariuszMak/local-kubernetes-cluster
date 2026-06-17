@@ -1,8 +1,7 @@
+from apps.health.views import RootView
 from django.urls import include, path
 from drf_spectacular.renderers import OpenApiJsonRenderer
 from drf_spectacular.views import SpectacularJSONAPIView, SpectacularRedocView, SpectacularSwaggerView
-
-from apps.health.views import RootView
 
 
 class PlainJsonRenderer(OpenApiJsonRenderer):

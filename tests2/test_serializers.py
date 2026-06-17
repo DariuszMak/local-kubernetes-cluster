@@ -1,10 +1,9 @@
 import pytest
-from hypothesis import given
-from hypothesis import strategies as st
-
 from apps.posts.models import Post
 from apps.posts.serializers import PostCreateSerializer, PostReadSerializer
 from apps.users.models import User
+from hypothesis import given
+from hypothesis import strategies as st
 
 
 @pytest.mark.django_db

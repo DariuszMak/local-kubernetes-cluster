@@ -1,12 +1,11 @@
 from typing import Any, cast
 
 import pytest
+from apps.auth_app.service import AuthService
 from hypothesis import given, settings
 from hypothesis import strategies as st
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import AccessToken
-
-from apps.auth_app.service import AuthService
 
 
 def _decode_token(token: str) -> str:

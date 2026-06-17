@@ -4,9 +4,9 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
+from src2.db.base import Base
 
 from alembic import context
-from src2.db.base import Base
 
 if TYPE_CHECKING:
     from sqlalchemy.engine import Connection

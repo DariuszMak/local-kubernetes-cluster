@@ -1,7 +1,4 @@
 import pytest
-from hypothesis import HealthCheck, given, settings
-from hypothesis import strategies as st
-
 from apps.posts.models import Post
 from apps.posts.repository import PostRepository
 from apps.posts.service import PostNotFoundError, PostService
@@ -9,6 +6,8 @@ from apps.users.models import User
 from apps.users.repository import UserRepository
 from apps.users.service import UserNotFoundError, UserService
 from core.exceptions import DuplicateEmailError
+from hypothesis import HealthCheck, given, settings
+from hypothesis import strategies as st
 
 
 @pytest.mark.django_db

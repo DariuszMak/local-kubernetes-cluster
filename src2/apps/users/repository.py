@@ -1,7 +1,7 @@
+from core.exceptions import DuplicateEmailError
 from django.db import IntegrityError
 
 from apps.users.models import User
-from core.exceptions import DuplicateEmailError
 
 
 class UserRepository:
