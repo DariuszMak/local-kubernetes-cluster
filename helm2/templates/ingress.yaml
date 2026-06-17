@@ -4,14 +4,15 @@ kind: Ingress
 metadata:
   name: {{ .Release.Name }}
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   ingressClassName: {{ .Values.ingress.className }}
   rules:
     - http:
         paths:
-          - path: {{ .Values.ingress.path }}
-            pathType: Prefix
+          - path: {{ .Values.ingress.path }}(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Release.Name }}

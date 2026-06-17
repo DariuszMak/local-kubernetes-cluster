@@ -12,7 +12,7 @@ service:
 ingress:
   enabled: true
   className: nginx
-  path: /
+  path: /app2
 
 resources:
   requests:
