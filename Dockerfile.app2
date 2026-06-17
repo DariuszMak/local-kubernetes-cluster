@@ -8,11 +8,9 @@ COPY pyproject.toml ./
 COPY uv.lock ./
 RUN uv sync --no-dev --frozen --compile-bytecode
 
-COPY alembic2.ini ./
-COPY alembic2/ ./alembic2/
 COPY src2/ ./src2/
 
 ENV PYTHONPATH=.
 ENV PATH="/app/.venv/bin:$PATH"
 
-CMD ["sh", "-c", "alembic -c alembic2.ini upgrade head && python src2/main.py"]
+CMD ["sh", "-c", "python src2/main.py"]
