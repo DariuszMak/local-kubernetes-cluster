@@ -6,7 +6,7 @@ from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 
 from alembic import context
-from src.db.base import Base
+from src2.db.base import Base
 
 if TYPE_CHECKING:
     from sqlalchemy.engine import Connection
@@ -18,7 +18,7 @@ if config.config_file_name is not None:
 
 target_metadata = Base.metadata
 
-DATABASE_URL = "sqlite+aiosqlite:///./app.db"
+DATABASE_URL = "sqlite+aiosqlite:///./app2.db"
 
 
 def run_migrations_offline() -> None:
