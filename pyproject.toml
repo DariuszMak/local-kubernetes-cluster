@@ -204,6 +204,7 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$" # Allow unused vari
 # S311: (Standard pseudo-random generators are not suitable for cryptographic purposes)
 # ARG001: unused args common for e.g. test fixtures
 "tests/*" = ["S311", "ARG001", "ANN"]
+"tests2/*" = ["S311", "ARG001", "ANN"]
 
 [tool.ruff.format]
 # Like Black, use double quotes for strings.
