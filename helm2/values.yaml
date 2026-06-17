@@ -23,8 +23,8 @@ resources:
     cpu: "500m"
 
 env:
-  HOST: "0.0.0.0"
-  PORT: "8000"
+  HOST2: "0.0.0.0"
+  PORT2: "8000"
   DEBUG: "false"
   OTEL_SERVICE_NAME: "python-project-app2"
   OTEL_EXPORTER_OTLP_ENDPOINT: "http://otelcol.monitoring.svc.cluster.local:4317"
