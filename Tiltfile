@@ -4,7 +4,7 @@ HELM_CHART   = "./helm"
 NAMESPACE    = "default"
 SECRET_KEYS  = ["EXAMPLE_VARIABLE_NAME"]
 
-def load_dev_env(path):
+def load_dev_env(path=".dev.env"):
     env = {}
     for line in str(read_file(path)).splitlines():
         line = line.strip()
@@ -14,7 +14,7 @@ def load_dev_env(path):
         env[k.strip()] = v.strip()
     return env
 
-dev_env = load_dev_env(".dev.env")
+dev_env = load_dev_env()
 
 docker_build(
     IMAGE,
@@ -49,9 +49,6 @@ IMAGE2        = "registry.localhost:5001/python-project-app2:local"
 RELEASE_NAME2 = "python-project-app2"
 HELM_CHART2   = "./helm2"
 
-
-dev2_env = load_dev_env(".dev2.env")
-
 docker_build(
     IMAGE2,
     context=".",
@@ -62,7 +59,7 @@ docker_build(
 )
 
 secret_set_args2 = {
-    "secrets.{}".format(k): dev2_env.get(k, "")
+    "secrets.{}".format(k): dev_env.get(k, "")
     for k in SECRET_KEYS
 }
 
