@@ -44,3 +44,36 @@ k8s_resource(
     port_forwards=["8003:8000"],
     labels=["app"],
 )
+
+IMAGE2        = "registry.localhost:5001/python-project-app2:local"
+RELEASE_NAME2 = "python-project-app2"
+HELM_CHART2   = "./helm2"
+
+docker_build(
+    IMAGE2,
+    context=".",
+    dockerfile="Dockerfile.app2",
+    live_update=[
+        sync("./src2", "/app/src2"),
+    ],
+)
+
+secret_set_args2 = {
+    "secrets.{}".format(k): dev_env.get(k, "")
+    for k in SECRET_KEYS
+}
+
+k8s_yaml(
+    helm(
+        HELM_CHART2,
+        name=RELEASE_NAME2,
+        namespace=NAMESPACE,
+        set=["{}={}".format(k, v) for k, v in secret_set_args2.items()],
+    )
+)
+
+k8s_resource(
+    RELEASE_NAME2,
+    port_forwards=["8004:8000"],
+    labels=["app"],
+)
