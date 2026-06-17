@@ -58,6 +58,7 @@ tasks:
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/wait_for_native_api.ps1
       - powershell -ExecutionPolicy Bypass -File tasks/test_native_api.ps1
+      - powershell -ExecutionPolicy Bypass -File tasks/wait_for_native_api2.ps1
 
   generate-diagrams:
     desc: Generate project diagrams
@@ -138,6 +139,7 @@ tasks:
     desc: Local dev Windows API tests
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/wait_for_tilt_api.ps1
+      - powershell -ExecutionPolicy Bypass -File tasks/wait_for_tilt_api2.ps1
       - powershell -ExecutionPolicy Bypass -File tasks/test_tilt_api.ps1
 
   full-dev-native:
