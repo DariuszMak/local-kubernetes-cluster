@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy import select
 
-from src.db.models.post import Post
+from src2.db.models.post import Post
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession

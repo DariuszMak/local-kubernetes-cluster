@@ -3,16 +3,16 @@ from typing import TYPE_CHECKING
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, ConfigDict
 
-from src.api.dependencies.auth import get_current_user_email
-from src.db.session import get_db
-from src.helpers.exceptions import DuplicateEmailError
-from src.repositories.user_repository import UserRepository
-from src.services.user_service import UserNotFoundError, UserService
+from src2.api.dependencies.auth import get_current_user_email
+from src2.db.session import get_db
+from src2.helpers.exceptions import DuplicateEmailError
+from src2.repositories.user_repository import UserRepository
+from src2.services.user_service import UserNotFoundError, UserService
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
 
-    from src.db.models.user import User
+    from src2.db.models.user import User
 
 router = APIRouter(prefix="/users", tags=["users"])
 

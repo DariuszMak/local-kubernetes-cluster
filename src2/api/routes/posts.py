@@ -2,16 +2,16 @@ from typing import TYPE_CHECKING
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from src.api.dependencies.auth import get_current_user_email
-from src.db.session import get_db
-from src.repositories.post_repository import PostRepository
-from src.schemas.post import PostCreate, PostRead
-from src.services.post_service import PostNotFoundError, PostService
+from src2.api.dependencies.auth import get_current_user_email
+from src2.db.session import get_db
+from src2.repositories.post_repository import PostRepository
+from src2.schemas.post import PostCreate, PostRead
+from src2.services.post_service import PostNotFoundError, PostService
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
 
-    from src.db.models.post import Post
+    from src2.db.models.post import Post
 
 router = APIRouter(prefix="/users/{user_id}/posts", tags=["posts"])
 

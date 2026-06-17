@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from src.schemas.health import HealthResponse
+from src2.schemas.health import HealthResponse
 
 router = APIRouter(prefix="/health", tags=["health"])
 

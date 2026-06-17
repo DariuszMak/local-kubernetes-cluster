@@ -1,8 +1,8 @@
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from src.db.models.user import User
-    from src.repositories.user_repository import UserRepository
+    from src2.db.models.user import User
+    from src2.repositories.user_repository import UserRepository
 
 
 class UserNotFoundError(Exception):

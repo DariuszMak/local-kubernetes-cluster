@@ -1,8 +1,8 @@
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from src.db.models.post import Post
-    from src.repositories.post_repository import PostRepository
+    from src2.db.models.post import Post
+    from src2.repositories.post_repository import PostRepository
 
 
 class PostNotFoundError(Exception):

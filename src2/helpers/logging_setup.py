@@ -2,7 +2,7 @@ import logging
 
 import structlog
 
-from src.helpers.config.config import Config
+from src2.helpers.config.config import Config
 
 
 def logging_setup(

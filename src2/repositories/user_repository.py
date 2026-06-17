@@ -3,8 +3,8 @@ from typing import TYPE_CHECKING
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
-from src.db.models.user import User
-from src.helpers.exceptions import DuplicateEmailError
+from src2.db.models.user import User
+from src2.helpers.exceptions import DuplicateEmailError
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession

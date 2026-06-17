@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from src.schemas.root import RootResponse
+from src2.schemas.root import RootResponse
 
 router = APIRouter(tags=["root"])
 

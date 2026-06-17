@@ -3,10 +3,10 @@ from typing import TYPE_CHECKING
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 
-from src.api.dependencies.auth import get_auth_service
+from src2.api.dependencies.auth import get_auth_service
 
 if TYPE_CHECKING:
-    from src.services.auth_service import AuthService
+    from src2.services.auth_service import AuthService
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 

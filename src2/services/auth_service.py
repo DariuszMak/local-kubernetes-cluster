@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from src.helpers.security import create_access_token
+from src2.helpers.security import create_access_token
 
 
 class AuthService:
