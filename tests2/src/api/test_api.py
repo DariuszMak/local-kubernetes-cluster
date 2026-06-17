@@ -6,8 +6,8 @@ from httpx import ASGITransport, AsyncClient
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from src.main import app
-from tests.conftest import reset_db
+from src2.main import app
+from tests2.conftest import reset_db
 
 
 def test_root(client: TestClient) -> None:

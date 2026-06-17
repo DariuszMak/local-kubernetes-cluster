@@ -4,10 +4,10 @@ import pytest
 import pytest_asyncio
 from fastapi.testclient import TestClient
 
-from src.db.base import Base
-from src.db.session import get_db
-from src.main import app
-from tests.utils.db_config import TestingSessionLocal, engine
+from src2.db.base import Base
+from src2.db.session import get_db
+from src2.main import app
+from tests2.utils.db_config import TestingSessionLocal, engine
 
 if TYPE_CHECKING:
     from collections.abc import AsyncGenerator, Generator

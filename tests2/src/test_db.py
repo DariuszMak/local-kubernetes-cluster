@@ -4,12 +4,12 @@ import pytest
 from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
 
-from src.repositories.post_repository import PostRepository
-from src.repositories.user_repository import UserRepository
-from src.services.post_service import PostNotFoundError, PostService
-from src.services.user_service import UserService
-from tests.conftest import reset_db
-from tests.utils.db_config import TestingSessionLocal
+from src2.repositories.post_repository import PostRepository
+from src2.repositories.user_repository import UserRepository
+from src2.services.post_service import PostNotFoundError, PostService
+from src2.services.user_service import UserService
+from tests2.conftest import reset_db
+from tests2.utils.db_config import TestingSessionLocal
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 from typing import TYPE_CHECKING
 
-from src.helpers.exceptions import DuplicateEmailError
+from src2.helpers.exceptions import DuplicateEmailError
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession

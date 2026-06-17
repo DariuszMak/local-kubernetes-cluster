@@ -1,7 +1,7 @@
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from src.helpers.security import create_access_token, decode_access_token
+from src2.helpers.security import create_access_token, decode_access_token
 
 
 def test_token_roundtrip() -> None:

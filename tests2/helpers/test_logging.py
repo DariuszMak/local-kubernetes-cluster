@@ -6,7 +6,7 @@ from typing import Any
 import pytest
 import structlog
 
-from src.helpers.logging_setup import logging_setup
+from src2.helpers.logging_setup import logging_setup
 
 
 @pytest.fixture(autouse=True)
