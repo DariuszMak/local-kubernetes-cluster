@@ -150,3 +150,4 @@ k8s/kustomize/overlays/**/.vault-token
 
 # Database
 *.db
+*.sqlite3

@@ -13,4 +13,4 @@ COPY src2/ ./src2/
 ENV PYTHONPATH=.
 ENV PATH="/app/.venv/bin:$PATH"
 
-CMD ["sh", "-c", "python src2/main.py"]
+CMD ["sh", "-c", "python src2/manage.py migrate && python src2/main.py"]
