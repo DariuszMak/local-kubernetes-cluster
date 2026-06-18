@@ -14,7 +14,7 @@ def run() -> None:
     import uvicorn
 
     uvicorn.run(
-        "src2.main:app",
+        "core.asgi:application",
         host=settings.host,
         port=settings.port,
         reload=settings.debug,

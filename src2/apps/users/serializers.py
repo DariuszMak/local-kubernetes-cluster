@@ -1,8 +1,7 @@
 from typing import ClassVar
 
-from rest_framework import serializers
-
 from apps.users.models import User
+from rest_framework import serializers
 
 
 class UserReadSerializer(serializers.ModelSerializer[User]):

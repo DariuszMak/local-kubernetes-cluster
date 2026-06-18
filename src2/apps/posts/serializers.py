@@ -1,8 +1,7 @@
 from typing import ClassVar
 
-from rest_framework import serializers
-
 from apps.posts.models import Post
+from rest_framework import serializers
 
 
 class PostReadSerializer(serializers.ModelSerializer[Post]):

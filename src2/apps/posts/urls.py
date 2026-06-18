@@ -1,6 +1,5 @@
-from django.urls import path
-
 from apps.posts.views import PostDetailView, PostListCreateView
+from django.urls import path
 
 urlpatterns = [
     path("", PostListCreateView.as_view()),

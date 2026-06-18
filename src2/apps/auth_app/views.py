@@ -1,11 +1,10 @@
 from typing import TYPE_CHECKING
 
+from apps.auth_app.service import AuthService
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from apps.auth_app.service import AuthService
 
 if TYPE_CHECKING:
     from rest_framework.request import Request

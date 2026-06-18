@@ -1,12 +1,11 @@
 from typing import TYPE_CHECKING
 
+from apps.posts.serializers import PostCreateSerializer, PostReadSerializer
+from apps.posts.service import PostNotFoundError, PostService
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from apps.posts.serializers import PostCreateSerializer, PostReadSerializer
-from apps.posts.service import PostNotFoundError, PostService
 
 if TYPE_CHECKING:
     from rest_framework.request import Request

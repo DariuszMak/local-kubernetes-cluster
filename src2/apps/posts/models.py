@@ -1,6 +1,5 @@
-from django.db import models
-
 from apps.users.models import User
+from django.db import models
 
 
 class Post(models.Model):
