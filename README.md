@@ -2,25 +2,29 @@
 
 ### Project structure diagrams
 
-##### Modular perspective for FastAPI project
+#### FastAPI project
+
+##### Modular perspective
 
 <p align="center">
   <img src="images/structure_module.svg" alt="Modular perspective" width="600">
 </p>
 
-##### Library dependencies perspective for FastAPI project
+##### Library dependencies perspective
 
 <p align="center">
   <img src="images/structure_module_clustered.svg" alt="Library dependencies perspective" width="600">
 </p>
 
-##### Modular perspective for Django project
+#### Django project
+
+##### Modular perspective
 
 <p align="center">
   <img src="images/structure_module2.svg" alt="Modular perspective" width="600">
 </p>
 
-##### Library dependencies perspective for Django project
+##### Library dependencies perspective
 
 <p align="center">
   <img src="images/structure_module_clustered2.svg" alt="Library dependencies perspective" width="600">
