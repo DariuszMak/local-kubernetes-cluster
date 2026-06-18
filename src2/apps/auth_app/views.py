@@ -5,14 +5,18 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from drf_spectacular.utils import extend_schema, inline_serializer
+from rest_framework import serializers
 if TYPE_CHECKING:
     from rest_framework.request import Request
 
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
-
+    @extend_schema(
+            request=inline_serializer("LoginRequest", {"username": serializers.CharField()}),
+            responses={200: inline_serializer("LoginResponse", {"access_token": serializers.CharField(), "token_type": serializers.CharField()})}
+        )
     def post(self, request: Request) -> Response:
 
         username = request.data.get("username")
