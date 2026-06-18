@@ -1,6 +1,8 @@
 import os
 import sys
 
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
 from src2.helpers.config.config import get_settings
 
 settings = get_settings()
@@ -8,7 +10,6 @@ settings = get_settings()
 
 def run() -> None:
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
-    sys.path.insert(0, "src2")
 
     import uvicorn
 
