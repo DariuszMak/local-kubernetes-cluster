@@ -24,7 +24,7 @@ class CreateUserView(APIView):
         try:
             user = service.create_user(email)
         except DuplicateEmailError as exc:
-            return Response({"detail": str(exc)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"detail": str(exc)}, status=status.HTTP_409_CONFLICT)
 
         return Response(UserReadSerializer(user).data, status=status.HTTP_200_OK)
 
