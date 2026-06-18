@@ -1,7 +1,7 @@
 import os
 import sys
 
-from src.helpers.config.config import get_settings
+from src2.helpers.config.config import get_settings
 
 settings = get_settings()
 
