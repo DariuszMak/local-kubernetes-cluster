@@ -15,4 +15,4 @@ COPY src/ ./src/
 ENV PYTHONPATH=.
 ENV PATH="/app/.venv/bin:$PATH"
 
-CMD ["sh", "-c", "alembic upgrade head && python src/main.py"]
+CMD ["sh", "-c", "alembic upgrade head && uv run alembic downgrade base && alembic upgrade head && python src/main.py"]
