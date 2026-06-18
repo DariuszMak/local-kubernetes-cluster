@@ -118,11 +118,11 @@ def test_create_user(client: Client) -> None:
 
 
 @pytest.mark.django_db
-def test_create_duplicate_user_returns_500(client: Client) -> None:
+def test_create_duplicate_user_returns_409(client: Client) -> None:
     client.post("/users/?email=dup@example.com")
     response = client.post("/users/?email=dup@example.com")
 
-    assert response.status_code == 500
+    assert response.status_code == 409
 
 
 @pytest.mark.django_db
