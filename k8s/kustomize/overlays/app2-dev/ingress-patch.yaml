@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: python-project-app2
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /dev/app2(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: app2-dev-python-project-app2
+                port:
+                  number: 80

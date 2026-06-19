@@ -1,0 +1,28 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: prod
+
+namePrefix: app2-prod-
+
+labels:
+  - pairs:
+      environment: prod
+
+resources:
+  - ../../base/app2
+  - hpa.yaml
+
+patches:
+  - path: deployment-patch.yaml
+    target:
+      kind: Deployment
+      name: python-project-app2
+  - path: ingress-patch.yaml
+    target:
+      kind: Ingress
+      name: python-project-app2
+
+images:
+  - name: registry.localhost:5001/python-project-app2
+    newTag: "1.0.0"

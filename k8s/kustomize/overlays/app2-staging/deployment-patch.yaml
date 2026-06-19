@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-project-app2
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: python-project-app2
+          env:
+            - name: LOG_LEVEL
+              value: INFO
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
