@@ -1,4 +1,5 @@
-.\scripts\k3d-up.ps1 ; 
+.\scripts\k3d-up.ps1 ;
+.\scripts\app2-image-build-push.ps1 ;
 
 Start-Process "http://localhost:8082" ; 
 
