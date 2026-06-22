@@ -11,6 +11,7 @@ RUN uv sync --no-dev --frozen --compile-bytecode
 COPY alembic.ini ./
 COPY alembic/ ./alembic/
 COPY src/ ./src/
+COPY .dev.env ./.dev.env
 
 ENV PYTHONPATH=.
 ENV PATH="/app/.venv/bin:$PATH"

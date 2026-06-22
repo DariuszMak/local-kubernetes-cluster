@@ -9,6 +9,7 @@ COPY uv.lock ./
 RUN uv sync --no-dev --frozen --compile-bytecode
 
 COPY src2/ ./src2/
+COPY .dev.env ./.dev.env
 
 ENV PYTHONPATH=.
 ENV PATH="/app/.venv/bin:$PATH"
