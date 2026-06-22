@@ -9,7 +9,7 @@ env = environ.Env(
     DEBUG=(bool, True),
     APP_NAME=(str, "Logged Time Reporting API"),
     VERSION=(str, "1.0.0"),
-    DATABASE_URL_2=(str, "postgres://postgres:postgres@localhost:5432/app"),
+    DATABASE_URL_2=(str, "sqlite+aiosqlite:///./app2.db"),
     SECRET_KEY=(str, "django-insecure-change-me-in-production"),
     ACCESS_TOKEN_LIFETIME_MINUTES=(int, 60),
 )
