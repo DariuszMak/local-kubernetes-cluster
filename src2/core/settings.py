@@ -85,25 +85,7 @@ SIMPLE_JWT = {
 }
 
 
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "standard": {
-            "format": "%(asctime)s | %(levelname)s | %(name)s | %(message)s",
-        },
-    },
-    "handlers": {
-        "stdout": {
-            "class": "logging.StreamHandler",
-            "formatter": "standard",
-        },
-    },
-    "root": {
-        "handlers": ["stdout"],
-        "level": "INFO",
-    },
-}
+LOGGING = None
 
 
 SPECTACULAR_SETTINGS = {
