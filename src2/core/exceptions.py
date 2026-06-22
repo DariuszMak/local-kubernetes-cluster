@@ -1,7 +1,6 @@
-import logging
 from typing import Any
-import structlog
 
+import structlog
 from rest_framework.response import Response
 from rest_framework.views import exception_handler
 

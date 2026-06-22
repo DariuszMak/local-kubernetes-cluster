@@ -4,8 +4,9 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 import structlog
-from src2.helpers.logging_setup import logging_setup
+
 from src2.helpers.config.config import get_settings
+from src2.helpers.logging_setup import logging_setup
 
 logging_setup()
 
