@@ -1,10 +1,11 @@
 import logging
 from typing import Any
+import structlog
 
 from rest_framework.response import Response
 from rest_framework.views import exception_handler
 
-logger = logging.getLogger("api")
+logger = structlog.get_logger(__name__)
 
 
 def global_exception_handler(exc: Exception, context: dict[str, Any]) -> Response:
