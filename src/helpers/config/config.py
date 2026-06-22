@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     port: int = Field(default=8001, validation_alias="PORT")
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=".dev.env",
         env_file_encoding="utf-8",
         extra="ignore",
     )
