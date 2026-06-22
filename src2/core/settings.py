@@ -14,7 +14,7 @@ env = environ.Env(
     ACCESS_TOKEN_LIFETIME_MINUTES=(int, 60),
 )
 
-environ.Env.read_env(BASE_DIR / ".env")
+environ.Env.read_env(BASE_DIR.parent / ".dev.env")
 
 
 APP_NAME = env("APP_NAME")
