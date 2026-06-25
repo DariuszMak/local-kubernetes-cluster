@@ -79,3 +79,5 @@ Write-Host ""
 Write-Host "Environment vars for your shell:"
 Write-Host "   `$env:VAULT_ADDR  = '$VaultAddr'"
 Write-Host "   `$env:VAULT_TOKEN = '$RootToken'"
+
+Start-Process "http://127.0.0.1:8200/ui" ; 
