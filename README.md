@@ -57,3 +57,13 @@ task full-dev-native ;
 ```commandline
 task full-gitops ; 
 ```
+
+### Dev credentials:
+
+Vault:
+>Token: `root`
+
+ArgoCD:
+>login: `admin`
+
+>password: `admin123`
