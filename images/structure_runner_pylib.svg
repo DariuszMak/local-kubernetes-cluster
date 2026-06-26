@@ -223,7 +223,7 @@
 <!-- src_api_routes_posts -->
 <g id="node39" class="node">
 <title>src_api_routes_posts</title><style>.edge>path:hover{stroke-width:8}</style>
-<ellipse fill="#4d46a4" stroke="#ffffff" cx="1826.15" cy="-3105.96" rx="32.53" ry="39.6"/>
+<ellipse fill="#4a439d" stroke="#ffffff" cx="1826.15" cy="-3105.96" rx="32.53" ry="39.6"/>
 <text xml:space="preserve" text-anchor="middle" x="1826.15" y="-3120.46" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#e0e0e0">src.</text>
 <text xml:space="preserve" text-anchor="middle" x="1826.15" y="-3108.46" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#e0e0e0">api.</text>
 <text xml:space="preserve" text-anchor="middle" x="1826.15" y="-3096.46" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#e0e0e0">routes.</text>
@@ -253,7 +253,7 @@
 <!-- src_api_routes_users -->
 <g id="node41" class="node">
 <title>src_api_routes_users</title><style>.edge>path:hover{stroke-width:8}</style>
-<ellipse fill="#433d8f" stroke="#ffffff" cx="2028.26" cy="-2843.96" rx="32.53" ry="39.6"/>
+<ellipse fill="#3f3a88" stroke="#ffffff" cx="2028.26" cy="-2843.96" rx="32.53" ry="39.6"/>
 <text xml:space="preserve" text-anchor="middle" x="2028.26" y="-2858.46" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#e0e0e0">src.</text>
 <text xml:space="preserve" text-anchor="middle" x="2028.26" y="-2846.46" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#e0e0e0">api.</text>
 <text xml:space="preserve" text-anchor="middle" x="2028.26" y="-2834.46" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#e0e0e0">routes.</text>
@@ -1082,7 +1082,7 @@
 <!-- src_api -->
 <g id="node34" class="node">
 <title>src_api</title><style>.edge>path:hover{stroke-width:8}</style>
-<ellipse fill="#453bce" stroke="#ffffff" cx="2374.29" cy="-2937.96" rx="27.21" ry="18"/>
+<ellipse fill="#3022e7" stroke="#ffffff" cx="2374.29" cy="-2937.96" rx="27.21" ry="18"/>
 <text xml:space="preserve" text-anchor="middle" x="2374.29" y="-2934.46" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#e0e0e0">src.api</text>
 </g>
 <!-- src_api&#45;&gt;main_py -->
@@ -1122,7 +1122,7 @@
 <title>src_api_routes_posts&#45;&gt;src_api_router</title><style>.edge>path:hover{stroke-width:8}</style>
 <path fill="none" stroke="#ffffff" d="M1858.53,-3099.53C1885.94,-3095.24 1926.44,-3092.16 1959.73,-3102.96 1995,-3114.41 1990.66,-3145.97 2027.26,-3151.96"/>
 <path fill="none" stroke="#ffffff" d="M2029.26,-3151.96C2101.23,-3161.19 2125.5,-3149.02 2187.28,-3110.96 2207.93,-3098.25 2205.47,-3086.41 2223.28,-3069.96 2226.82,-3066.7 2230.67,-3063.45 2234.58,-3060.34"/>
-<polygon fill="#4d46a4" stroke="#ffffff" points="2236.64,-3063.17 2242.45,-3054.32 2232.39,-3057.61 2236.64,-3063.17"/>
+<polygon fill="#4a439d" stroke="#ffffff" points="2236.64,-3063.17 2242.45,-3054.32 2232.39,-3057.61 2236.64,-3063.17"/>
 </g>
 <!-- src_api_routes_root&#45;&gt;src_api_router -->
 <g id="edge121" class="edge">
@@ -1134,7 +1134,7 @@
 <title>src_api_routes_users&#45;&gt;src_api_router</title><style>.edge>path:hover{stroke-width:8}</style>
 <path fill="none" stroke="#ffffff" d="M2049.63,-2874.2C2053.42,-2880.05 2057.29,-2886.15 2060.78,-2891.96 2098.97,-2955.4 2068.9,-3021.24 2141.03,-3037.96"/>
 <path fill="none" stroke="#ffffff" d="M2143.03,-3037.96C2165.54,-3043.18 2191,-3043.99 2212.89,-3043.19"/>
-<polygon fill="#433d8f" stroke="#ffffff" points="2213,-3046.69 2222.81,-3042.69 2212.65,-3039.7 2213,-3046.69"/>
+<polygon fill="#3f3a88" stroke="#ffffff" points="2213,-3046.69 2222.81,-3042.69 2212.65,-3039.7 2213,-3046.69"/>
 </g>
 <!-- src_helpers -->
 <g id="node42" class="node">

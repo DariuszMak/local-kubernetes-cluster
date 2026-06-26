@@ -75,7 +75,7 @@
 <!-- src_api_routes_posts -->
 <g id="node22" class="node">
 <title>src_api_routes_posts</title><style>.edge>path:hover{stroke-width:8}</style>
-<ellipse fill="#49ac8b" stroke="#ffffff" cx="1697.39" cy="-1359.09" rx="32.53" ry="39.6"/>
+<ellipse fill="#46a485" stroke="#ffffff" cx="1697.39" cy="-1359.09" rx="32.53" ry="39.6"/>
 <text xml:space="preserve" text-anchor="middle" x="1697.39" y="-1373.59" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#e0e0e0">src.</text>
 <text xml:space="preserve" text-anchor="middle" x="1697.39" y="-1361.59" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#e0e0e0">api.</text>
 <text xml:space="preserve" text-anchor="middle" x="1697.39" y="-1349.59" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#e0e0e0">routes.</text>
@@ -105,7 +105,7 @@
 <!-- src_api_routes_users -->
 <g id="node24" class="node">
 <title>src_api_routes_users</title><style>.edge>path:hover{stroke-width:8}</style>
-<ellipse fill="#409679" stroke="#ffffff" cx="1697.39" cy="-1223.09" rx="32.53" ry="39.6"/>
+<ellipse fill="#3d8f74" stroke="#ffffff" cx="1697.39" cy="-1223.09" rx="32.53" ry="39.6"/>
 <text xml:space="preserve" text-anchor="middle" x="1697.39" y="-1237.59" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#e0e0e0">src.</text>
 <text xml:space="preserve" text-anchor="middle" x="1697.39" y="-1225.59" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#e0e0e0">api.</text>
 <text xml:space="preserve" text-anchor="middle" x="1697.39" y="-1213.59" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#e0e0e0">routes.</text>
@@ -414,7 +414,7 @@
 <!-- src_api -->
 <g id="node17" class="node">
 <title>src_api</title><style>.edge>path:hover{stroke-width:8}</style>
-<ellipse fill="#3bce9d" stroke="#ffffff" cx="2066.29" cy="-907.09" rx="27.21" ry="18"/>
+<ellipse fill="#22e7a5" stroke="#ffffff" cx="2066.29" cy="-907.09" rx="27.21" ry="18"/>
 <text xml:space="preserve" text-anchor="middle" x="2066.29" y="-903.59" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#e0e0e0">src.api</text>
 </g>
 <!-- src_api&#45;&gt;main_py -->
