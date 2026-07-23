@@ -4,6 +4,22 @@
 
 #### FastAPI project
 
+<p align="center">
+  <img src="images/runtime/1.png" alt="Modular perspective" width="600">
+</p>
+
+<p align="center">
+  <img src="images/runtime/2.png" alt="Modular perspective" width="600">
+</p>
+
+<p align="center">
+  <img src="images/runtime/3.png" alt="Modular perspective" width="600">
+</p>
+
+<p align="center">
+  <img src="images/runtime/4.png" alt="Modular perspective" width="600">
+</p>
+
 ##### Modular perspective
 
 <p align="center">
@@ -61,9 +77,11 @@ task full-gitops ;
 ### Dev credentials:
 
 Vault:
+
 >Token: `root`
 
 ArgoCD:
+
 >login: `admin`
 
 >password: `admin123`
