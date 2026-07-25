@@ -5,19 +5,19 @@
 #### FastAPI project
 
 <p align="center">
-  <img src="images/runtime/1.png" alt="Modular perspective" width="600">
+  <img src="images/runtime/1.png" alt="Swagger UI" width="600">
 </p>
 
 <p align="center">
-  <img src="images/runtime/2.png" alt="Modular perspective" width="600">
+  <img src="images/runtime/2.png" alt="Argo CD" width="600">
 </p>
 
 <p align="center">
-  <img src="images/runtime/3.png" alt="Modular perspective" width="600">
+  <img src="images/runtime/3.png" alt="Tilt" width="600">
 </p>
 
 <p align="center">
-  <img src="images/runtime/4.png" alt="Modular perspective" width="600">
+  <img src="images/runtime/4.png" alt="Kubernetes tree view" width="600">
 </p>
 
 ##### Modular perspective
