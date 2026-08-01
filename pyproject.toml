@@ -33,6 +33,7 @@ dependencies = [
     "types-python-jose>=3.5.0.20250531",
     "uvicorn>=0.40.0",
     "structlog>=26.1.0",
+    "semgrep>=1.79.0",
 ]
 
 [dependency-groups]
@@ -46,7 +47,6 @@ dev = [
     "pytest-cov>=7.0.0",
     "ruff>=0.11.13",
     "vulture>=2.16",
-    "semgrep>=1.90.0",
     "pytest-django>=4.8",
     "factory-boy>=3.3",
     "django-stubs>=5.0",
