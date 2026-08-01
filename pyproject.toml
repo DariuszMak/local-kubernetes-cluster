@@ -45,6 +45,7 @@ dev = [
     "pytest-cov>=7.0.0",
     "ruff>=0.11.13",
     "vulture>=2.16",
+    "semgrep>=1.90.0",
     "pytest-django>=4.8",
     "factory-boy>=3.3",
     "django-stubs>=5.0",
@@ -149,6 +150,8 @@ select = [
     "E303",
     "E305",
     "E306",
+    # McCabe complexity gate - replaces a standalone `mccabe` CLI call
+    "C90",
 ]
 # S101: we don't optimize out sanity asserts.
 # PT001 Checks for argument-free @pytest.fixture() decorators with or without parentheses, depending on the lint.flake8-pytest-style.fixture-parentheses setting
