@@ -1627,7 +1627,6 @@ dependencies = [
     { name = "pytest-asyncio" },
     { name = "python-jose", extra = ["cryptography"] },
     { name = "python-multipart" },
-    { name = "semgrep" },
     { name = "sqlalchemy" },
     { name = "starlette" },
     { name = "structlog" },
@@ -1650,6 +1649,7 @@ dev = [
     { name = "pytest-cov" },
     { name = "pytest-django" },
     { name = "ruff" },
+    { name = "semgrep" },
     { name = "vulture" },
 ]
 
@@ -1675,7 +1675,6 @@ requires-dist = [
     { name = "pytest-asyncio", specifier = ">=1.3.0" },
     { name = "python-jose", extras = ["cryptography"], specifier = ">=3.5.0" },
     { name = "python-multipart", specifier = ">=0.0.22" },
-    { name = "semgrep", specifier = ">=1.79.0" },
     { name = "sqlalchemy", specifier = ">=2.0.46" },
     { name = "starlette", specifier = ">=1.3.0" },
     { name = "structlog", specifier = ">=26.1.0" },
@@ -1699,6 +1698,7 @@ dev = [
     { name = "pytest-cov", specifier = ">=7.0.0" },
     { name = "pytest-django", specifier = ">=4.8" },
     { name = "ruff", specifier = ">=0.11.13" },
+    { name = "semgrep", specifier = ">=1.79.0" },
     { name = "vulture", specifier = ">=2.16" },
 ]
 
