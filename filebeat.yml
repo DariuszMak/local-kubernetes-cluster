@@ -13,6 +13,7 @@ filebeat.inputs:
     id: app-log-stream
     paths:
       - /usr/share/filebeat/app_logs/app.log
+      - /usr/share/filebeat/app_logs/app2.log
     take_over: true
 
 output.elasticsearch:
