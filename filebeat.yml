@@ -1,10 +1,22 @@
 filebeat.inputs:
+
   - type: container
     paths:
       - /var/lib/docker/containers/*/*.log
+    processors:
+      - add_docker_metadata: ~
+      - decode_json_fields:
+          fields: ["log"]
+          overwrite_keys: true
+
+  - type: filestream
+    id: app-log-stream
+    paths:
+      - /usr/share/filebeat/app_logs/app.log
+    take_over: true
 
 output.elasticsearch:
   hosts: ["http://elasticsearch:9200"]
 
 setup.kibana:
-  host: "kibana:5601"
+  host: "http://kibana:5601"
