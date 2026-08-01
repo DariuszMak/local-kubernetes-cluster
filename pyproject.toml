@@ -219,6 +219,11 @@ unfixable = ["B"]
 # Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$" # Allow unused variables when underscore-prefixed.
 
+[tool.ruff.lint.mccabe]
+# Fails a function once its cyclomatic complexity exceeds this. Mirrors the
+# `mccabe --min 16` gate from the recommended stack, expressed via ruff C90.
+max-complexity = 15
+
 [tool.ruff.lint.per-file-ignores]
 # last checked EnvLoaderMixin + JsonSchemaMixin was having problems with X | Y annotations
 "app/{config,data_types}.py" = ["UP007"]
