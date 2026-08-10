@@ -1,9 +1,5 @@
 # Local kubernetes cluster
 
-### Project structure diagrams
-
-#### FastAPI project
-
 <p align="center">
   <img src="images/runtime/1.png" alt="Swagger UI" width="600">
 </p>
@@ -19,6 +15,10 @@
 <p align="center">
   <img src="images/runtime/4.png" alt="Kubernetes tree view" width="600">
 </p>
+
+### Project structure diagrams
+
+#### FastAPI project
 
 ##### Modular perspective
 
