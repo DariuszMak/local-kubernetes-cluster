@@ -15,6 +15,7 @@ uv run mypy --strict alembic src tests
 # uv run mypy --explicit-package-bases --check-untyped-defs alembic src tests
 # uv run mypy --strict alembic src tests
 
+
 uv run ruff format src2 tests2
 uv run ruff check --fix src2 tests2
 uv run ruff check --fix --unsafe-fixes src2 tests2
@@ -32,9 +33,11 @@ uv run mypy --strict src2 tests2
 # uv run mypy --explicit-package-bases --check-untyped-defs src2 tests2
 # uv run mypy --strict src2 tests2
 
+
 uv run lint-imports --config pyproject.toml
 
 uv run semgrep --config=auto --config=p/security-audit --error src tests
+uv run semgrep --config=auto --config=p/security-audit --error src2 tests2
 
 uv run coverage report
 uv run coverage xml
