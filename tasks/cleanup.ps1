@@ -5,7 +5,7 @@ docker system df ;
 docker compose down -v --remove-orphans ; 
 docker stop $(docker ps -a -q) ; 
 docker rm -f $(docker ps -a -q) ; 
-docker system prune --volumes -a -f ; 
+docker system prune --volumes -f ; 
 docker volume rm -f $(docker volume ls -q) ; 
 docker system df ; 
 
