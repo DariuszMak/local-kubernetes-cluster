@@ -34,6 +34,7 @@ uv run mypy --strict src2 tests2
 # uv run mypy --explicit-package-bases src2 tests2
 # uv run mypy --explicit-package-bases --check-untyped-defs src2 tests2
 # uv run mypy --strict src2 tests2
+
 uv run semgrep --config=auto --config=p/security-audit --error src2 tests2
 
 
