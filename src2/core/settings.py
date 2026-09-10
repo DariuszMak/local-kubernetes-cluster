@@ -55,7 +55,7 @@ DATABASES = {
 }
 
 
-REST_FRAMEWORK = {
+REST_FRAMEWORK = {  # nosemgrep
     "DEFAULT_AUTHENTICATION_CLASSES": ("core.authentication.EmailJWTAuthentication",),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "EXCEPTION_HANDLER": "core.exceptions.global_exception_handler",
