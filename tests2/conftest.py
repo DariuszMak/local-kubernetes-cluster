@@ -14,12 +14,6 @@ def reset_db(db: None) -> None:
 
 @pytest.fixture(autouse=True)
 def disable_throttling(settings):
-
-    settings.REST_FRAMEWORK = {
-        **settings.REST_FRAMEWORK,
-        "DEFAULT_THROTTLE_CLASSES": [],
-    }
-
     settings.REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"] = {
         "anon": None,
         "user": None,
