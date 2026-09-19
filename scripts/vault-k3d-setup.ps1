@@ -3,25 +3,11 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-$Namespace    = "vault"
-$SecretPath   = "secret/python-project/dev"
-$RootToken    = "root"
-$LocalPort    = "8200"
+$Namespace   = "vault"
+$SecretPath  = "secret/python-project/dev"
+$RootToken   = "root"
+$LocalPort   = "8200"
 $ManifestFile = "k8s/vault/vault-dev.yaml"
-
-$BoundServiceAccounts = @(
-    "python-project",
-    "python-project-app2",
-    "dev-python-project",
-    "staging-python-project",
-    "prod-python-project",
-    "app2-dev-python-project-app2",
-    "app2-staging-python-project-app2",
-    "app2-prod-python-project-app2",
-    "default"
-) -join ","
-
-$BoundNamespaces = "default,dev,staging,prod"
 
 Write-Host "-> Ensuring namespace '$Namespace' exists..." -ForegroundColor Cyan
 $ErrorActionPreference = "Continue"
@@ -79,7 +65,6 @@ helm repo update
 
 helm upgrade --install vault hashicorp/vault `
     --namespace $Namespace `
-    --values helm/vault/values.yaml `
     --set "server.enabled=false" `
     --set "injector.enabled=true" `
     --set "injector.externalVaultAddr=http://vault.vault.svc.cluster.local:8200" `
@@ -158,8 +143,8 @@ Write-Host "   $cfgOut" -ForegroundColor DarkGray
 
 Write-Host "-> Creating auth role..." -ForegroundColor Cyan
 vault write auth/kubernetes/role/python-project `
-    bound_service_account_names="$BoundServiceAccounts" `
-    bound_service_account_namespaces="$BoundNamespaces" `
+    bound_service_account_names="python-project,default" `
+    bound_service_account_namespaces="default,dev" `
     policies=python-project-policy `
     ttl=1h
 
@@ -167,3 +152,4 @@ Write-Host ""
 Write-Host "Vault is running in k3d" -ForegroundColor Green
 Write-Host "   UI      : http://localhost:$LocalPort/ui  (token: $RootToken)"
 Write-Host "   Secrets : vault kv get $SecretPath"
+Write-Host "   Verify  : kubectl exec -n $Namespace $vaultPod -- sh -c 'VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=root vault read auth/kubernetes/config'"
