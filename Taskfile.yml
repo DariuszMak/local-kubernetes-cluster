@@ -42,6 +42,16 @@ tasks:
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/static_analysis_and_tests.ps1
 
+  manifests-validate:
+    desc: Validate rendered Kustomize overlays with kubeconform
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File scripts/kubeconform-validate.ps1
+
+  manifests-validate-prod:
+    desc: Validate prod overlays with kubeconform
+    cmds:
+      - powershell -ExecutionPolicy Bypass -Command ".\scripts\kubeconform-validate.ps1 -Overlays prod,app2-prod"
+
   kibana-elastic:
     desc: Start Elastic + Kibana stack
     cmds:
@@ -86,19 +96,21 @@ tasks:
       - powershell -ExecutionPolicy Bypass -Command ".\scripts\k3d-down.ps1"
 
   kustomize-dev:
-    desc: Load kustomize dev overlay
+    desc: Load kustomize dev overlays (app + app2)
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/kustomize.ps1
 
-  kustomize-prod-dry-run:
-    desc: Apply kustomize prod overlay in dry-run mode
-    cmds:
-      - powershell -ExecutionPolicy Bypass -Command ".\scripts\kustomize-apply.ps1 -Overlay prod -DryRun"
-
   kustomize-staging:
-    desc: Apply kustomize staging overlay
+    desc: Apply kustomize staging overlays
     cmds:
       - powershell -ExecutionPolicy Bypass -Command ".\scripts\kustomize-apply.ps1 -Overlay staging"
+      - powershell -ExecutionPolicy Bypass -Command ".\scripts\kustomize-apply.ps1 -Overlay app2-staging"
+
+  kustomize-prod-dry-run:
+    desc: Apply kustomize prod overlays in dry-run mode
+    cmds:
+      - powershell -ExecutionPolicy Bypass -Command ".\scripts\kustomize-apply.ps1 -Overlay prod -DryRun"
+      - powershell -ExecutionPolicy Bypass -Command ".\scripts\kustomize-apply.ps1 -Overlay app2-prod -DryRun"
 
   argocd:
     desc: Install Argo CD into the cluster
@@ -150,6 +162,7 @@ tasks:
       - task: vault-dev
       - task: dev-env
       - task: local-static-tests
+      - task: manifests-validate
       - task: kibana-elastic
       - task: local-dev-native-run
       - task: local-dev-native-api-tests
@@ -165,10 +178,11 @@ tasks:
       - task: local-dev-tilt-api-tests
 
   full-gitops:
-    desc: Full GitOps flow — k3d + Vault + Argo CD (requires REPO_URL variable)
+    desc: Full GitOps flow (k3d + Vault + Argo CD)
     deps:
       - cleanup
     cmds:
+      - task: manifests-validate
       - task: k3d
       - task: vault-k3d
       - task: argocd

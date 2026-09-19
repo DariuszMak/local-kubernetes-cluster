@@ -1,6 +1,6 @@
 .\scripts\k3d-up.ps1 ;
 
-Start-Process "http://localhost:8082" ; 
+Start-Process "http://localhost:8082/dev" ;
 
 kubectl get deployments -A --no-headers `
 | ForEach-Object {

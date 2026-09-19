@@ -1,20 +1,11 @@
-IMAGE        = "registry.localhost:5001/python-project:local"
-RELEASE_NAME = "python-project"
-HELM_CHART   = "./helm"
-NAMESPACE    = "default"
-SECRET_KEYS  = ["EXAMPLE_VARIABLE_NAME"]
+IMAGE  = "registry.localhost:5001/python-project:local"
+IMAGE2 = "registry.localhost:5001/python-project-app2:local"
 
-def load_dev_env(path=".dev.env"):
-    env = {}
-    for line in str(read_file(path)).splitlines():
-        line = line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-        k, _, v = line.partition("=")
-        env[k.strip()] = v.strip()
-    return env
+OVERLAY  = "k8s/kustomize/overlays/dev"
+OVERLAY2 = "k8s/kustomize/overlays/app2-dev"
 
-dev_env = load_dev_env()
+local("powershell -ExecutionPolicy Bypass -File scripts/render-secrets.ps1 -Overlay dev")
+local("powershell -ExecutionPolicy Bypass -File scripts/render-secrets.ps1 -Overlay app2-dev")
 
 docker_build(
     IMAGE,
@@ -25,30 +16,6 @@ docker_build(
     ],
 )
 
-secret_set_args = {
-    "secrets.{}".format(k): dev_env.get(k, "")
-    for k in SECRET_KEYS
-}
-
-k8s_yaml(
-    helm(
-        HELM_CHART,
-        name=RELEASE_NAME,
-        namespace=NAMESPACE,
-        set=["{}={}".format(k, v) for k, v in secret_set_args.items()],
-    )
-)
-
-k8s_resource(
-    RELEASE_NAME,
-    port_forwards=["8003:8000"],
-    labels=["app"],
-)
-
-IMAGE2        = "registry.localhost:5001/python-project-app2:local"
-RELEASE_NAME2 = "python-project-app2"
-HELM_CHART2   = "./helm2"
-
 docker_build(
     IMAGE2,
     context=".",
@@ -58,22 +25,17 @@ docker_build(
     ],
 )
 
-secret_set_args2 = {
-    "secrets.{}".format(k): dev_env.get(k, "")
-    for k in SECRET_KEYS
-}
+k8s_yaml(kustomize(OVERLAY))
+k8s_yaml(kustomize(OVERLAY2))
 
-k8s_yaml(
-    helm(
-        HELM_CHART2,
-        name=RELEASE_NAME2,
-        namespace=NAMESPACE,
-        set=["{}={}".format(k, v) for k, v in secret_set_args2.items()],
-    )
+k8s_resource(
+    "dev-python-project",
+    port_forwards=["8003:8000"],
+    labels=["app"],
 )
 
 k8s_resource(
-    RELEASE_NAME2,
+    "app2-dev-python-project-app2",
     port_forwards=["8004:8000"],
     labels=["app2"],
 )
