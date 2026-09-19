@@ -1,37 +1,37 @@
 #!/usr/bin/env pwsh
 
 param(
-    [ValidateSet("dev", "staging", "prod", "app2-dev", "app2-staging", "app2-prod")]
+    [ValidateSet("dev", "staging", "prod")]
     [string]$Overlay = "dev",
 
-    [switch]$DryRun,
-
-    [switch]$SkipValidate
+    [switch]$DryRun
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 $OverlayPath = "k8s/kustomize/overlays/$Overlay"
+$SecretsEnv  = "$OverlayPath/.$Overlay.secrets.env"
+$ExampleEnv  = "$OverlayPath/.$Overlay.secrets.env.example"
 
-$Namespace = switch -Regex ($Overlay) {
-    "staging$" { "staging" }
-    "prod$"    { "prod" }
-    default    { "dev" }
-}
-
-powershell -ExecutionPolicy Bypass -File scripts/render-secrets.ps1 -Overlay $Overlay
-
-if (-not $SkipValidate) {
-    powershell -ExecutionPolicy Bypass -File scripts/kubeconform-validate.ps1 -Overlays $Overlay
+if ($Overlay -eq "dev" -and -not (Test-Path $SecretsEnv)) {
+    if (Test-Path $ExampleEnv) {
+        Write-Host "-> Secrets file not found. Copying example to $SecretsEnv ..." -ForegroundColor Yellow
+        Copy-Item $ExampleEnv $SecretsEnv
+        Write-Host "   Edit $SecretsEnv with real values if needed." -ForegroundColor DarkGray
+    } else {
+        Write-Host "-> Generating $SecretsEnv from .dev.env ..." -ForegroundColor Yellow
+        $lines = Get-Content ".dev.env" | Where-Object { $_ -notmatch "^#" -and $_ -match "=" }
+        $lines | Set-Content $SecretsEnv
+    }
 }
 
 $ErrorActionPreference = "Continue"
-$nsExists = kubectl get namespace $Namespace 2>$null
+$nsExists = kubectl get namespace $Overlay 2>$null
 $ErrorActionPreference = "Stop"
 if (-not $nsExists) {
-    Write-Host "-> Creating namespace '$Namespace'..." -ForegroundColor Cyan
-    kubectl create namespace $Namespace
+    Write-Host "-> Creating namespace '$Overlay'..." -ForegroundColor Cyan
+    kubectl create namespace $Overlay
 }
 
 if ($DryRun) {
@@ -42,5 +42,5 @@ if ($DryRun) {
     kubectl apply -k $OverlayPath
     Write-Host ""
     Write-Host "Done! Overlay '$Overlay' applied." -ForegroundColor Green
-    Write-Host "   kubectl get all -n $Namespace"
+    Write-Host "   kubectl get all -n $Overlay"
 }

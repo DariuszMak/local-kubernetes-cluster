@@ -4,11 +4,14 @@ Set-StrictMode -Version Latest
 
 $ErrorActionPreference = "Stop"
 
-$ClusterName = "python-project"
-$Registry    = "localhost:5001"
-$ImageName   = "$Registry/python-project:local"
-$ImageName2  = "$Registry/python-project-app2:local"
-$K3dConfig   = "k8s/k3d-config.yaml"
+$ClusterName  = "python-project"
+$Registry     = "localhost:5001"
+$ImageName    = "$Registry/python-project:local"
+$K3dConfig    = "k8s/k3d-config.yaml"
+$HelmChart    = "helm"
+$ReleaseName  = "python-project"
+
+$SecretKeys = @("EXAMPLE_VARIABLE_NAME")
 
 $ErrorActionPreference = "Continue"
 $clusterExists = k3d cluster list --no-headers 2>$null | Select-String $ClusterName
@@ -64,12 +67,6 @@ docker build -t $ImageName .
 Write-Host "-> Pushing image to local registry..." -ForegroundColor Cyan
 docker push $ImageName
 
-Write-Host "-> Building Docker image: $ImageName2 ..." -ForegroundColor Cyan
-docker build -t $ImageName2 -f Dockerfile.app2 .
-
-Write-Host "-> Pushing image to local registry..." -ForegroundColor Cyan
-docker push $ImageName2
-
 $ErrorActionPreference = "Continue"
 $existing = kubectl get ns ingress-nginx --ignore-not-found 2>$null
 $ErrorActionPreference = "Stop"
@@ -81,12 +78,44 @@ if (-not $existing) {
     Write-Host "v ingress-nginx already installed." -ForegroundColor Green
 }
 
-Write-Host "-> Deploying dev overlays via Kustomize..." -ForegroundColor Cyan
-powershell -ExecutionPolicy Bypass -File scripts/kustomize-apply.ps1 -Overlay dev
-powershell -ExecutionPolicy Bypass -File scripts/kustomize-apply.ps1 -Overlay app2-dev
+$envMap = @{}
+foreach ($line in Get-Content ".dev.env") {
+    $line = $line.Trim()
+    if ($line -eq "" -or $line.StartsWith("#") -or $line -notmatch "=") { continue }
+    $parts       = $line -split "=", 2
+    $envMap[$parts[0].Trim()] = $parts[1].Trim()
+}
+
+$secretArgs = @()
+foreach ($key in $SecretKeys) {
+    if ($envMap.ContainsKey($key)) {
+        $secretArgs += "--set=secrets.$key=$($envMap[$key])"
+    } else {
+        Write-Warning "Secret key '$key' not found in .dev.env"
+    }
+}
+
+Write-Host "-> Deploying via Helm..." -ForegroundColor Cyan
+helm upgrade --install $ReleaseName $HelmChart `
+    --wait --timeout 60s `
+    @secretArgs
 
 Write-Host ""
-Write-Host "Done! App available at: http://localhost:8082/dev" -ForegroundColor Green
-Write-Host "   App2 available at  : http://localhost:8082/dev/app2"
-Write-Host "   kubectl context    : k3d-$ClusterName"
-Write-Host "   kubectl get all -n dev"
+Write-Host "Done! App available at: http://localhost:8082" -ForegroundColor Green
+Write-Host "   kubectl context : k3d-$ClusterName"
+Write-Host "   helm release    : $ReleaseName"
+Write-Host "   helm history    : helm history $ReleaseName"
+
+
+$ErrorActionPreference = "Stop"
+$Registry  = "localhost:5001"
+$ImageName = "$Registry/python-project-app2:local"
+
+Write-Host "-> Building Docker image: $ImageName ..." -ForegroundColor Cyan
+docker build -t $ImageName -f Dockerfile.app2 .
+
+Write-Host "-> Pushing image to local registry..." -ForegroundColor Cyan
+docker push $ImageName
+
+Write-Host ""
+Write-Host "Done. Image pushed: $ImageName" -ForegroundColor Green

@@ -23,12 +23,6 @@ patches:
       kind: Ingress
       name: python-project-app2
 
-secretGenerator:
-  - name: python-project-app2-secrets
-    behavior: merge
-    envs:
-      - .prod.secrets.env
-
 images:
   - name: registry.localhost:5001/python-project-app2
     newTag: "1.0.0"
