@@ -13,25 +13,33 @@ spec:
     metadata:
       labels:
         app: python-project-app2
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "python-project"
+        vault.hashicorp.com/agent-inject-secret-app.env: "secret/data/python-project/dev"
+        vault.hashicorp.com/agent-inject-template-app.env: |
+          {{- with secret "secret/data/python-project/dev" -}}
+          {{- range $k, $v := .Data.data -}}
+          {{ $k }}={{ $v }}
+          {{ end -}}
+          {{- end -}}
+        vault.hashicorp.com/agent-pre-populate-only: "true"
     spec:
+      serviceAccountName: python-project-app2
       containers:
         - name: python-project-app2
           image: registry.localhost:5001/python-project-app2:local
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: python-project-app2-config
+            - secretRef:
+                name: python-project-app2-secrets
           env:
-            - name: HOST2
-              value: "0.0.0.0"
-            - name: PORT2
-              value: "8000"
-            - name: DEBUG
-              value: "false"
-            - name: EXAMPLE_VARIABLE_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: python-project-app2-secrets
-                  key: EXAMPLE_VARIABLE_NAME
+            - name: VAULT_SECRETS_FILE
+              value: "/vault/secrets/app.env"
           livenessProbe:
             httpGet:
               path: /health/liveness

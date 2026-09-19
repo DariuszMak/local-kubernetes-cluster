@@ -4,14 +4,16 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 $ClusterName = "python-project"
-$ReleaseName = "python-project"
 
-Write-Host "-> Uninstalling Helm release '$ReleaseName'..." -ForegroundColor Yellow
+Write-Host "-> Deleting dev overlays..." -ForegroundColor Yellow
 $ErrorActionPreference = "Continue"
-helm uninstall $ReleaseName 2>$null
+kubectl delete -k k8s/kustomize/overlays/app2-dev 2>$null
+kubectl delete -k k8s/kustomize/overlays/dev 2>$null
 $ErrorActionPreference = "Stop"
 
 Write-Host "-> Deleting k3d cluster '$ClusterName'..." -ForegroundColor Yellow
-k3d cluster delete $ClusterName
+$ErrorActionPreference = "Continue"
+k3d cluster delete $ClusterName 2>$null
+$ErrorActionPreference = "Stop"
 
 Write-Host "Done." -ForegroundColor Green

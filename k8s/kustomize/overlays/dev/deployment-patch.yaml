@@ -11,8 +11,6 @@ spec:
           env:
             - name: LOG_LEVEL
               value: DEBUG
-            - name: PORT
-              value: "8000"
           resources:
             requests:
               memory: "64Mi"
