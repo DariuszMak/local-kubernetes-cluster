@@ -32,7 +32,7 @@ class CreateUserView(APIView):
 class GetUserView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request: Request, user_id: int) -> Response:  # noqa: ARG002
+    def get(self, request: Request, user_id: int) -> Response:  # ruff: ignore[unused-method-argument]
         service = UserService()
         try:
             user = service.get_user(user_id)

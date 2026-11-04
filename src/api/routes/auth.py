@@ -13,8 +13,8 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 @router.post("/login")
 async def login(
-    form_data: OAuth2PasswordRequestForm = Depends(),  # noqa: B008
-    service: AuthService = Depends(get_auth_service),  # noqa: B008
+    form_data: OAuth2PasswordRequestForm = Depends(),  # ruff: ignore[function-call-in-default-argument]
+    service: AuthService = Depends(get_auth_service),  # ruff: ignore[function-call-in-default-argument]
 ) -> dict[str, str]:
     token = service.create_token_for_user(form_data.username)
     return {"access_token": token, "token_type": "bearer"}

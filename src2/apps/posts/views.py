@@ -20,7 +20,7 @@ class PostListCreateView(APIView):
         responses={200: PostReadSerializer(many=True)},
         summary="List all posts for a specific user",
     )
-    def get(self, request: Request, user_id: int) -> Response:  # noqa: ARG002
+    def get(self, request: Request, user_id: int) -> Response:  # ruff: ignore[unused-method-argument]
         service = PostService()
         posts = service.get_posts_for_user(user_id)
         return Response(PostReadSerializer(posts, many=True).data)
@@ -53,7 +53,7 @@ class PostDetailView(APIView):
         responses={200: PostReadSerializer, 404: dict},
         summary="Get a specific post detail",
     )
-    def get(self, request: Request, user_id: int, post_id: int) -> Response:  # noqa: ARG002
+    def get(self, request: Request, user_id: int, post_id: int) -> Response:  # ruff: ignore[unused-method-argument]
         service = PostService()
         try:
             post = service.get_post(post_id)
@@ -66,7 +66,7 @@ class PostDetailView(APIView):
         responses={204: None, 404: dict},
         summary="Delete a specific post",
     )
-    def delete(self, request: Request, user_id: int, post_id: int) -> Response:  # noqa: ARG002
+    def delete(self, request: Request, user_id: int, post_id: int) -> Response:  # ruff: ignore[unused-method-argument]
         service = PostService()
         try:
             service.delete_post(post_id)

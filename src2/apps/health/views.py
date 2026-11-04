@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 class RootView(APIView):
     permission_classes = [AllowAny]
 
-    def get(self, request: Request) -> Response:  # noqa: ARG002
+    def get(self, request: Request) -> Response:  # ruff: ignore[unused-method-argument]
         return Response({"message": "API playground is running"})
 
 
@@ -21,19 +21,19 @@ class HealthCheckView(APIView):
     permission_classes = [AllowAny]
 
     @extend_schema(responses={200: inline_serializer("HealthResponse", {"status": serializers.CharField()})})
-    def get(self, request: Request) -> Response:  # noqa: ARG002
+    def get(self, request: Request) -> Response:  # ruff: ignore[unused-method-argument]
         return Response({"status": "ok"})
 
 
 class LivenessView(APIView):
     permission_classes = [AllowAny]
 
-    def get(self, request: Request) -> Response:  # noqa: ARG002
+    def get(self, request: Request) -> Response:  # ruff: ignore[unused-method-argument]
         return Response({"status": "alive"})
 
 
 class ReadinessView(APIView):
     permission_classes = [AllowAny]
 
-    def get(self, request: Request) -> Response:  # noqa: ARG002
+    def get(self, request: Request) -> Response:  # ruff: ignore[unused-method-argument]
         return Response({"status": "ready"})

@@ -61,7 +61,7 @@ def test_login_returns_token(client: Client) -> None:
     assert "access_token" in data
     assert isinstance(data["access_token"], str)
     assert data["access_token"]
-    assert data["token_type"] == "bearer"  # noqa: S105
+    assert data["token_type"] == "bearer"  # ruff: ignore[hardcoded-password-string]
 
 
 @pytest.mark.django_db

@@ -87,7 +87,7 @@ async def test_login_returns_token() -> None:
     assert response.status_code == 200
     data = response.json()
     assert "access_token" in data
-    assert data["token_type"] == "bearer"  # noqa: S105
+    assert data["token_type"] == "bearer"  # ruff: ignore[hardcoded-password-string]
 
 
 @pytest.mark.asyncio

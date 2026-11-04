@@ -24,7 +24,7 @@ class UserRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-def get_user_service(db: AsyncSession = Depends(get_db)) -> UserService:  # noqa: B008
+def get_user_service(db: AsyncSession = Depends(get_db)) -> UserService:  # ruff: ignore[function-call-in-default-argument]
     repo = UserRepository(db)
     return UserService(repo)
 
@@ -32,7 +32,7 @@ def get_user_service(db: AsyncSession = Depends(get_db)) -> UserService:  # noqa
 @router.post("/", response_model=UserRead)
 async def create_user(
     email: str,
-    service: UserService = Depends(get_user_service),  # noqa: B008
+    service: UserService = Depends(get_user_service),  # ruff: ignore[function-call-in-default-argument]
 ) -> User:
     try:
         return await service.create_user(email)
@@ -44,7 +44,7 @@ async def create_user(
 async def get_user(
     user_id: int,
     _: str = Depends(get_current_user_email),
-    service: UserService = Depends(get_user_service),  # noqa: B008
+    service: UserService = Depends(get_user_service),  # ruff: ignore[function-call-in-default-argument]
 ) -> User:
     try:
         return await service.get_user(user_id)

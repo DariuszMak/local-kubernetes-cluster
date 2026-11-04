@@ -27,4 +27,4 @@ AsyncSessionLocal = async_sessionmaker(
 
 async def get_db() -> AsyncGenerator[AsyncSession]:
     async with AsyncSessionLocal() as session:
-        yield session  # noqa: ASYNC119
+        yield session  # ruff: ignore[yield-in-context-manager-in-async-generator]

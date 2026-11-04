@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 router = APIRouter(prefix="/users/{user_id}/posts", tags=["posts"])
 
 
-def get_post_service(db: AsyncSession = Depends(get_db)) -> PostService:  # noqa: B008
+def get_post_service(db: AsyncSession = Depends(get_db)) -> PostService:  # ruff: ignore[function-call-in-default-argument]
     repo = PostRepository(db)
     return PostService(repo)
 
@@ -26,7 +26,7 @@ async def create_post(
     user_id: int,
     payload: PostCreate,
     _: str = Depends(get_current_user_email),
-    service: PostService = Depends(get_post_service),  # noqa: B008
+    service: PostService = Depends(get_post_service),  # ruff: ignore[function-call-in-default-argument]
 ) -> Post:
     return await service.create_post(user_id=user_id, title=payload.title, body=payload.body)
 
@@ -35,17 +35,17 @@ async def create_post(
 async def list_posts(
     user_id: int,
     _: str = Depends(get_current_user_email),
-    service: PostService = Depends(get_post_service),  # noqa: B008
+    service: PostService = Depends(get_post_service),  # ruff: ignore[function-call-in-default-argument]
 ) -> list[Post]:
     return await service.get_posts_for_user(user_id)
 
 
 @router.get("/{post_id}", response_model=PostRead)
 async def get_post(
-    user_id: int,  # noqa: ARG001
+    user_id: int,  # ruff: ignore[unused-function-argument]
     post_id: int,
     _: str = Depends(get_current_user_email),
-    service: PostService = Depends(get_post_service),  # noqa: B008
+    service: PostService = Depends(get_post_service),  # ruff: ignore[function-call-in-default-argument]
 ) -> Post:
     try:
         return await service.get_post(post_id)
@@ -55,10 +55,10 @@ async def get_post(
 
 @router.delete("/{post_id}", status_code=204)
 async def delete_post(
-    user_id: int,  # noqa: ARG001
+    user_id: int,  # ruff: ignore[unused-function-argument]
     post_id: int,
     _: str = Depends(get_current_user_email),
-    service: PostService = Depends(get_post_service),  # noqa: B008
+    service: PostService = Depends(get_post_service),  # ruff: ignore[function-call-in-default-argument]
 ) -> None:
     try:
         await service.delete_post(post_id)
