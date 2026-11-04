@@ -11,3 +11,6 @@ kubectl get deployments -A --no-headers `
     Write-Host "`n=== $ns / $name ==="
     kubectl tree deployment $name -n $ns
 }
+
+kubectl top nodes ; 
+kubectl top pods ; 
