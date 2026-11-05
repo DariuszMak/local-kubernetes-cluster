@@ -1,0 +1,85 @@
+# Grafana Loki values for log aggregation
+# This enables Loki to collect logs from Kubernetes pods and make them queryable in Grafana
+
+loki:
+  enabled: true
+  isDefault: true
+  
+  commonConfig:
+    replication_factor: 1
+
+  storage:
+    type: fs
+
+  # Single-binary mode for simplicity in dev
+  singleBinary:
+    replicas: 1
+
+  # Resource limits for dev
+  limits_config:
+    reject_old_samples: true
+    reject_old_samples_max_age: 168h
+
+  # Enable metrics for Grafana dashboards
+  metrics:
+    generator:
+      loki:
+        enabled: true
+
+  # Configure ingester to accept logs
+  ingester:
+    lifecycler:
+      address: 127.0.0.1
+      ring:
+        kvstore:
+          store: inmemory
+        instance:
+          addr: 127.0.0.1
+          port: 10000
+        replication_factor: 1
+
+  # Schema for logs
+  schema_config:
+    configs:
+      - from: "2024-01-01"
+        store: tsdb
+        object_store: filesystem
+        schema: v13
+        prefix: loki_index_
+
+  # Storage config
+  storage:
+    filesystem:
+      chunks_directory: /loki/chunks
+      configs_directory: /loki/configs
+
+# Query engine for Loki
+queryEngine:
+  store: tsdb
+
+# Query frontend
+queryFrontend:
+  enabled: true
+
+# Distributor for log distribution
+distributor:
+  enabled: true
+
+# Compactor for log compaction
+compactor:
+  enabled: true
+  retention_enabled: true
+  retention_deletes_enabled: true
+  retention_default: true
+
+# Search configuration
+search:
+  enabled: true
+
+# Enable OTLP receiver for OpenTelemetry logs
+otlp:
+  enabled: true
+
+# Read the Loki configuration from files
+config:
+  auth_enabled: false

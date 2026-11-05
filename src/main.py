@@ -2,9 +2,11 @@ from pathlib import Path
 
 import structlog
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
+from src.api.middleware import HTTPLogMiddleware
 from src.api.router import api_router
 from src.helpers.config.config import get_settings
 from src.helpers.exceptions import global_exception_handler
@@ -24,6 +26,18 @@ app = FastAPI(
 )
 
 app.include_router(api_router)
+
+# HTTP request logging middleware (for Grafana/Loki)
+app.add_middleware(HTTPLogMiddleware)
+
+# CORS middleware for local development
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.add_exception_handler(Exception, global_exception_handler)
 

@@ -1,0 +1,182 @@
+# OpenTelemetry Collector values for collecting traces, metrics, and logs
+# This collector receives OTLP data from the applications and forwards to Tempo/Prometheus/Loki
+
+mode: "deployment"
+
+config:
+  receivers:
+    otlp:
+      protocols:
+        http:
+          endpoint: "0.0.0.0:4318"
+        grpc:
+          endpoint: "0.0.0.0:4317"
+
+    # Also accept logs from filebeat/filelog
+    filelog/k8s:
+      config:
+        operators:
+          - type: router
+            id: router_operator
+            routes:
+              - output: json_parser
+                expr: 'body matches ".*"'
+          - type: json_parser
+            id: json_parser
+            body: '{{ .body }}'
+            timestamp:
+              parse_from: attributes.timestamp
+            time_zone: UTC
+          - type: remove
+            id: remove_body
+            attribute_key: body
+
+  processors:
+    batch:
+      send_batch_max_size: 1024
+      send_batch_size: 512
+      timeout: 5s
+
+    memory_limiter:
+      check_interval: 1s
+      limit_mib: 1024
+      spike_limit_mib: 256
+
+    # Add resource attributes for Kubernetes
+    k8sattributes:
+      extract:
+        metadata:
+          - k8s.pod.name
+          - k8s.pod.uid
+          - k8s.deployment.name
+          - k8s.namespace.name
+          - k8s.node.name
+          - container.id
+      pod_association:
+        - sources:
+            - context: pod
+            - source: k8s.pod.uid
+
+    # Transform log bodies to include k8s metadata
+    transform/log_body:
+      log_statements:
+        - context: log
+          statements:
+            - set(body, FormatJSON(merge_maps(body, attributes, "insert")))
+            - set("resource.labels.container", resource.container_id)
+            - set("source.name", resource.host_name)
+
+  exporters:
+    # Send traces to Tempo
+    tempo:
+      endpoint: "tempo.monitoring.svc.cluster.local:4317"
+      tls:
+        insecure: true
+      sending_queue:
+        enabled: true
+        num_consumers: 10
+        queue_size: 1000
+      retry_on_failure:
+        enabled: true
+        initial_interval: 5s
+        max_interval: 30s
+        max_elapsed_time: 300s
+
+    # Send metrics to Prometheus
+    prometheus:
+      endpoint: "0.0.0.0:8889"
+      send_timestamps: true
+      metric_expiration: 5m
+
+    # Send logs to Loki
+    loki:
+      endpoint: "http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push"
+      external_labels:
+        cluster: k3d-local-dev
+        kubernetes_namespace: $K8S_NAMESPACE
+        kubernetes_pod_name: $POD_NAME
+        kubernetes_pod_uid: $POD_UID
+      retry_on_failure:
+        enabled: true
+        initial_interval: 5s
+        max_interval: 30s
+        max_elapsed_time: 300s
+      sending_queue:
+        enabled: true
+        num_consumers: 10
+        queue_size: 1000
+      batch_size: 1024
+      batch_timeout: 5s
+
+    # Debug exporter (optional, for development)
+    logging:
+      loglevel: info
+
+  service:
+    pipelines:
+      traces:
+        receivers: [otlp]
+        processors: [memory_limiter, batch]
+        exporters: [tempo, logging]
+      metrics:
+        receivers: [otlp]
+        processors: [memory_limiter, batch]
+        exporters: [prometheus, logging]
+      logs:
+        receivers: [otlp, filelog/k8s]
+        processors: [memory_limiter, batch, k8sattributes, transform/log_body]
+        exporters: [loki, logging]
+
+    extensions: [memory_limiter]
+    telemetry:
+      metrics:
+        address: "0.0.0.0:8888"
+
+# Expose OTLP ports
+ports:
+  otlp:
+    enabled: true
+    containerPort: 4317
+    protocol: TCP
+  otlp-http:
+    enabled: true
+    containerPort: 4318
+    protocol: TCP
+  prometheus:
+    enabled: true
+    containerPort: 8889
+    protocol: TCP
+  prometheus-http:
+    enabled: true
+    containerPort: 8888
+    protocol: TCP
+
+# Use host network for log collection
+hostNetwork: true
+
+# DaemonSet mode to collect logs from all nodes
+daemonSet:
+  enabled: true
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "128Mi"
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+
+# Add namespace and pod env vars for loki exporter
+env:
+  - name: K8S_NAMESPACE
+    valueFrom:
+      fieldRef:
+        fieldPath: metadata.namespace
+  - name: POD_NAME
+    valueFrom:
+      fieldRef:
+        fieldPath: metadata.name
+  - name: POD_UID
+    valueFrom:
+      fieldRef:
+        fieldPath: metadata.uid

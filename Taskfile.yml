@@ -125,6 +125,16 @@ tasks:
     cmds:
       - powershell -ExecutionPolicy Bypass -File scripts/monitoring-uninstall.ps1
 
+  monitoring-logs:
+    desc: Install Loki + OpenTelemetry Collector for log aggregation in Grafana
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File scripts/monitoring-logs-install.ps1
+
+  monitoring-logs-down:
+    desc: Uninstall Loki + OpenTelemetry Collector
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File scripts/monitoring-logs-uninstall.ps1
+
   tilt:
     desc: Load Tilt
     cmds:
