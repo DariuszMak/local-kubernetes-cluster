@@ -55,7 +55,7 @@ class HTTPLogMiddleware:
             await self.app(scope, receive, capture_send)
         except Exception as exc:
             duration_ms = (time.perf_counter() - start_time) * 1000
-            logger.error(
+            logger.exception(
                 "http_request_error",
                 method=method,
                 path=path,
