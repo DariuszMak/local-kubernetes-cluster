@@ -75,11 +75,6 @@ tasks:
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/k3d.ps1
 
-  k3d-redeploy:
-    desc: Redeploy k3d cluster
-    cmds:
-      - powershell -ExecutionPolicy Bypass -Command ".\scripts\k3d-redeploy.ps1"
-
   k3d-down:
     desc: Tear down k3d cluster
     cmds:
