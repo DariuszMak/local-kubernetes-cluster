@@ -79,16 +79,6 @@ tasks:
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/kustomize.ps1
 
-  kustomize-prod-dry-run:
-    desc: Apply kustomize prod overlay in dry-run mode
-    cmds:
-      - powershell -ExecutionPolicy Bypass -Command ".\scripts\kustomize-apply.ps1 -Overlay prod -DryRun"
-
-  kustomize-staging:
-    desc: Apply kustomize staging overlay
-    cmds:
-      - powershell -ExecutionPolicy Bypass -Command ".\scripts\kustomize-apply.ps1 -Overlay staging"
-
   argocd:
     desc: Install Argo CD into the cluster
     cmds:
