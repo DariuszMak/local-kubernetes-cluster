@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 
 param(
-    [ValidateSet("dev", "staging", "prod")]
+    [ValidateSet("dev")]
     [string]$Overlay = "dev",
 
     [switch]$DryRun

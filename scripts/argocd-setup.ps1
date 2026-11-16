@@ -6,7 +6,7 @@ param(
 
     [string]$SshKeyFile = "",
 
-    [ValidateSet("dev", "staging", "prod", "all")]
+    [ValidateSet("dev", "all")]
     [string]$Env = "all"
 )
 
