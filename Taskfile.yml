@@ -105,30 +105,15 @@ tasks:
     cmds:
       - powershell -ExecutionPolicy Bypass -Command ".\scripts\argocd-setup.ps1 -RepoURL https://github.com/DariuszMak/local-kubernetes-cluster"
 
-  argocd-down:
-    desc: Uninstall Argo CD and remove Application manifests
-    cmds:
-      - powershell -ExecutionPolicy Bypass -File scripts/argocd-down.ps1
-
   monitoring:
     desc: Install kube-prometheus-stack (Prometheus + Grafana)
     cmds:
       - powershell -ExecutionPolicy Bypass -File scripts/monitoring-install.ps1
 
-  monitoring-down:
-    desc: Uninstall kube-prometheus-stack
-    cmds:
-      - powershell -ExecutionPolicy Bypass -File scripts/monitoring-uninstall.ps1
-
   tilt:
     desc: Load Tilt
     cmds:
       - powershell -ExecutionPolicy Bypass -Command "Start-Process .\tasks\tilt.ps1"
-
-  tilt-down:
-    desc: Stop Tilt environment
-    cmds:
-      - powershell -ExecutionPolicy Bypass -Command ".\scripts\tilt-down.ps1"
 
   local-dev-tilt-api-tests:
     desc: Local dev Windows API tests
