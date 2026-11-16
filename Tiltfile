@@ -1,6 +1,6 @@
 IMAGE        = "registry.localhost:5001/python-project:local"
 RELEASE_NAME = "python-project"
-HELM_CHART   = "./tilt/helm-app2"
+HELM_CHART   = "./tilt/helm-app"
 NAMESPACE    = "default"
 SECRET_KEYS  = ["EXAMPLE_VARIABLE_NAME"]
 
