@@ -1,6 +1,6 @@
 IMAGE        = "registry.localhost:5001/python-project:local"
 RELEASE_NAME = "python-project"
-HELM_CHART   = "./tilt/helm"
+HELM_CHART   = "./tilt/tilt-helm-app2"
 NAMESPACE    = "default"
 SECRET_KEYS  = ["EXAMPLE_VARIABLE_NAME"]
 
@@ -47,7 +47,7 @@ k8s_resource(
 
 IMAGE2        = "registry.localhost:5001/python-project-app2:local"
 RELEASE_NAME2 = "python-project-app2"
-HELM_CHART2   = "./tilt/helm2"
+HELM_CHART2   = "./tilt/tilt-helm-app2"
 
 docker_build(
     IMAGE2,
