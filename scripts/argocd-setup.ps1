@@ -58,12 +58,8 @@ kubectl apply -f k8s/argocd/project.yaml
 
 $appFiles = switch ($Env) {
     "dev"     { @("k8s/argocd/app-dev.yaml", "k8s/argocd/app2-dev.yaml") }
-    "staging" { @("k8s/argocd/app-staging.yaml", "k8s/argocd/app2-staging.yaml") }
-    "prod"    { @("k8s/argocd/app-prod.yaml", "k8s/argocd/app2-prod.yaml") }
     "all"     { @(
-        "k8s/argocd/app-dev.yaml", "k8s/argocd/app2-dev.yaml",
-        "k8s/argocd/app-staging.yaml", "k8s/argocd/app2-staging.yaml",
-        "k8s/argocd/app-prod.yaml", "k8s/argocd/app2-prod.yaml"
+        "k8s/argocd/app-dev.yaml", "k8s/argocd/app2-dev.yaml"
     ) }
 }
 
