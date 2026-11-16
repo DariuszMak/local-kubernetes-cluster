@@ -134,6 +134,8 @@ tasks:
       - task: argocd
       - task: argocd-setup
       - task: kustomize-dev
+      - task: kustomize-staging
+      - task: kustomize-prod-dry-run
       - task: monitoring
       - task: tilt
       - task: local-dev-tilt-api-tests
