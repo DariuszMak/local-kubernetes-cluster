@@ -10,7 +10,7 @@ labels:
       environment: dev
 
 resources:
-  - ../../base
+  - ../../base/app
 
 patches:
   - path: deployment-patch.yaml
