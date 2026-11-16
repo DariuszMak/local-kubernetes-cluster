@@ -74,6 +74,12 @@ task full-dev-native ;
 task full-gitops ; 
 ```
 
+## Tilt:
+
+```commandline
+task tilt ; 
+```
+
 ### Dev credentials:
 
 Vault:
