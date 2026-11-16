@@ -4,7 +4,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 $ClusterName = "python-project"
-$K3dConfig   = "k8s/k3d-config.yaml"
+$K3dConfig   = "k3d-config.yaml"
 
 $ErrorActionPreference = "Continue"
 $clusterExists = k3d cluster list --no-headers 2>$null | Select-String $ClusterName
