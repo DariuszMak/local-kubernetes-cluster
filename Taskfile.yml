@@ -7,7 +7,6 @@ tasks:
   cleanup:
     desc: Full project cleanup (docker, git, ports, caches)
     cmds:
-      - task: monitoring-down
       - powershell -ExecutionPolicy Bypass -File tasks/cleanup.ps1
 
   vault-dev:
@@ -74,11 +73,6 @@ tasks:
     desc: Load k3d cluster
     cmds:
       - powershell -ExecutionPolicy Bypass -File tasks/k3d.ps1
-
-  k3d-down:
-    desc: Tear down k3d cluster
-    cmds:
-      - powershell -ExecutionPolicy Bypass -Command ".\scripts\k3d-down.ps1"
 
   kustomize-dev:
     desc: Load kustomize dev overlay
