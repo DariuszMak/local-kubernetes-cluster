@@ -8,7 +8,7 @@ $ClusterName  = "python-project"
 $Registry     = "localhost:5001"
 $ImageName    = "$Registry/python-project:local"
 $K3dConfig    = "k3d-config.yaml"
-$HelmChart    = "helm"
+$HelmChart    = "tilt/helm-app"
 $ReleaseName  = "python-project"
 
 $SecretKeys = @("EXAMPLE_VARIABLE_NAME")

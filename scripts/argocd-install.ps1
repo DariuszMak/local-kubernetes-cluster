@@ -5,7 +5,7 @@ $ErrorActionPreference = "Stop"
 
 $Namespace   = "argocd"
 $ReleaseName = "argocd"
-$ValuesFile  = "helm/argocd/values.yaml"
+$ValuesFile  = "tilt/helm-app/argocd/values.yaml"
 
 $ErrorActionPreference = "Continue"
 kubectl get namespace $Namespace 2>$null | Out-Null
