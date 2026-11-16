@@ -5,7 +5,7 @@ $ErrorActionPreference = "Stop"
 
 $Namespace   = "monitoring"
 $ReleaseName = "kube-prometheus-stack"
-$ValuesFile  = "helm/monitoring/values.yaml"
+$ValuesFile  = "k8s/monitoring/values.yaml"
 
 $ErrorActionPreference = "Continue"
 kubectl get namespace $Namespace 2>$null | Out-Null
