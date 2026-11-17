@@ -9,7 +9,7 @@ spec:
   rules:
     - http:
         paths:
-          - path: /app-dev(/|$)(.*)
+          - path: /dev/app(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:

@@ -14,6 +14,6 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: app2-dev-python-project-app2
+                name: app2-dev-python-project
                 port:
                   number: 80
