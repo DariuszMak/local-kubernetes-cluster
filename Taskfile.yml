@@ -106,6 +106,12 @@ tasks:
       - powershell -ExecutionPolicy Bypass -File tasks/wait_for_tilt_api2.ps1
       - powershell -ExecutionPolicy Bypass -File tasks/test_tilt_api.ps1
 
+  show-kubernetes-info:
+    desc: Shows deployments, nodes and pods
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/show_kubernetes_info.ps1
+
+  
   full-dev-native:
     desc: Full local dev flow with Vault (Windows native)
     deps:
@@ -127,6 +133,7 @@ tasks:
       - task: monitoring
       - task: tilt
       - task: local-dev-tilt-api-tests
+      - task: show-kubernetes-info
 
   full-gitops:
     desc: Full GitOps flow — k3d + Vault + Argo CD (requires REPO_URL variable)
@@ -137,3 +144,4 @@ tasks:
       - task: vault-k3d
       - task: argocd
       - task: argocd-setup
+      - task: show-kubernetes-info

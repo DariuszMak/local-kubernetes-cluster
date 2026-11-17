@@ -1,0 +1,12 @@
+kubectl get deployments -A --no-headers `
+| ForEach-Object {
+    $parts = $_ -split '\s+'
+    $ns = $parts[0]
+    $name = $parts[1]
+
+    Write-Host "`n=== $ns / $name ==="
+    kubectl tree deployment $name -n $ns
+}
+
+kubectl top nodes ; 
+kubectl top pods ; 
