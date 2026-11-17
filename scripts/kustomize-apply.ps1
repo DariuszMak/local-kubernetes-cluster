@@ -2,7 +2,7 @@
 
 param(
     [ValidateSet("dev")]
-    [string]$Overlay = "app-dev",
+    [string]$Overlay = "dev",
 
     [switch]$DryRun
 )
@@ -10,7 +10,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-$OverlayPath = "k8s/kustomize/overlays/$Overlay"
+$OverlayPath = "k8s/kustomize/overlays/app-$Overlay"
 $SecretsEnv  = "$OverlayPath/.$Overlay.secrets.env"
 $ExampleEnv  = "$OverlayPath/.$Overlay.secrets.env.example"
 
