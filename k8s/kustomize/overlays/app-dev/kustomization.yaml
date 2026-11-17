@@ -3,7 +3,7 @@ kind: Kustomization
 
 namespace: dev
 
-namePrefix: dev-
+namePrefix: app-dev-
 
 labels:
   - pairs:

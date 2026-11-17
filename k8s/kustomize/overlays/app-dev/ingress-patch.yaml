@@ -9,10 +9,10 @@ spec:
   rules:
     - http:
         paths:
-          - path: /dev(/|$)(.*)
+          - path: /app-dev(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
-                name: dev-python-project
+                name: app-dev-python-project
                 port:
                   number: 80
