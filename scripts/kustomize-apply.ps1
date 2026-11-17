@@ -2,7 +2,7 @@
 
 param(
     [ValidateSet("dev")]
-    [string]$Overlay = "dev",
+    [string]$Overlay = "app-dev",
 
     [switch]$DryRun
 )
