@@ -6,10 +6,24 @@ $ErrorActionPreference = "Stop"
 
 $ClusterName  = "python-project"
 $Registry     = "localhost:5001"
-$ImageName    = "$Registry/python-project:local"
 $K3dConfig    = "k3d-config.yaml"
-$HelmChart    = "tilt/helm-app"
-$ReleaseName  = "python-project"
+
+$Apps = @(
+    @{
+        Name        = "app"
+        ImageName   = "$Registry/python-project:local"
+        Dockerfile  = "Dockerfile"
+        HelmChart   = "tilt/helm-app"
+        ReleaseName = "python-project"
+    },
+    @{
+        Name        = "app2"
+        ImageName   = "$Registry/python-project-app2:local"
+        Dockerfile  = "Dockerfile.app2"
+        HelmChart   = "tilt/helm-app2"
+        ReleaseName = "python-project-app2"
+    }
+)
 
 $SecretKeys = @("EXAMPLE_VARIABLE_NAME")
 
@@ -61,11 +75,15 @@ while (-not $apiReady) {
 }
 Write-Host "v API server is ready." -ForegroundColor Green
 
-Write-Host "-> Building Docker image: $ImageName ..." -ForegroundColor Cyan
-docker build -t $ImageName .
+foreach ($app in $Apps) {
+    Write-Host "-> Building Docker image ($($app.Name)): $($app.ImageName) ..." -ForegroundColor Cyan
+    docker build -t $app.ImageName -f $app.Dockerfile .
+    if ($LASTEXITCODE -ne 0) { Write-Error "Docker build failed for $($app.Name)."; exit 1 }
 
-Write-Host "-> Pushing image to local registry..." -ForegroundColor Cyan
-docker push $ImageName
+    Write-Host "-> Pushing image ($($app.Name)) to local registry..." -ForegroundColor Cyan
+    docker push $app.ImageName
+    if ($LASTEXITCODE -ne 0) { Write-Error "Docker push failed for $($app.Name)."; exit 1 }
+}
 
 $ErrorActionPreference = "Continue"
 $existing = kubectl get ns ingress-nginx --ignore-not-found 2>$null
@@ -95,27 +113,20 @@ foreach ($key in $SecretKeys) {
     }
 }
 
-Write-Host "-> Deploying via Helm..." -ForegroundColor Cyan
-helm upgrade --install $ReleaseName $HelmChart `
-    --wait --timeout 60s `
-    @secretArgs
+foreach ($app in $Apps) {
+    Write-Host "-> Deploying via Helm ($($app.Name)): $($app.ReleaseName) from $($app.HelmChart) ..." -ForegroundColor Cyan
+    helm upgrade --install $app.ReleaseName $app.HelmChart `
+        --wait --timeout 60s `
+        @secretArgs
+    if ($LASTEXITCODE -ne 0) { Write-Error "Helm deploy failed for $($app.Name)."; exit 1 }
+}
 
 Write-Host ""
-Write-Host "Done! App available at: http://localhost:8082" -ForegroundColor Green
+Write-Host "Done! Apps available at:" -ForegroundColor Green
+Write-Host "   app  : http://localhost:8082"
+Write-Host "   app2 : http://localhost:8082/app2"
 Write-Host "   kubectl context : k3d-$ClusterName"
-Write-Host "   helm release    : $ReleaseName"
-Write-Host "   helm history    : helm history $ReleaseName"
-
-
-$ErrorActionPreference = "Stop"
-$Registry  = "localhost:5001"
-$ImageName = "$Registry/python-project-app2:local"
-
-Write-Host "-> Building Docker image: $ImageName ..." -ForegroundColor Cyan
-docker build -t $ImageName -f Dockerfile.app2 .
-
-Write-Host "-> Pushing image to local registry..." -ForegroundColor Cyan
-docker push $ImageName
-
-Write-Host ""
-Write-Host "Done. Image pushed: $ImageName" -ForegroundColor Green
+foreach ($app in $Apps) {
+    Write-Host "   helm release    : $($app.ReleaseName)"
+    Write-Host "   helm history    : helm history $($app.ReleaseName)"
+}
