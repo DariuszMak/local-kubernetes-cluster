@@ -5,7 +5,6 @@ description = "Simple template project for Python Application"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-    "asyncpg>=0.30.0",
     "django>=6.0.3",
     "djangorestframework>=3.15",
     "djangorestframework-simplejwt>=5.3",
@@ -30,7 +29,6 @@ dependencies = [
     "opentelemetry-exporter-otlp-proto-grpc>=1.37.0",
     "opentelemetry-instrumentation-urllib3>=0.58b0",
     "opentelemetry-sdk>=1.37.0",
-    "greenlet>=3.5.6",
 ]
 
 [dependency-groups]
