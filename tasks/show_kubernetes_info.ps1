@@ -10,3 +10,6 @@ kubectl get deployments -A --no-headers `
 
 kubectl top nodes ; 
 kubectl top pods ; 
+
+k3d cluster list ; 
+k3d node list ; 
